@@ -1,13 +1,32 @@
 #include "mt8809.h"
 #include "utils.h"
 
+static int enable_switches(struct mt8809 *mt8809, bool enable) {
+
+	// Get gpio pin bitmap
+	uint32_t pinmap  = ((1 << mt8809->pin_map.ax0) |
+						(1 << mt8809->pin_map.ax1) |
+						(1 << mt8809->pin_map.ax2) |
+						(1 << mt8809->pin_map.ay0) |
+						(1 << mt8809->pin_map.ay1) |
+						(1 << mt8809->pin_map.ay2) |
+						(1 << mt8809->pin_map.cs) |
+						(1 << mt8809->pin_map.strobe) |
+						(1 << mt8809->pin_map.reset) |
+						(1 << mt8809->pin_map.data));
+
+	gpio_set_bits(mt8809->gpio_bank, GPIO_OE, pinmap, enable ? 0xFFFFFFFF : 0x0000000);
+
+	return 0;
+}
+
 static int clear_switches(struct mt8809 *mt8809) {
 
-	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, mt8809->pin_map.reset, 0);
+	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, 1 << mt8809->pin_map.reset, 0);
 
 	SLEEP(NANOSECONDS, 40);
 
-	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, mt8809->pin_map.reset, 1);
+	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, 1 << mt8809->pin_map.reset, 1);
 
 	mt8809->switch_set = 0x0000000000000000;
 
@@ -23,6 +42,10 @@ int mt8809_init(struct mt8809 *mt8809, struct gpio *gpio, struct mt8809_pin_map 
 	mt8809->gpio_bank = gpio;
 	memcpy(&mt8809->pin_map, pin_map, sizeof(mt8809->pin_map));
 
+	// Enable gpio outputs
+	enable_switches(mt8809, TRUE);
+
+	// Clear gpio outputs
 	clear_switches(mt8809);
 
 	return 0;
@@ -76,11 +99,11 @@ int mt8809_set_switch(struct mt8809 *mt8809, uint8_t address, uint8_t set) {
 						((address & 0x01) ? (1 << mt8809->pin_map.ay2) : 0x0) |
 						((set) ? (1 << mt8809->pin_map.data) : 0x0));
 
-	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, mt8809->pin_map.cs, 0);
+	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, 1 << mt8809->pin_map.cs, 0);
 
 	SLEEP(NANOSECONDS, 10);
 
-	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, mt8809->pin_map.strobe, 0);
+	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, 1 << mt8809->pin_map.strobe, 0);
 
 	SLEEP(NANOSECONDS, 10);
 
@@ -88,11 +111,11 @@ int mt8809_set_switch(struct mt8809 *mt8809, uint8_t address, uint8_t set) {
 
 	SLEEP(NANOSECONDS, 10);
 
-	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, mt8809->pin_map.strobe, 1);
+	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, 1 << mt8809->pin_map.strobe, 1);
 
 	SLEEP(NANOSECONDS, 10);
 
-	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, mt8809->pin_map.cs, 1);
+	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, 1 << mt8809->pin_map.cs, 1);
 
 	return 0;
 }
@@ -114,7 +137,7 @@ int mt8809_set_switches(struct mt8809 *mt8809, uint64_t switch_set) {
 
 	uint32_t values;
 
-	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, mt8809->pin_map.cs, 0);
+	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, 1 << mt8809->pin_map.cs, 0);
 
 	SLEEP(NANOSECONDS, 10);
 
@@ -129,7 +152,7 @@ int mt8809_set_switches(struct mt8809 *mt8809, uint64_t switch_set) {
                   ((i & 0x01) ? (1 << mt8809->pin_map.ay2) : 0x0) |
                   ((switch_set & (1 << i)) ? (1 << mt8809->pin_map.data) : 0x0));
 
-		gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, mt8809->pin_map.strobe, 0);
+		gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, 1 << mt8809->pin_map.strobe, 0);
 
 		SLEEP(NANOSECONDS, 10);
 
@@ -137,12 +160,12 @@ int mt8809_set_switches(struct mt8809 *mt8809, uint64_t switch_set) {
 
 		SLEEP(NANOSECONDS, 10);
 
-		gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, mt8809->pin_map.strobe, 1);
+		gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, 1 << mt8809->pin_map.strobe, 1);
 
 		SLEEP(NANOSECONDS, 10);
 	}
 
-	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, mt8809->pin_map.cs, 1);
+	gpio_set_bit(mt8809->gpio_bank, GPIO_SETDATAOUT, 1 << mt8809->pin_map.cs, 1);
 
 	mt8809->switch_set = switch_set;
 

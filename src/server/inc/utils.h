@@ -6,6 +6,12 @@
 #include <string.h>
 #include <time.h>
 
+#define TRUE true
+#define FALSE false
+
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) < (b) ? (b) : (a))
+
 enum {
 	SECONDS      = 1,
 	MILLISECONDS = 1000,
