@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 import json
+from ctypes import *
 
 app = Flask(__name__)
 
@@ -110,6 +111,10 @@ def preset_order():
         data = json.load(f)"""
 
     return "Success"
+
+def load_c_lib():
+    lib = cdll.LoadLibrary("aeffects.so")   # call constructor at startup, def __init__ (in essence, I'm calling C code constructor)
+    return 0
 
 
 if __name__ == "__main__":
