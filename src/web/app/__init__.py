@@ -3,9 +3,29 @@ import json
 
 app = Flask(__name__)
 
-#@app.route('/')
-@app.route('/PresetsSaved', methods=['POST'])
-def index():
+
+@app.route('/Pedal_Inventory', methods=['POST'])
+def pedal_inventory():
+    pedal_name = request.json['pedal_name']
+    pedal_num = request.json['pedal_num']
+    pedal_descrip = request.json['pedal_descrip']
+    pedal_sett = request.json['pedal_sett']
+    data = {
+        'pedal_name': pedal_name,
+        'pedal_num': pedal_num,
+        'pedal_descrip': pedal_descrip,
+        'pedal_sett': pedal_sett
+    }
+
+    # Write to JSON
+    with open('pedal_inventory.json', 'w') as f:
+        json.dump(data, f)
+
+    return "Success"
+
+
+@app.route('/Presets', methods=['POST'])
+def preset_order():
     pedal = [0, 0, 0, 0, 0, 0, 0]
     pedal_in = [0, 0, 0, 0, 0, 0, 0]
     pedal_out = [0, 0, 0, 0, 0, 0, 0]
@@ -82,7 +102,7 @@ def index():
     }
 
     # Write to JSON
-    with open('data.json', 'w') as f:
+    with open('presets.json', 'w') as f:
         json.dump(data, f)
 
     # Read JSON
