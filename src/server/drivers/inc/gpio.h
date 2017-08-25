@@ -4,13 +4,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-
-enum {
-	GPIO0,
-	GPIO1,
-	GPIO2,
-	GPIO3
-};
+#include <pthread.h>
 
 #define GPIO0_START_ADDR	0x44E07000
 #define GPIO0_END_ADDR		0x44E09000
@@ -55,12 +49,50 @@ enum {
 #define GPIO_CLEARDATAOUT		0x0190
 #define GPIO_SETDATAOUT			0x0194
 
-struct gpio {
-	volatile void	*mmap_address;
-	int				size;
+enum gpio_bank {
+	GPIO0,
+	GPIO1,
+	GPIO2,
+	GPIO3
 };
 
-int gpio_init(struct gpio *gpio, uint32_t bank);
+enum gpio_direction {
+	GPIO_DIR_NONE,
+	GPIO_DIR_IN,
+	GPIO_DIR_OUT
+};
+
+enum gpio_sensitivity {
+	GPIO_SEN_NONE,
+	GPIO_SEN_RISING,
+	GPIO_SEN_FALLING,
+	GPIO_SEN_BOTH
+};
+
+struct gpio {
+	volatile void	*mmap_address;
+	unsigned int	size;
+	enum gpio_bank	bank;
+};
+
+struct gpio_irq {
+	struct gpio				*gpio;
+	int						(*callback)(void *);
+	void					*context;
+	enum gpio_direction		direction;
+	enum gpio_sensitivity	sensitivity;
+	bool					enabled;
+	pthread_t				int_thread;
+};
+
+struct gpio_pin {
+	struct gpio	*gpio;
+	int			pin;
+};
+
+#define GPIO_PIN_INITIALIZER(gpio, pin) {.gpio = gpio, .pin = pin}
+
+int gpio_init(struct gpio *gpio, enum gpio_bank bank);
 
 int gpio_uninit(struct gpio *gpio);
 
@@ -75,5 +107,27 @@ int gpio_get_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t *set);
 int gpio_get_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t *value);
 
 int gpio_get_value(struct gpio *gpio, uint32_t reg, uint32_t *value);
+
+int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, uint8_t pin, int (*callback)(void *), void *context, int direction, int sensitivity);
+
+int gpio_irq_uninit(struct gpio_irq *irq);
+
+int gpio_irq_set_callback(int (*callback)(void *), void *context);
+
+int gpio_irq_set_direction(struct gpio_irq *irq, int direction);
+
+int gpio_irq_get_direction(struct gpio_irq *irq, int *direction);
+
+int gpio_irq_set_sensitivity(struct gpio_irq *irq, int sensitivity);
+
+int gpio_irq_get_sensitivity(struct gpio_irq *irq, int *sensitivity);
+
+int gpio_irq_enable(struct gpio_irq *irq, bool enable);
+
+int gpio_irq_is_enabled(struct gpio_irq *irq, bool *enabled);
+
+int gpio_pin_set_value(struct gpio_pin *gpioPin, bool value);
+
+int gpio_pin_get_value(struct gpio_pin *gpioPin, bool *value);
 
 #endif // GPIO_H_
