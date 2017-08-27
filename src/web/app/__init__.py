@@ -29,13 +29,12 @@ def pedal_inventory():
 @app.route('/Presets', methods=['POST'])
 def preset_order():
     pedal = [0, 0, 0, 0, 0, 0, 0]
-    pedal_in = [0, 0, 0, 0, 0, 0, 0]
-    pedal_out = [0, 0, 0, 0, 0, 0, 0]
 
     bank_name = request.json['bank_name']
     bank_num = request.json['bank_num']
     preset_name = request.json['preset_name']
     preset_num = request.json['preset_num']
+
     pedal_pos1_name = request.json['pedal_pos1_name']
     pedal_pos2_name = request.json['pedal_pos2_name']
     pedal_pos3_name = request.json['pedal_pos3_name']
@@ -43,6 +42,7 @@ def preset_order():
     pedal_pos5_name = request.json['pedal_pos5_name']
     pedal_pos6_name = request.json['pedal_pos6_name']
     pedal_pos7_name = request.json['pedal_pos7_name']
+
     pedal[0] = request.json['pedal_pos1']
     pedal[1] = request.json['pedal_pos2']
     pedal[2] = request.json['pedal_pos3']
@@ -73,9 +73,8 @@ def preset_order():
         'pedal_pos7': pedal[6],
     }
 
-    filename = "%d_%d" %(bank_num, preset_num)
-
     # Write to JSON
+    filename = "%d_%d" % (bank_num, preset_num)
     with open('presets_' + filename + '.json', 'w') as f:
         json.dump(data, f)
 
@@ -87,8 +86,8 @@ def preset_order():
 
 
 def load_c_lib():
-    c_lib = cdll.LoadLibrary("aeffects.so")   # call constructor at startup, def __init__ (in essence, I'm calling C code constructor)
-    c_lib.aeffects_init() #convert 2d tuple of presets to 2d array passed through init
+    c_lib = cdll.LoadLibrary("aeffects.so")  # call construct at startup, def __init (in essence, calling C constructor)
+    c_lib.aeffects_init()  # convert 2d tuple of presets to 2d array passed through init
     return 0
 
 
