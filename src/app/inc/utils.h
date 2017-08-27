@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
+#include <pthread.h>
 
 #define TRUE true
 #define FALSE false
@@ -22,5 +24,9 @@ enum {
 int sleep_internal(int units, unsigned int time);
 
 #define SLEEP(units, time) sleep_internal(units, time)
+
+int write_to_file(const char *file, void *data, size_t size);
+
+int read_from_file(const char *file, void *data, size_t size);
 
 #endif // UTILS_H_

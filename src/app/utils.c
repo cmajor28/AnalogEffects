@@ -3,13 +3,15 @@
 int sleep_internal(int units, unsigned int time) {
 
 	int ret;
+
+	// Select sleep function based on time give
 	switch (units) {
 	case SECONDS: {
 		ret = sleep(time);
 		break;
 	}
 	case MILLISECONDS: {
-		ret = usleep(time * MICROSECONDS / MILLISECONDS)
+		ret = usleep(time * MICROSECONDS / MILLISECONDS);
 		break;
 	}
 	case MICROSECONDS: {

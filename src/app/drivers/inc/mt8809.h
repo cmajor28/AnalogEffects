@@ -17,13 +17,13 @@ struct mt8809_pin_map {
 };
 
 struct mt8809 {
-	struct gpio				*gpio_bank;
-	struct mt8809_pin_map	pin_map;
-	uint64_t				switch_set;
+	struct gpio				*gpioBank;
+	struct mt8809_pin_map	pinMap;
+	uint64_t				switchSet;
 
 };
 
-int mt8809_init(struct mt8809 *mt8809, struct gpio *gpio, struct mt8809_pin_map *pin_map);
+int mt8809_init(struct mt8809 *mt8809, struct gpio *gpio, struct mt8809_pin_map *pinMap);
 
 int mt8809_uninit(struct mt8809 *mt8809);
 
@@ -31,10 +31,10 @@ int mt8809_reset(struct mt8809 *mt8809);
 
 int mt8809_set_switch(struct mt8809 *mt8809, uint8_t address, uint8_t set);
 
-int mt8809_set_switches(struct mt8809 *mt8809, uint64_t switch_set);
+int mt8809_set_switches(struct mt8809 *mt8809, uint64_t switchSet);
 
 int mt8809_get_switch(struct mt8809 *mt8809, uint8_t address, uint8_t *set);
 
-int mt8809_get_switches(struct mt8809 *mt8809, uint64_t *switch_set);
+int mt8809_get_switches(struct mt8809 *mt8809, uint64_t *switchSet);
 
 #endif // MT8809_H_
