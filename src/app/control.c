@@ -1,8 +1,8 @@
 #include "control.h"
 #include "utils.h"
 #include "gpio.h"
+#include "pcf857x.h"
 #include "mt8809.h"
-#include "pcf875x.h"
 #include <stdio.h>
 
 bool gPresenceDetect[AE_MAX_EFFECTS+1][2];
@@ -13,9 +13,17 @@ struct ae_config gConfig;
 extern struct pthread_mutex_t gPresetsMutex;
 extern struct ae_preset gPresets[AE_BANK_COUNT][AE_PRESET_COUNT];
 
+struct gpio gGPIOBanks[GPIO_COUNT];
+struct gpio_ext gGPIOExtBanks[3];
+struct mt8809 gSwitchMatrix;
+struct gpio_ext_pin gBypassSwitch;
+struct gpio_ext_pin gLedOutputs[AE_MAX_EFFECTS+3];
+struct gpio_ext_pin gPresenceInputs[AE_MAX_EFFECTS+1][2];
+struct gpio_ext_pin gButtonsInputs[AE_MAX_EFFECTS+3];
+
 static int get_last_configuration(struct ae_config *lastConfig) {
 
-	size_t count;
+	int count;
 
 	count = fread(lastConfig, sizeof(*lastConfig), 1, gConfigFile);
 	if (count != sizeof(*lastConfig)) {
@@ -27,7 +35,7 @@ static int get_last_configuration(struct ae_config *lastConfig) {
 
 static int set_last_configuration(struct ae_config *lastConfig) {
 
-	size_t count;
+	int count;
 
 	count = fwrite(lastConfig, sizeof(*lastConfig), 1, gConfigFile);
 	if (count != sizeof(*lastConfig)) {
@@ -37,9 +45,11 @@ static int set_last_configuration(struct ae_config *lastConfig) {
 	return 0;
 }
 
-static int apply_bypass(bool bypass, void *todo) {
+static int apply_bypass(bool bypass, struct gpio_ext_pin *bypassSwitch) {
 
-	return 0;
+	int ret;
+	ret = gpio_ext_pin_set_value(bypassSwitch, bypass);
+	return ret;
 }
 
 static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabled[AE_MAX_EFFECTS], bool presenceDetect[AE_MAX_EFFECTS+1][2], struct mt8809 *mt8809) {
@@ -99,13 +109,13 @@ int control_init() {
 	// Apply configuration
 	if (gConfig.pedalMode) {
 		// Apply bypass
-		ret = apply_bypass(gConfig.bypassEnabled, NULL);
+		ret = apply_bypass(gConfig.bypassEnabled, &gBypassSwitch);
 		if (ret != 0) {
 			return -1;
 		}
 
 		// Apply switch configuration
-		ret = apply_switch_configuration(gConfig.currPreset.pedalOrder, gConfig.enabled, gPresenceDetect, NULL);
+		ret = apply_switch_configuration(gConfig.currPreset.pedalOrder, gConfig.enabled, gPresenceDetect, &gSwitchMatrix);
 		if (ret != 0) {
 			return -1;
 		}
@@ -117,7 +127,7 @@ int control_init() {
 		}
 
 		// Apply switch configuration
-		ret = apply_switch_configuration(gConfig.currPreset.pedalOrder, gConfig.currPreset.enabled, gPresenceDetect, NULL);
+		ret = apply_switch_configuration(gConfig.currPreset.pedalOrder, gConfig.currPreset.enabled, gPresenceDetect, &gSwitchMatrix);
 		if (ret != 0) {
 			return -1;
 		}

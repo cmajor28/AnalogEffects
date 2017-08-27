@@ -1,10 +1,7 @@
 #ifndef GPIO_H_
 #define GPIO_H_
 
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <pthread.h>
+#include "utils.h"
 
 #define GPIO0_START_ADDR	0x44E07000
 #define GPIO0_END_ADDR		0x44E09000
@@ -53,7 +50,8 @@ enum gpio_bank {
 	GPIO0,
 	GPIO1,
 	GPIO2,
-	GPIO3
+	GPIO3,
+	GPIO_COUNT
 };
 
 enum gpio_direction {
@@ -77,12 +75,14 @@ struct gpio {
 
 struct gpio_irq {
 	struct gpio				*gpio;
+	int						pin;
 	int						(*callback)(void *);
 	void					*context;
 	enum gpio_direction		direction;
 	enum gpio_sensitivity	sensitivity;
-	bool					enabled;
-	pthread_t				int_thread;
+	atomic bool				enabled;
+	int						fd;
+	pthread_t				intThread;
 };
 
 struct gpio_pin {
@@ -90,7 +90,7 @@ struct gpio_pin {
 	int			pin;
 };
 
-#define GPIO_PIN_INITIALIZER(gpio, pin) {.gpio = gpio, .pin = pin}
+#define GPIO_PIN_INITIALIZER(gpio, pin) { .gpio = gpio, .pin = pin }
 
 int gpio_init(struct gpio *gpio, enum gpio_bank bank);
 
@@ -108,19 +108,9 @@ int gpio_get_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t *valu
 
 int gpio_get_value(struct gpio *gpio, uint32_t reg, uint32_t *value);
 
-int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, uint8_t pin, int (*callback)(void *), void *context, int direction, int sensitivity);
+int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, int pin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity);
 
 int gpio_irq_uninit(struct gpio_irq *irq);
-
-int gpio_irq_set_callback(int (*callback)(void *), void *context);
-
-int gpio_irq_set_direction(struct gpio_irq *irq, int direction);
-
-int gpio_irq_get_direction(struct gpio_irq *irq, int *direction);
-
-int gpio_irq_set_sensitivity(struct gpio_irq *irq, int sensitivity);
-
-int gpio_irq_get_sensitivity(struct gpio_irq *irq, int *sensitivity);
 
 int gpio_irq_enable(struct gpio_irq *irq, bool enable);
 

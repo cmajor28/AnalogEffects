@@ -1,5 +1,4 @@
 #include "gpio.h"
-#include "utils.h"
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -7,18 +6,12 @@
 #include <limits.h>
 #include <poll.h>
 
-struct gpio_irq_context {
-	int		(*callback)(void *);
-	void	*context;
-	int		fd;
-};
-
-static int gpio_irq_func(struct gpio_irq_context *params) {
+static int gpio_irq_func(struct gpio_irq *irq) {
 
 	int ret;
 	struct pollfd fds;
 
-	fds.fd = params->fd;
+	fds.fd = irq->fd;
 	fds.events = POLLPRI | POLLERR;
 	fds.revents = 0;
 
@@ -28,8 +21,8 @@ static int gpio_irq_func(struct gpio_irq_context *params) {
 			return ret;
 		}
 
-		if (params->callback) {
-			params->callback(params->context);
+		if (irq->enabled && irq->callback) {
+			irq->callback(irq->context);
 		}
 	}
 
@@ -67,7 +60,6 @@ int gpio_init(struct gpio *gpio, enum gpio_bank bank) {
 
 	// Open mem fd
 	fd = open("/dev/mem", O_RDWR);
-
 	if (fd == -1) {
 		return -1;
 	}
@@ -102,9 +94,11 @@ int gpio_set_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t set) {
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmap_address + reg;
+	uint32_t tmp = *loc;
 
 	// Set bit to value
-	*loc ^= (-set ^ *loc) & (1 << bit);
+	tmp ^= (-set ^ tmp) & (1 << bit);
+	*loc = tmp;
 
 	return 0;
 }
@@ -113,15 +107,17 @@ int gpio_set_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t value
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmap_address + reg;
+	uint32_t tmp = *loc;
 
 	// Set bit to value
-	*loc ^= (-bits ^ *loc) & value;
+	tmp ^= (-bits ^ tmp) & value;
+	*loc = tmp;
 
 	return 0;
 }
 
 
-int gpio_set(struct gpio *gpio, uint32_t reg, uint32_t value) {
+int gpio_set_value(struct gpio *gpio, uint32_t reg, uint32_t value) {
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmap_address + reg;
@@ -153,7 +149,7 @@ int gpio_get_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t *valu
 	return 0;
 }
 
-int gpio_get(struct gpio *gpio, uint32_t reg, uint32_t *value) {
+int gpio_get_value(struct gpio *gpio, uint32_t reg, uint32_t *value) {
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmap_address + reg;
@@ -163,22 +159,21 @@ int gpio_get(struct gpio *gpio, uint32_t reg, uint32_t *value) {
 	return 0;
 }
 
-int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, uint8_t pin, int (*callback)(void *), void *context, int direction, int sensitivity) {
+int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, int pin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity) {
 
-	int gpio_number = gpio->bank * 32 + pin;
-	int fd;
+	int gpioNumber = gpio->bank * 32 + pin;
 	int ret;
-	static char file_buffer[255];
-	char *dir_str;
-	char *sen_str;
-	char num_str[4];
+	static char fileBuffer[256];
+	char *dirStr;
+	char *senStr;
+	char numStr[4];
 
 	switch (direction) {
 	case GPIO_DIR_IN:
-		dir_str = "in";
+		dirStr = "in";
 		break;
 	case GPIO_DIR_OUT:
-		dir_str = "out";
+		dirStr = "out";
 		break;
 	case GPIO_DIR_NONE:
 	default:
@@ -187,56 +182,54 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, uint8_t pin, int (*ca
 
 	switch (sensitivity) {
 	case GPIO_SEN_NONE:
-		sen_str = "none";
+		senStr = "none";
 		break;
 	case GPIO_SEN_RISING:
-		sen_str = "rising";
+		senStr = "rising";
 		break;
 	case GPIO_SEN_FALLING:
-		sen_str = "falling";
+		senStr = "falling";
 		break;
 	case GPIO_SEN_BOTH:
-		sen_str = "both";
+		senStr = "both";
 		break;
 	default:
 		return -1;
 	}
 
 	// Enable gpio export
-	itoa(gpio_number, num_str, 10);
-	ret = write_to_file("sys/class/gpio/export", num_str, strlen(num_str));
-
+	snprintf(numStr, sizeof(numStr), "%d", gpioNumber);
+	ret = write_to_file("sys/class/gpio/export", numStr, strlen(numStr));
 	if (ret != 0) {
-		return -1;
+		return ret;
 	}
 
 	// Set direction
-	snprintf(file_buffer, sizeof(file_buffer), "/sys/class/gpio/gpio%d/direction", gpio_number);
-	write_to_file(file_buffer, dir_str, strlen(dir_str));
-
+	snprintf(fileBuffer, sizeof(fileBuffer), "/sys/class/gpio/gpio%d/direction", gpioNumber);
+	ret = write_to_file(fileBuffer, dirStr, strlen(dirStr));
 	if (ret != 0) {
-		return -1;
+		return ret;
 	}
 
 	// Set sensitivity
-	snprintf(file_buffer, sizeof(file_buffer), "/sys/class/gpio/gpio%d/edge", gpio_number);
-	write_to_file(file_buffer, sen_str, strlen(sen_str));
-
+	snprintf(fileBuffer, sizeof(fileBuffer), "/sys/class/gpio/gpio%d/edge", gpioNumber);
+	ret = write_to_file(fileBuffer, senStr, strlen(senStr));
 	if (ret != 0) {
+		return ret;
+	}
+
+	// Open file for int
+	snprintf(fileBuffer, sizeof(fileBuffer), "/sys/class/gpio/gpio%d/value", gpioNumber);
+	irq->fd = open(fileBuffer, O_RDONLY);
+	if (irq->fd == -1) {
 		return -1;
 	}
 
-	struct gpio_irq_context gpio_irq_ctx;
-
-	gpio_irq_ctx.callback = callback;
-	gpio_irq_ctx.context = context;
-	gpio_irq_ctx.fd = fd;
-
 	// Create thread to handle interrupt
-	ret = pthread_create(&irq->int_thread, NULL, &gpio_irq_func, &gpio_irq_ctx);
-
+	ret = pthread_create(&irq->intThread, NULL, (void *(*)(void *))&gpio_irq_func, irq);
 	if (ret != 0) {
-		close(fd);
+		close(irq->fd);
+		return ret;
 	}
 
 	irq->gpio = gpio;
@@ -245,47 +238,53 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, uint8_t pin, int (*ca
 	irq->direction = direction;
 	irq->sensitivity = sensitivity;
 	irq->enabled = FALSE;
+	irq->pin = pin;
 
 	return 0;
 }
 
 int gpio_irq_uninit(struct gpio_irq *irq) {
 
-	return 0;
-}
+	int gpioNumber = irq->gpio->bank * 32 + irq->pin;
+	int ret;
+	char numStr[4];
 
-int gpio_irq_set_callback(int (*callback)(void *), void *context) {
+	// Cancel interrupt thread
+	ret = pthread_cancel(irq->intThread);
+	if (ret != 0) {
+		return ret;
+	}
 
-	return 0;
-}
+	// Wait for thread to exit
+	ret = pthread_join(irq->intThread, NULL);
+	if (ret != 0) {
+		return ret;
+	}
 
-int gpio_irq_set_direction(struct gpio_irq *irq, int direction) {
+	// Close int file
+	close(irq->fd);
 
-	return 0;
-}
+	// Disable gpio export
+	snprintf(numStr, sizeof(numStr), "%d", gpioNumber);
+	ret = write_to_file("sys/class/gpio/unexport", numStr, strlen(numStr));
+	if (ret != 0) {
+		return ret;
+	}
 
-int gpio_irq_get_direction(struct gpio_irq *irq, int *direction) {
-
-	return 0;
-}
-
-int gpio_irq_set_sensitivity(struct gpio_irq *irq, int sensitivity) {
-
-	return 0;
-}
-
-int gpio_irq_get_sensitivity(struct gpio_irq *irq, int *sensitivity) {
+	memset(irq, 0, sizeof(*irq));
 
 	return 0;
 }
 
 int gpio_irq_enable(struct gpio_irq *irq, bool enable) {
 
+	irq->enabled = enable;
 	return 0;
 }
 
 int gpio_irq_is_enabled(struct gpio_irq *irq, bool *enabled) {
 
+	*enabled = irq->enabled;
 	return 0;
 }
 
@@ -299,6 +298,6 @@ int gpio_pin_set_value(struct gpio_pin *gpioPin, bool value) {
 int gpio_pin_get_value(struct gpio_pin *gpioPin, bool *value) {
 
 	int ret;
-	ret = gpio_get_bit(gpioPin->gpio, GPIO_DATAIN, gpioPin->pin, value);
+	ret = gpio_get_bit(gpioPin->gpio, GPIO_DATAIN, gpioPin->pin, (uint8_t *)value);
 	return ret;
 }
