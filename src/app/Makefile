@@ -1,6 +1,6 @@
-CFILES += main.c utils.c aeffects.c control.c drivers/gpio.c drivers/i2c.c drivers/mt8809.c drivers/pcf875x.c
-CFLAGS += -ggdb -Wall -Iinc -Idrivers/inc -fPIC
-LFLAGS += 
+CFILES += main.c utils.c aeffects.c control.c drivers/gpio.c drivers/i2c.c drivers/mt8809.c drivers/pcf857x.c
+CFLAGS += -std=gnu11 -ggdb -Wall -Iinc -Idrivers/inc -fPIC
+LFLAGS += -lpthread
 OUTDIR ?= .
 
 debug: CFLAGS += -DDEBUG -O0
