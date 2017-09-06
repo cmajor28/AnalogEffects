@@ -3,7 +3,13 @@ import json
 from ctypes import *
 
 app = Flask(__name__)
+c_lib = cdll.LoadLibrary("./aeffects.so")  # call construct at startup, def __init (in essence, calling C constructor)
 
+class AE_PRESET(Structure):
+    _fields_ = [("bank", c_int),
+                ("preset", c_int),
+                ("pedalOrder", c_int * 7),
+                ("enabled", c_bool * 7)]
 
 @app.route('/Pedal_Inventory', methods=['POST'])
 def pedal_inventory():
@@ -29,6 +35,7 @@ def pedal_inventory():
 @app.route('/Presets', methods=['POST'])
 def preset_order():
     pedal = [0, 0, 0, 0, 0, 0, 0]
+    enable = [0, 0, 0, 0, 0, 0, 0]
 
     bank_name = request.json['bank_name']
     bank_num = request.json['bank_num']
@@ -51,6 +58,22 @@ def preset_order():
     pedal[5] = request.json['pedal_pos6']
     pedal[6] = request.json['pedal_pos7']
 
+    enable[0] = request.json['enabled_pos1']
+    enable[1] = request.json['enabled_pos2']
+    enable[2] = request.json['enabled_pos3']
+    enable[3] = request.json['enabled_pos4']
+    enable[4] = request.json['enabled_pos5']
+    enable[5] = request.json['enabled_pos6']
+    enable[6] = request.json['enabled_pos7']
+
+    new_preset = AE_PRESET()
+    new_preset.preset = preset_num
+    new_preset.bank = bank_num
+    new_preset.pedalOrder = (c_int * 7)(*pedal)
+    new_preset.enabled = (c_bool * 7)(*enable)
+
+    c_lib.aeffects_update(byref(new_preset))
+
     # 0 indicates unused pedal, 8 indicates final output
     data = {
         'bank_name': bank_name,
@@ -71,6 +94,13 @@ def preset_order():
         'pedal_pos5': pedal[4],
         'pedal_pos6': pedal[5],
         'pedal_pos7': pedal[6],
+        "enabled_pos1": enable[0],
+        "enabled_pos2": enable[1],
+        "enabled_pos3": enable[2],
+        "enabled_pos4": enable[3],
+        "enabled_pos5": enable[4],
+        "enabled_pos6": enable[5],
+        "enabled_pos7": enable[6]
     }
 
     # Write to JSON
@@ -85,11 +115,12 @@ def preset_order():
     return "Success"
 
 
-def load_c_lib():
-    c_lib = cdll.LoadLibrary("aeffects.so")  # call construct at startup, def __init (in essence, calling C constructor)
+def init_c_lib():
+    # pass through init function correctly
     c_lib.aeffects_init()  # convert 2d tuple of presets to 2d array passed through init
     return 0
 
 
 if __name__ == "__main__":
+    init_c_lib()
     app.run(host='0.0.0.0', port=5052, debug=True)
