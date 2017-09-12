@@ -215,14 +215,17 @@ static int presence_control_update(void *context, enum ae_presence jack, bool pr
 
 	int ret;
 
-	gPresenceDetect[jack/2][jack%2] = presence;
-
-	ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, &gSwitchMatrix);
+	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
 		return -1;
 	}
 
-	return 0;
+	gPresenceDetect[jack/2][jack%2] = presence;
+	ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, &gSwitchMatrix);
+
+	pthread_mutex_unlock(&gConfigMutex);
+
+	return ret;
 }
 
 static int button_control_update(void *context, enum ae_button button, enum button_state state) {
@@ -230,12 +233,18 @@ static int button_control_update(void *context, enum ae_button button, enum butt
 	(void)context; // Unused
 
 	static enum button_state lastState[AE_BUTTON_COUNT] = { 0 };
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		return -1;
+	}
 
 	switch (state) {
 	case BUTTON_RELEASED:
 		if (lastState[button] == BUTTON_PRESSED) {
 			// The button has been pressed
-			handle_button_pressed_event(button);
+			ret = handle_button_pressed_event(button);
 		}
 		break;
 	case BUTTON_PRESSED:
@@ -243,17 +252,19 @@ static int button_control_update(void *context, enum ae_button button, enum butt
 	case BUTTON_HELD:
 		if (lastState[button] == BUTTON_PRESSED) {
 			// The button has been held down
-			handle_button_held_event(button);
+			ret = handle_button_held_event(button);
 		}
 		break;
 	default:
-		return -1;
+		ret = -1;
 	}
 
 	// Update last button state
 	lastState[button] = state;
 
-	return 0;
+	pthread_mutex_unlock(&gConfigMutex);
+
+	return ret;
 }
 
 int control_init() {
