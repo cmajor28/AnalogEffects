@@ -9,6 +9,9 @@ int aeffects_init(struct ae_preset presets[AE_BANK_COUNT][AE_PRESET_COUNT]) {
 
 	int ret;
 
+	// Initialize mutex
+	pthread_mutex_init(&gPresetsMutex, NULL);
+
 	// Store list of presets
 	memcpy(gPresets, presets, sizeof(presets[0][0]) * AE_BANK_COUNT * AE_PRESET_COUNT);
 
@@ -31,7 +34,7 @@ int aeffects_update(struct ae_preset *preset) {
 	}
 
 	// Store updated preset
-	memcpy(&gPresets[preset->bank][preset->preset], preset, sizeof(*preset));
+	memcpy(&gPresets[preset->bank - 1][preset->preset - 1], preset, sizeof(*preset)); // Index starts at 1
 
 	pthread_mutex_unlock(&gPresetsMutex);
 
@@ -50,6 +53,9 @@ int aeffects_uninit() {
 
 	// Reset presets
 	memset(gPresets, 0, sizeof(gPresets));
+
+	// Destroy mutex
+	pthread_mutex_destroy(&gPresetsMutex);
 
 	return 0;
 }

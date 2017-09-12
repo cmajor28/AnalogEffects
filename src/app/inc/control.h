@@ -7,8 +7,11 @@
 #define CONFIG_FILE "config.bin"
 
 struct ae_config {
+	bool				controlEnabled[2];
 	bool				bypassEnabled;
+	bool				muteEnabled;
 	bool				pedalMode;
+	int					currBank;
 	struct ae_preset	currPreset;
 	bool				enabled[AE_MAX_EFFECTS];
 };
@@ -16,6 +19,11 @@ struct ae_config {
 enum {
 	IN,
 	OUT
+};
+
+enum {
+	TIP,
+	RING
 };
 
 int control_init();

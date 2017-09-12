@@ -1,6 +1,32 @@
 #include "utils.h"
 
-int sleep_internal(int units, unsigned int time) {
+static int timer_thread_func(struct timer *timer) {
+
+	int ret;
+
+	do {
+		ret = sleep2(timer->units, timer->duration);
+		if (ret != 0) {
+			return ret;
+		}
+
+		ret = pthread_mutex_lock(&timer->callbackMutex);
+		if (ret != 0) {
+			return -1;
+		}
+
+		timer->enabled = !timer->singleShot;
+		timer->callback(timer->context);
+
+		pthread_mutex_unlock(&timer->callbackMutex);
+	} while (!timer->singleShot);
+
+	timer->enabled = FALSE;
+
+	return 0;
+}
+
+int sleep2(enum time_units units, time_t time) {
 
 	int ret;
 
@@ -63,4 +89,64 @@ int read_from_file(const char *file, void *data, size_t size) {
 	close(fd);
 
 	return (count == size ? 0 : -1);
+}
+
+int timer_init(struct timer *timer, bool singleShot, enum time_units units, time_t duration, int (*callback)(void *), void *context) {
+
+	pthread_mutexattr_t attr;
+
+	timer->enabled = FALSE;
+	timer->singleShot = singleShot;
+	timer->units = units;
+	timer->duration = duration;
+	timer->callback = callback;
+	timer->context = context;
+
+	// Create recursive mutex
+	pthread_mutexattr_init(&attr);
+	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+	pthread_mutex_init(&timer->callbackMutex, &attr);
+
+	return 0;
+}
+
+int timer_enable(struct timer *timer, bool enable) {
+
+	int ret;
+
+	if (enable) {
+		ret = pthread_create(&timer->timerThread, NULL, (void *(*)(void *))&timer_thread_func, (void *)timer);
+		if (ret != 0) {
+			return -1;
+		}
+	} else {
+		ret = pthread_mutex_lock(&timer->callbackMutex);
+		if (ret != 0) {
+			return -1;
+		}
+		ret = pthread_cancel(timer->timerThread);
+		pthread_mutex_unlock(&timer->callbackMutex);
+		if (ret != 0) {
+			return -1;
+		}
+	}
+
+	timer->enabled = enable;
+
+	return 0;
+}
+
+int timer_is_enabled(struct timer *timer, bool *enabled) {
+
+	*enabled = timer->enabled;
+	return 0;
+}
+
+int timer_uninit(struct timer *timer) {
+
+	if (timer->enabled) pthread_cancel(timer->timerThread);
+	pthread_mutex_destroy(&timer->callbackMutex);
+	memset(timer, 0, sizeof(*timer));
+
+	return 0;
 }

@@ -12,6 +12,7 @@ struct ae_preset {
 	int		preset;
 	int		pedalOrder[AE_MAX_EFFECTS];
 	bool	enabled[AE_MAX_EFFECTS];
+	bool	controlEnabled[2];
 };
 
 int aeffects_init(struct ae_preset presets[AE_BANK_COUNT][AE_PRESET_COUNT]);

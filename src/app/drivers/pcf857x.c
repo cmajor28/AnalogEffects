@@ -67,20 +67,25 @@ static int gpio_ext_read(struct gpio_ext *gpioExt) {
 	return 0;
 }
 
-int gpio_ext_init(struct gpio_ext *gpioExt, enum pcf857x_pin_count numPins, struct i2c *i2c, struct gpio *gpio, int pin) {
+int gpio_ext_init(struct gpio_ext *gpioExt, enum pcf857x_pin_count numPins, struct i2c *i2c) {
 
 	int ret;
-
-	// Setup irq for interrupt pin
-	ret = gpio_irq_init(&gpioExt->irq, gpio, pin, (int (*)(void *))&gpio_ext_read, gpioExt, GPIO_DIR_IN, GPIO_SEN_FALLING);
-	if (ret != 0) {
-		return ret;
-	}
 
 	gpioExt->values = 0x0000;
 	gpioExt->i2c = i2c;
 	gpioExt->numPins = numPins;
 	memset(gpioExt->irqList, 0, sizeof(gpioExt->irqList));
+
+	// We don't have to have an int pin
+	if (gpioExt->gpioPin.gpio == NULL || gpioExt->gpioPin.pin == -1) {
+		return 0;
+	}
+
+	// Setup irq for interrupt pin
+	ret = gpio_irq_init(&gpioExt->irq, &gpioExt->gpioPin, (int (*)(void *))&gpio_ext_read, gpioExt, GPIO_DIR_IN, GPIO_SEN_FALLING);
+	if (ret != 0) {
+		return ret;
+	}
 
 	// Enable interrupt pin irq
 	ret = gpio_irq_enable(&gpioExt->irq, TRUE);
@@ -95,10 +100,12 @@ int gpio_ext_uninit(struct gpio_ext *gpioExt) {
 
 	int ret;
 
-	// Uninit irq for interrupt pin
-	ret = gpio_irq_uninit(&gpioExt->irq);
-	if (ret != 0) {
-		return ret;
+	// Only remove irq if pin exists
+	if (gpioExt->gpioPin.gpio == NULL || gpioExt->gpioPin.pin == -1) {
+		ret = gpio_irq_uninit(&gpioExt->irq);
+		if (ret != 0) {
+			return ret;
+		}
 	}
 
 	memset(gpioExt, 0, sizeof(*gpioExt));
@@ -179,23 +186,22 @@ int gpio_ext_get_value(struct gpio_ext *gpioExt, uint16_t *value) {
 	return 0;
 }
 
-int gpio_ext_irq_init(struct gpio_ext_irq *extIrq, struct gpio_ext *gpioExt, int pin, int (*callback)(void *), void *context, int direction, int sensitivity) {
+int gpio_ext_irq_init(struct gpio_ext_irq *extIrq, struct gpio_ext_pin *gpioExtPin, int (*callback)(void *), void *context, int direction, int sensitivity) {
 
-	extIrq->gpioExt = gpioExt;
-	extIrq->pin = pin;
+	extIrq->gpioExtPin = *gpioExtPin;
 	extIrq->callback = callback;
 	extIrq->context = context;
 	extIrq->direction = direction;
 	extIrq->sensitivity = sensitivity;
 	extIrq->enabled = FALSE;
-	gpioExt->irqList[pin] = extIrq;
+	gpioExtPin->gpioExt->irqList[gpioExtPin->pin] = extIrq;
 
 	return 0;
 }
 
 int gpio_ext_irq_uninit(struct gpio_ext_irq *extIrq) {
 
-	extIrq->gpioExt->irqList[extIrq->pin] = NULL;
+	extIrq->gpioExtPin.gpioExt->irqList[extIrq->gpioExtPin.pin] = NULL;
 	memset(extIrq, 0, sizeof(*extIrq));
 
 	return 0;

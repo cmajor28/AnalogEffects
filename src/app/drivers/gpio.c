@@ -159,9 +159,9 @@ int gpio_get_value(struct gpio *gpio, uint32_t reg, uint32_t *value) {
 	return 0;
 }
 
-int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, int pin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity) {
+int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity) {
 
-	int gpioNumber = gpio->bank * 32 + pin;
+	int gpioNumber = gpioPin->gpio->bank * 32 + gpioPin->pin;
 	int ret;
 	static char fileBuffer[256];
 	char *dirStr;
@@ -232,20 +232,19 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, int pin, int (*callba
 		return ret;
 	}
 
-	irq->gpio = gpio;
+	irq->gpioPin = *gpioPin;
 	irq->callback = callback;
 	irq->context = context;
 	irq->direction = direction;
 	irq->sensitivity = sensitivity;
 	irq->enabled = FALSE;
-	irq->pin = pin;
 
 	return 0;
 }
 
 int gpio_irq_uninit(struct gpio_irq *irq) {
 
-	int gpioNumber = irq->gpio->bank * 32 + irq->pin;
+	int gpioNumber = irq->gpioPin.gpio->bank * 32 + irq->gpioPin.pin;
 	int ret;
 	char numStr[4];
 
