@@ -73,9 +73,13 @@ struct gpio {
 	enum gpio_bank	bank;
 };
 
+struct gpio_pin {
+	struct gpio	*gpio;
+	int			pin;
+};
+
 struct gpio_irq {
-	struct gpio				*gpio;
-	int						pin;
+	struct gpio_pin			gpioPin;
 	int						(*callback)(void *);
 	void					*context;
 	enum gpio_direction		direction;
@@ -85,12 +89,7 @@ struct gpio_irq {
 	pthread_t				intThread;
 };
 
-struct gpio_pin {
-	struct gpio	*gpio;
-	int			pin;
-};
-
-#define GPIO_PIN_INITIALIZER(gpio, pin) { .gpio = gpio, .pin = pin }
+#define GPIO_PIN_INITIALIZER(gpioBank, pinNum) { .gpio = gpioBank, .pin = pinNum }
 
 int gpio_init(struct gpio *gpio, enum gpio_bank bank);
 
@@ -108,7 +107,7 @@ int gpio_get_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t *valu
 
 int gpio_get_value(struct gpio *gpio, uint32_t reg, uint32_t *value);
 
-int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, int pin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity);
+int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity);
 
 int gpio_irq_uninit(struct gpio_irq *irq);
 

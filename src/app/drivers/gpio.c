@@ -15,12 +15,14 @@ static int gpio_irq_func(struct gpio_irq *irq) {
 	fds.events = POLLPRI | POLLERR;
 	fds.revents = 0;
 
+	// Wait for irq
 	while (TRUE) {
 		ret = poll(&fds, 1, 0);
 		if (ret != 0) {
 			return ret;
 		}
 
+		// Call isr
 		if (irq->enabled && irq->callback) {
 			irq->callback(irq->context);
 		}
@@ -64,7 +66,7 @@ int gpio_init(struct gpio *gpio, enum gpio_bank bank) {
 		return -1;
 	}
 
-	// Do memory map
+	// Do memory map of registers
 	gpio->mmap_address = mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, startAddr);
 
 	// Don't need fd after mmap
@@ -159,15 +161,16 @@ int gpio_get_value(struct gpio *gpio, uint32_t reg, uint32_t *value) {
 	return 0;
 }
 
-int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, int pin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity) {
+int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity) {
 
-	int gpioNumber = gpio->bank * 32 + pin;
+	int gpioNumber = gpioPin->gpio->bank * 32 + gpioPin->pin;
 	int ret;
 	static char fileBuffer[256];
 	char *dirStr;
 	char *senStr;
 	char numStr[4];
 
+	// Set direction string
 	switch (direction) {
 	case GPIO_DIR_IN:
 		dirStr = "in";
@@ -180,6 +183,7 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, int pin, int (*callba
 		return -1;
 	}
 
+	// Set sensitivity string
 	switch (sensitivity) {
 	case GPIO_SEN_NONE:
 		senStr = "none";
@@ -232,20 +236,19 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio *gpio, int pin, int (*callba
 		return ret;
 	}
 
-	irq->gpio = gpio;
+	irq->gpioPin = *gpioPin;
 	irq->callback = callback;
 	irq->context = context;
 	irq->direction = direction;
 	irq->sensitivity = sensitivity;
 	irq->enabled = FALSE;
-	irq->pin = pin;
 
 	return 0;
 }
 
 int gpio_irq_uninit(struct gpio_irq *irq) {
 
-	int gpioNumber = irq->gpio->bank * 32 + irq->pin;
+	int gpioNumber = irq->gpioPin.gpio->bank * 32 + irq->gpioPin.pin;
 	int ret;
 	char numStr[4];
 

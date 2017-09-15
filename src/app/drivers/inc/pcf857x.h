@@ -13,6 +13,7 @@ enum pcf857x_pin_count {
 struct gpio_ext_irq;
 
 struct gpio_ext {
+	struct gpio_pin			gpioPin;
 	atomic uint16_t			values;
 	struct i2c				*i2c;
 	struct gpio_irq			irq;
@@ -20,9 +21,13 @@ struct gpio_ext {
 	struct gpio_ext_irq     *irqList[PCF857X_MAX_PINS];
 };
 
+struct gpio_ext_pin {
+	struct gpio_ext	*gpioExt;
+	unsigned int	pin;
+};
+
 struct gpio_ext_irq {
-	struct gpio_ext			*gpioExt;
-	int						pin;
+	struct gpio_ext_pin		gpioExtPin;
 	int						(*callback)(void *);
 	void					*context;
 	enum gpio_direction		direction;
@@ -30,14 +35,11 @@ struct gpio_ext_irq {
 	atomic bool				enabled;
 };
 
-struct gpio_ext_pin {
-	struct gpio_ext	*gpioExt;
-	unsigned int	pin;
-};
+#define PCF8575_PIN_INITIALIZER(intPin) { .gpioPin = intPin }
 
-#define GPIO_EXT_PIN_INITIALIZER(gpioExt, pin) { .gpioExt = gpioExt, .pin = pin }
+#define GPIO_EXT_PIN_INITIALIZER(gpioExtBank, pinNum) { .gpioExt = gpioExtBank, .pin = pinNum }
 
-int gpio_ext_init(struct gpio_ext *gpioExt, enum pcf857x_pin_count numPins, struct i2c *i2c, struct gpio *gpio, int pin);
+int gpio_ext_init(struct gpio_ext *gpioExt, enum pcf857x_pin_count numPins, struct i2c *i2c);
 
 int gpio_ext_uninit(struct gpio_ext *gpioExt);
 
@@ -53,7 +55,7 @@ int gpio_ext_get_bits(struct gpio_ext *gpioExt, uint16_t bits, uint16_t *value);
 
 int gpio_ext_get_value(struct gpio_ext *gpioExt, uint16_t *value);
 
-int gpio_ext_irq_init(struct gpio_ext_irq *extIrq, struct gpio_ext *gpioExt, int pin, int (*callback)(void *), void *context, int direction, int sensitivity);
+int gpio_ext_irq_init(struct gpio_ext_irq *extIrq, struct gpio_ext_pin *gpioExtPin, int (*callback)(void *), void *context, int direction, int sensitivity);
 
 int gpio_ext_irq_uninit(struct gpio_ext_irq *extIrq);
 

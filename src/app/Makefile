@@ -1,4 +1,4 @@
-CFILES += main.c utils.c aeffects.c control.c drivers/gpio.c drivers/i2c.c drivers/mt8809.c drivers/pcf857x.c
+CFILES += main.c utils.c aeffects.c control.c led_control.c button_control.c presence_control.c remote_control.c drivers/gpio.c drivers/i2c.c drivers/mt8809.c drivers/pcf857x.c
 CFLAGS += -std=gnu11 -ggdb -Wall -Iinc -Idrivers/inc -fPIC
 LFLAGS += -lpthread
 OUTDIR ?= .
@@ -17,4 +17,4 @@ aeffects: $(OUTDIR)/$(patsubst %.c,%.o,$(CFILES))
 
 .PHONY: clean
 clean: 
-	@rm $(OUTDIR)/$(patsubst %.c,$(OUTDIR)/%.o,$(CFILES)) $(OUTDIR)/aeffects $(OUTDIR)/aeffects.so
+	@rm -f $(OUTDIR)/$(patsubst %.c,$(OUTDIR)/%.o,$(CFILES)) $(OUTDIR)/aeffects $(OUTDIR)/aeffects.so
