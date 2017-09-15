@@ -26,7 +26,13 @@ struct led_control {
 
 int led_control_init(struct led_control *leds, bool ledOn[AE_LED_COUNT]);
 
-int led_control_update(struct led_control *leds, enum ae_led ledPin, bool ledOn);
+int led_control_set(struct led_control *leds, enum ae_led ledPin, bool ledOn);
+
+int led_control_set_all(struct led_control *leds, bool ledOn[AE_LED_COUNT]);
+
+int led_control_get(struct led_control *leds, enum ae_led ledPin, bool *ledOn);
+
+int led_control_get_all(struct led_control *leds, bool ledOn[AE_LED_COUNT]);
 
 int led_control_uninit(struct led_control *leds);
 

@@ -48,7 +48,6 @@ struct mt8809 {
 									} \
 								}
 
-
 int mt8809_init(struct mt8809 *mt8809);
 
 int mt8809_uninit(struct mt8809 *mt8809);

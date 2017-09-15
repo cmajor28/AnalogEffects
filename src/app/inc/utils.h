@@ -21,6 +21,9 @@
 #define min(a, b) ((a) < (b) ? (a) : (b))
 #define max(a, b) ((a) < (b) ? (b) : (a))
 
+#define log2(val) (8*sizeof(val) - __builtin_clzll(val) - 1)
+#define pow2(val) ((uint64_t)1 << (val))
+
 enum time_units {
 	SECONDS      = 1,
 	MILLISECONDS = 1000,

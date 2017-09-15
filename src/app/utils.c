@@ -5,6 +5,7 @@ static int timer_thread_func(struct timer *timer) {
 	int ret;
 
 	do {
+		// Sleep for timer duration
 		ret = sleep2(timer->units, timer->duration);
 		if (ret != 0) {
 			return ret;
@@ -15,6 +16,7 @@ static int timer_thread_func(struct timer *timer) {
 			return -1;
 		}
 
+		// Fire timer
 		timer->enabled = !timer->singleShot;
 		timer->callback(timer->context);
 
@@ -115,6 +117,7 @@ int timer_enable(struct timer *timer, bool enable) {
 	int ret;
 
 	if (enable) {
+		// Create timer thread
 		ret = pthread_create(&timer->timerThread, NULL, (void *(*)(void *))&timer_thread_func, (void *)timer);
 		if (ret != 0) {
 			return -1;
@@ -124,6 +127,7 @@ int timer_enable(struct timer *timer, bool enable) {
 		if (ret != 0) {
 			return -1;
 		}
+		// Kill timer thread
 		ret = pthread_cancel(timer->timerThread);
 		pthread_mutex_unlock(&timer->callbackMutex);
 		if (ret != 0) {

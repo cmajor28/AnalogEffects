@@ -23,7 +23,7 @@ extern struct gpio gGPIOBanks[GPIO_COUNT];
 extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 
 #define GPIO_EXT_LEDS_INIT()																					\
-		PCF8575_PIN_INITIALIZER(GPIO_PIN_INITIALIZER(NULL, -1))					  /* int (no pin connected) */
+		PCF8575_PIN_INITIALIZER(GPIO_PIN_INITIALIZER(NULL, -1))					/* int (no pin connected) */
 
 #define GPIO_EXT_PRESENCE_INIT()															\
 		PCF8575_PIN_INITIALIZER(GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO3], 21))	/* int */
@@ -102,15 +102,10 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 #define BYPASS_PINS_INIT()											\
 		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO1], 17)	/* en */
 
-// TODO
-#define MUTE_PINS_INIT()											\
-		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO0], 0)		/* en */
-
-// TODO
 #define CONTROL_PINS_INIT()											\
 {																	\
-		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO0], 0),	/* en_a */	\
-		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO0], 0)	  	/* en_a */	\
+		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO3], 14),	/* en_a */	\
+		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO3], 16)	/* en_a */	\
 }
 
 #endif // PINS_H_

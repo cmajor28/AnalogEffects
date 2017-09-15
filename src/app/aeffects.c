@@ -45,6 +45,11 @@ int aeffects_uninit() {
 
 	int ret;
 
+	ret = pthread_mutex_lock(&gPresetsMutex);
+	if (ret != 0) {
+		return -1;
+	}
+
 	// Uninitialize control
 	ret = control_uninit();
 	if (ret != 0) {
@@ -55,6 +60,7 @@ int aeffects_uninit() {
 	memset(gPresets, 0, sizeof(gPresets));
 
 	// Destroy mutex
+	pthread_mutex_unlock(&gPresetsMutex);
 	pthread_mutex_destroy(&gPresetsMutex);
 
 	return 0;

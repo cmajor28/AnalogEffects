@@ -6,6 +6,7 @@ static int gpio_ext_write(struct gpio_ext *gpioExt, uint16_t values) {
 	int ret;
 	char bytes[2] = { values & 0xFF , values >> 8 };
 
+	// Function is not reinterant
 	ret = pthread_mutex_lock(&funcMutex);
 	if (ret != 0) {
 		return ret;
@@ -32,6 +33,7 @@ static int gpio_ext_read(struct gpio_ext *gpioExt) {
 	uint16_t values;
 	int old, new;
 
+	// Function is not reinterant
 	ret = pthread_mutex_lock(&funcMutex);
 	if (ret != 0) {
 		return ret;

@@ -13,7 +13,6 @@ struct ae_config {
 	bool				pedalMode;
 	int					currBank;
 	struct ae_preset	currPreset;
-	bool				enabled[AE_MAX_EFFECTS];
 };
 
 enum {

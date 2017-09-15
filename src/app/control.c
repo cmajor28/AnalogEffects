@@ -21,27 +21,35 @@ struct led_control gLedControl = LED_PINS_INIT();
 struct presence_control gPresenceControl = PRESENCE_PINS_INIT();
 struct button_control gButtonControl = BUTTON_PINS_INIT();
 struct gpio_pin gBypassSwitch = BYPASS_PINS_INIT();
-struct gpio_pin gMuteSwitch = MUTE_PINS_INIT();
 struct gpio_pin gControlSwitch[2] = CONTROL_PINS_INIT();
 
 // I2C interfaces
 struct i2c gI2C[GPIO_EXT_COUNT];
 
-static int apply_bypass(bool bypass, struct gpio_pin *bypassSwitch) {
+static int leds_set_one_hot(enum ae_led led) {
 
 	int ret;
-	ret = gpio_pin_set_value(bypassSwitch, !bypass); // Bypass active low
+	bool ledOneHot[AE_LED_COUNT] = { 0 };
+	ledOneHot[led] = TRUE;
+	ret = led_control_set_all(&gLedControl, ledOneHot);
 	return ret;
 }
 
-static int apply_mute(bool mute, struct gpio_pin *muteSwitch) {
+static int leds_set(enum ae_led led, bool value) {
 
 	int ret;
-	ret = gpio_pin_set_value(muteSwitch, !mute); // Mute active low
+	ret = led_control_set(&gLedControl, led, value);
 	return ret;
 }
 
-static int apply_control(bool control[2], struct gpio_pin gControlSwitch[2]) {
+static int apply_bypass(bool bypass) {
+
+	int ret;
+	ret = gpio_pin_set_value(&gBypassSwitch, !bypass); // Bypass active low
+	return ret;
+}
+
+static int apply_control(bool control[2]) {
 
 	int ret = 0;
 	ret |= gpio_pin_set_value(&gControlSwitch[TIP], !control[TIP]); // Control is active low
@@ -49,9 +57,10 @@ static int apply_control(bool control[2], struct gpio_pin gControlSwitch[2]) {
 	return ret;
 }
 
-static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabled[AE_MAX_EFFECTS], bool presenceDetect[AE_MAX_EFFECTS][2], struct mt8809 *mt8809) {
+static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabled[AE_MAX_EFFECTS], bool presenceDetect[AE_MAX_EFFECTS][2], bool mute) {
 
 	static uint64_t lastSwitchSet = 0;
+	static bool lastMute = FALSE;
 
 	int ret;
 	uint64_t switchSet = 0;
@@ -76,15 +85,39 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 	// Route last input to output
 	switchSet |= ((uint64_t)1 << lastInput);
 
-	// Only program the switch if a change has been made
-	if (switchSet != lastSwitchSet) {
-		// Set switches on mt8809
-		ret = mt8809_set_switches(mt8809, switchSet);
+	// Calculate switch sets with input disconnected for mute
+	uint64_t switchSetNoInput = switchSet & 0x0101010101010101;
+	uint64_t lastSwitchSetNoInput = lastSwitchSet & 0x0101010101010101;
+
+	if (lastMute && !mute && (switchSetNoInput == lastSwitchSetNoInput)) { // We are unmuting only
+		// Route input on mt8809
+		ret = mt8809_set_switch(&gSwitchMatrix, log2(switchSetNoInput), 0x1);
 		if (ret != 0) {
-			return -1;
+			return ret;
+		}
+	} else if (!lastMute && mute && (switchSetNoInput == lastSwitchSetNoInput)) { // We are muting only
+		// Unroute input on mt8809
+		ret = mt8809_set_switch(&gSwitchMatrix, log2(lastSwitchSetNoInput), 0x0);
+		if (ret != 0) {
+			return ret;
+		}
+	} else if (switchSet != lastSwitchSet) { // Only program the switch if a change has been made
+		// Apply mute to switch set
+		if (mute) {
+			switchSet = switchSetNoInput;
+		}
+
+		// Reset switch (break-before make)
+		mt8809_reset(&gSwitchMatrix);
+
+		// Set switches on mt8809
+		ret = mt8809_set_switches(&gSwitchMatrix, switchSet);
+		if (ret != 0) {
+			return ret;
 		}
 	}
 
+	lastMute = mute;
 	lastSwitchSet = switchSet;
 
 	return 0;
@@ -94,15 +127,19 @@ static int load_preset(int bank, int preset) {
 
 	int ret;
 
+	// Lock preset mutex
 	ret = pthread_mutex_lock(&gPresetsMutex);
 	if (ret != 0) {
 		return -1;
 	}
 
+	// Load preset into config
 	memcpy(&gConfig->currPreset, &gPresets[bank][preset], sizeof(gConfig->currPreset));
 	pthread_mutex_unlock(&gPresetsMutex);
-	ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, &gSwitchMatrix);
-	ret |= apply_control(gConfig->currPreset.controlEnabled, gControlSwitch);
+
+	// Apply the preset to hardware
+	ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, gConfig->muteEnabled);
+	ret |= apply_control(gConfig->currPreset.controlEnabled);
 
 	return ret;
 }
@@ -121,9 +158,10 @@ static int handle_button_pressed_event(enum ae_button button) {
 		case AE_BUTTON_B6:
 		case AE_BUTTON_B7:
 		case AE_BUTTON_B8:
+			// Toggle pedal enabled
 			gConfig->currPreset.enabled[button] = !gConfig->currPreset.enabled[button];
-			led_control_update(&gLedControl, button, gConfig->currPreset.enabled[button]);
-			ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, &gSwitchMatrix);
+			leds_set(button, gConfig->currPreset.enabled[button]);
+			ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, gConfig->muteEnabled);
 			if (ret != 0) {
 				return -1;
 			}
@@ -131,9 +169,10 @@ static int handle_button_pressed_event(enum ae_button button) {
 			break;
 		case AE_BUTTON_BU:
 		case AE_BUTTON_BD:
+			// Toggle control enabled
 			gConfig->controlEnabled[button-AE_BUTTON_BU] = !gConfig->controlEnabled[button-AE_BUTTON_BU];
-			led_control_update(&gLedControl, button, gConfig->currPreset.controlEnabled[button-AE_BUTTON_BU]);
-			ret = apply_control(gConfig->controlEnabled, gControlSwitch);
+			leds_set(button, gConfig->currPreset.controlEnabled[button-AE_BUTTON_BU]);
+			ret = apply_control(gConfig->controlEnabled);
 			if (ret != 0) {
 				return -1;
 			}
@@ -150,23 +189,24 @@ static int handle_button_pressed_event(enum ae_button button) {
 		case AE_BUTTON_B5:
 		case AE_BUTTON_B6:
 		case AE_BUTTON_B7:
-			led_control_update(&gLedControl, button, TRUE);
+		case AE_BUTTON_B8:
+			// Load new preset
+			leds_set_one_hot(button);
 			ret = load_preset(gConfig->currBank, button);
 			if (ret != 0) {
 				return ret;
 			}
-			ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, &gSwitchMatrix);
+			ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, gConfig->muteEnabled);
 			if (ret != 0) {
 				return -1;
 			}
 			break;
-		case AE_BUTTON_B8:
-			// TODO In the future, this could be a store preset button
-			break;
 		case AE_BUTTON_BU:
+			// Increment bank
 			gConfig->currBank = (gConfig->currBank + 1) % AE_BANK_COUNT;
 			break;
 		case AE_BUTTON_BD:
+			// Decrement bank
 			gConfig->currBank = (gConfig->currBank + AE_BANK_COUNT - 1) % AE_BANK_COUNT;
 			break;
 		default:
@@ -189,7 +229,7 @@ static int handle_button_held_event(enum ae_button button) {
 	case AE_BUTTON_BU:
 		// Toggle bypass
 		gConfig->bypassEnabled = !gConfig->bypassEnabled;
-		ret = apply_bypass(gConfig->bypassEnabled, &gBypassSwitch);
+		ret = apply_bypass(gConfig->bypassEnabled);
 		if (ret != 0) {
 			return ret;
 		}
@@ -197,7 +237,7 @@ static int handle_button_held_event(enum ae_button button) {
 	case AE_BUTTON_BD:
 		// Toggle mute
 		gConfig->muteEnabled = !gConfig->muteEnabled;
-		ret = apply_mute(gConfig->muteEnabled, &gMuteSwitch);
+		ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, gConfig->muteEnabled);
 		if (ret != 0) {
 			return ret;
 		}
@@ -220,8 +260,13 @@ static int presence_control_update(void *context, enum ae_presence jack, bool pr
 		return -1;
 	}
 
-	gPresenceDetect[jack/2][jack%2] = presence;
-	ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, &gSwitchMatrix);
+	gPresenceDetect[jack/2][jack%2] = presence; // gPresenceDetect is a [X][2] array while presence is indexing [X*2]
+
+	// Apply new switch parameters if needed
+	ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, gConfig->muteEnabled);
+	if (ret != 0) {
+		return ret;
+	}
 
 	pthread_mutex_unlock(&gConfigMutex);
 
@@ -353,35 +398,21 @@ int control_init() {
 		return -1;
 	}
 
-	// Apply configuration
-	if (gConfig->pedalMode) {
-		// Apply bypass
-		ret = apply_bypass(gConfig->bypassEnabled, &gBypassSwitch);
-		if (ret != 0) {
-			pthread_mutex_unlock(&gConfigMutex);
-			return -1;
-		}
+	// Set bypass
+	ret = apply_bypass(gConfig->bypassEnabled);
+	if (ret != 0) {
+		pthread_mutex_unlock(&gConfigMutex);
+		return -1;
+	}
 
-		// Apply switch configuration
-		ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->enabled, gPresenceDetect, &gSwitchMatrix);
-		if (ret != 0) {
-			pthread_mutex_unlock(&gConfigMutex);
-			return -1;
-		}
-	} else {
-		// Disable bypass
-		ret = apply_bypass(FALSE, NULL);
-		if (ret != 0) {
-			pthread_mutex_unlock(&gConfigMutex);
-			return -1;
-		}
+	// Set control
+	ret = apply_control(gConfig->controlEnabled);
 
-		// Apply switch configuration
-		ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, &gSwitchMatrix);
-		if (ret != 0) {
-			pthread_mutex_unlock(&gConfigMutex);
-			return -1;
-		}
+	// Apply switch configuration
+	ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, gConfig->muteEnabled);
+	if (ret != 0) {
+		pthread_mutex_unlock(&gConfigMutex);
+		return -1;
 	}
 
 	bool ledOn[AE_LED_COUNT] = { 0 };
@@ -391,7 +422,7 @@ int control_init() {
 		ledOn[AE_LED_BU] = gConfig->controlEnabled[TIP];
 		ledOn[AE_LED_BD] = gConfig->controlEnabled[RING];
 		for (int i = 0; i < AE_MAX_EFFECTS; i++) {
-			ledOn[i] = gConfig->enabled[i];
+			ledOn[i] = gConfig->currPreset.enabled[i];
 		}
 	} else {
 		ledOn[gConfig->currPreset.preset] = TRUE;
