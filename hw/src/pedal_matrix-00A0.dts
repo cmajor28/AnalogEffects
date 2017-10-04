@@ -1,0 +1,119 @@
+/dts-v1/;
+/plugin/;
+
+#include <am335x-bbw-bbb-base.h>
+#include <gpio.h>
+#include <am33xx.h>
+
+/{
+    compatible = "ti,beaglebone", "ti,beaglebone-black";
+    part_number = "pedal_matrix";
+
+    exclusive-use =
+    
+        "P9.17",    /* I2C1_SDA */
+        "P9.18",    /* I2C1_SCL */
+        "i2c1",     /* PCF8575 I2C */
+    
+        "P9.26",    /* GPIO1_29 */
+        "gpio3_21", /* PCF8575 INT Presence */
+	
+        /* TODO: Change this to GPIO1_0 (P9.25) */ 
+        "P9.24",    /* GPIO1_1 */
+        "gpio1_1",	/* PCF8575 INT Buttons */
+
+        "P8.23",    /* GPIO1_4 */
+        "gpio1_4",  /* MT8809 RESET */
+
+        "P8.18",    /* GPIO2_1 */
+        "gpio2_1",  /* MT8809 CS */
+
+        "P8.14",    /* GPIO0_26 */
+        "gpio0_26", /* MT8809 STROBE */
+
+        "P8.16",    /* GPIO1_14 */
+        "gpio1_14", /* MT8809 DATA */
+
+        "P8.19",    /* GPIO0_22 */
+        "gpio0_22", /* MT8809 AX0 */
+
+        "P8.17",    /* GPIO0_17 */
+        "gpio0_27", /* MT8809 AX1 */
+
+        "P8.15",    /* GPIO1_15 */
+        "gpio1_15", /* MT8809 AX2 */
+
+        "P8.11",    /* GPIO1_13 */
+        "gpio1_13", /* MT8809 AY0 */
+
+        "P8.13",    /* GPIO0_23 */
+        "gpio0_23"  /* MT8809 AY1 */
+         
+        "P8.12",    /* GPIO1_12 */
+        "gpio1_12", /* MT8809 AY2 */
+        
+        "P9.42",    /* GPIO0_7 */
+        "gpio0_7"   /* EN TIP */
+         
+        /* TODO: Change this to GPIO0_20 (P9.41) */ 
+        "P9.30",    /* GPIO3_16 */
+        "gpio3_16"; /* EN RING */
+
+    fragment@0 {
+        target = <&am33xx_pinmux>;
+        __overlay__ {
+            bb_i2c1_pins: pinmux_bb_i2c1_pins {
+                pinctrl-single,pins = <
+                    BONE_P9_17 (SLEWCTRL_SLOW | INPUT_PULLUP | MODE3) /* i2c1_sda */
+                    BONE_P9_18 (SLEWCTRL_SLOW | INPUT_PULLUP | MODE3) /* i2c1_scl */
+                >;
+            };
+
+            bb_mt8809_pins: pinmux_bb_mt8809_pins {
+                pinctrl-single,pins = <
+                    BONE_P8_23 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 reset */
+                    BONE_P8_18 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 cs */
+                    BONE_P8_14 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 strobe */
+                    BONE_P8_16 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 data */
+                    BONE_P8_19 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 ax0 */
+                    BONE_P8_17 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 ax1 */
+                    BONE_P8_15 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 ax2 */
+                    BONE_P8_11 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 ay0 */
+                    BONE_P8_13 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 ay1 */
+                    BONE_P8_12 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 ay2 */
+                >;            
+            };
+
+            bb_pcf8575_presence_pins: pinmux_bb_pcf8575_presence_pins {
+                pinctrl-single,pins = <
+                    BONE_P9_26 (SLEWCTRL_FAST | INPUT_PULLUP | MODE7) /* pcf8575 int */
+                };
+            };
+
+            bb_pcf8575_button_pins: pinmux_bb_pcf8575_button_pins {
+                pinctrl-single,pins = <
+                    BONE_P9_24 (SLEWCTRL_FAST | INPUT_PULLUP | MODE7) /* pcf8575 int */
+                };
+            };
+
+            bb_ext_control_pins: pinmux_ext_control_pins {
+                pinctrl-single,pins = <
+                    BONE_P9_42 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* en tip */
+                    BONE_P9_30 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* en ring */
+                };
+            };
+        };
+    };
+
+    fragment@1 {
+        target = <&i2c1>;
+        __overlay__ {
+            status = "okay";
+            pinctrl-names = "default";
+            pinctrl-0 = <&bb_i2c1_pins>;
+            clock-frequency = <100000>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+        };
+    };
+};
