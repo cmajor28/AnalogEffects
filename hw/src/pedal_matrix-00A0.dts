@@ -1,10 +1,6 @@
 /dts-v1/;
 /plugin/;
 
-#include <am335x-bbw-bbb-base.h>
-#include <gpio.h>
-#include <am33xx.h>
-
 /{
     compatible = "ti,beaglebone", "ti,beaglebone-black";
     part_number = "pedal_matrix";
@@ -47,13 +43,13 @@
         "gpio1_13", /* MT8809 AY0 */
 
         "P8.13",    /* GPIO0_23 */
-        "gpio0_23"  /* MT8809 AY1 */
+        "gpio0_23", /* MT8809 AY1 */
          
         "P8.12",    /* GPIO1_12 */
         "gpio1_12", /* MT8809 AY2 */
         
         "P9.42",    /* GPIO0_7 */
-        "gpio0_7"   /* EN TIP */
+        "gpio0_7",  /* EN TIP */
          
         /* TODO: Change this to GPIO0_20 (P9.41) */ 
         "P9.30",    /* GPIO3_16 */
@@ -64,43 +60,43 @@
         __overlay__ {
             bb_i2c1_pins: pinmux_bb_i2c1_pins {
                 pinctrl-single,pins = <
-                    BONE_P9_17 (SLEWCTRL_SLOW | INPUT_PULLUP | MODE3) /* i2c1_sda */
-                    BONE_P9_18 (SLEWCTRL_SLOW | INPUT_PULLUP | MODE3) /* i2c1_scl */
+                    0x15C 0x72 /* BONE_P9_17 (SLEWCTRL_SLOW | INPUT_PULLUP | MODE3) */
+                    0x158 0x72 /* BONE_P9_18 (SLEWCTRL_SLOW | INPUT_PULLUP | MODE3) */
                 >;
             };
 
             bb_mt8809_pins: pinmux_bb_mt8809_pins {
                 pinctrl-single,pins = <
-                    BONE_P8_23 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 reset */
-                    BONE_P8_18 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 cs */
-                    BONE_P8_14 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 strobe */
-                    BONE_P8_16 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 data */
-                    BONE_P8_19 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 ax0 */
-                    BONE_P8_17 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 ax1 */
-                    BONE_P8_15 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 ax2 */
-                    BONE_P8_11 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 ay0 */
-                    BONE_P8_13 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 ay1 */
-                    BONE_P8_12 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* mt8809 ay2 */
+                    0x034 0x17 /* BONE_P8_23 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                    0x08C 0x17 /* BONE_P8_18 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                    0x028 0x17 /* BONE_P8_14 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                    0x038 0x17 /* BONE_P8_16 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                    0x020 0x17 /* BONE_P8_19 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                    0x02C 0x17 /* BONE_P8_17 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                    0x03C 0x17 /* BONE_P8_15 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                    0x034 0x17 /* BONE_P8_11 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                    0x024 0x17 /* BONE_P8_13 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                    0x030 0x17 /* BONE_P8_12 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
                 >;            
             };
 
             bb_pcf8575_presence_pins: pinmux_bb_pcf8575_presence_pins {
                 pinctrl-single,pins = <
-                    BONE_P9_26 (SLEWCTRL_FAST | INPUT_PULLUP | MODE7) /* pcf8575 int */
-                };
+                    0x180 0x37 /* BONE_P9_26 (SLEWCTRL_FAST | INPUT_PULLUP | MODE7) */
+                >;
             };
 
             bb_pcf8575_button_pins: pinmux_bb_pcf8575_button_pins {
                 pinctrl-single,pins = <
-                    BONE_P9_24 (SLEWCTRL_FAST | INPUT_PULLUP | MODE7) /* pcf8575 int */
-                };
+                    0x184 0x37 /* BONE_P9_24 (SLEWCTRL_FAST | INPUT_PULLUP | MODE7) */
+                >;
             };
 
             bb_ext_control_pins: pinmux_ext_control_pins {
                 pinctrl-single,pins = <
-                    BONE_P9_42 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* en tip */
-                    BONE_P9_30 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) /* en ring */
-                };
+                    0x164 0x17 /* BONE_P9_42 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                    0x198 0x17 /* BONE_P9_30 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                >;
             };
         };
     };
