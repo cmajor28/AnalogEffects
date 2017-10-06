@@ -39,7 +39,7 @@ const unsigned long gDisplayTime = 2000;
 
 // Pins used
 const int gRotaryPin = A0;
-const int gButtonPins[BUTTON_COUNT] = { 0, 1 };
+const int gButtonPins[BUTTON_COUNT] = { A1, A2 };
 const int gDisplayPins[SEGMENT_COUNT] =  { 2, 3, 5, 6, 9, 10, 11 };
 
 /* ...hardware SPI, using SCK/MOSI/MISO hardware SPI pins and then user selected CS/IRQ/RST */
@@ -100,43 +100,43 @@ int updateDisplay(int digit, unsigned long displayTime, int displayPins[SEGMENT_
   // Get 7 segment display bitmap
   switch (lastDigit) {
     case 0: {
-      displayBitMap = 0x3F;
+      displayBitMap = ~0x3F;
     }
     case 1: {
-      displayBitMap = 0x06;
+      displayBitMap = ~0x06;
     }
     case 2: {
-      displayBitMap = 0x5B;
+      displayBitMap = ~0x5B;
     }
     case 3: {
-      displayBitMap = 0x4F;
+      displayBitMap = ~0x4F;
     }
     case 4: {
-      displayBitMap = 0x66;
+      displayBitMap = ~0x66;
     }
     case 5: {
-      displayBitMap = 0x6D;
+      displayBitMap = ~0x6D;
     }
     case 6: {
-      displayBitMap = 0x7D;
+      displayBitMap = ~0x7D;
     }
     case 7: {
-      displayBitMap = 0x07;
+      displayBitMap = ~0x07;
     }
     case 8: {
-      displayBitMap = 0x7F;
+      displayBitMap = ~0x7F;
     }
     case 9: {
-      displayBitMap = 0x6F;
+      displayBitMap = ~0x6F;
     }
     default: {
-      displayBitMap = 0x00;
+      displayBitMap = ~0x00;
     }
   }
 
   // Set outputs
   for (int i = 0; i < 7; i++) {
-    digitalWrite(displayPins[i], (displayBitMap >> i) & 0x01);
+    digitalWrite(displayPins[i], (displayBitMap >> i) & 0x1);
   }
 
   return digit;
@@ -206,10 +206,6 @@ void setup()
   Serial.println("Requesting Bluefruit info:");
   /* Print Bluefruit information */
   ble.info();
-
-  Serial.println(F("Please use Adafruit Bluefruit LE app to connect in UART mode"));
-  Serial.println(F("Then Enter characters to send to Bluefruit"));
-  Serial.println();
 
   ble.verbose(false);  // debug info is a little annoying after this point!
 
