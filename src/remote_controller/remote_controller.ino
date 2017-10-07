@@ -51,38 +51,24 @@ void error(const __FlashStringHelper*err) {
   while (1);
 }
 
-// Debounce inputs
-int debounce(int currValue, int *lastValue, unsigned long *lastDebounceTime, const unsigned long debounceDelay) {
-
-  // If the switch changed, due to noise or pressing:
-  if (currValue != *lastValue) {
-    // reset the debouncing timer
-    *lastDebounceTime = millis();
-  }
-
-  // The debounce time has elapsed
-  if ((millis() - *lastDebounceTime) > debounceDelay) {
-    return currValue;
-  }
-
-  return *lastValue;
-}
-
 // Get rotary switch position
 int getRotaryPosition(int value) {
 
+  // TODO switch is backwards so swap ADC values
+  value = 1024 - value;
+
   int bin;
-  bin = 8 * (value - 1024/8/2) / 1024;
+  bin = 7 * (value + 1024/7/2) / 1024;
   bin = bin < 0 ? 0 : bin;
   return bin;
 }
 
 // Update 7 segment display
-int updateDisplay(int digit, unsigned long displayTime, int displayPins[SEGMENT_COUNT]) {
+int updateDisplay(char digit, unsigned long displayTime, int displayPins[SEGMENT_COUNT]) {
 
   static unsigned long lastDisplayTime = 0;
   static unsigned long lastStartTime = 0;
-  static int lastDigit = -1;
+  static char lastDigit = -1;
   int displayBitMap;
 
   if (millis() > (lastStartTime + lastDisplayTime)) {
@@ -90,7 +76,7 @@ int updateDisplay(int digit, unsigned long displayTime, int displayPins[SEGMENT_
     lastDigit = -1;
   }
 
-  if (digit >= 0 && digit <= 9) {
+  if ((digit >= '0' && digit <= '9') || (digit >= 'a' && digit <= 'z')) {
     // New digit to display
     lastDigit = digit;
     lastStartTime = millis();
@@ -99,38 +85,163 @@ int updateDisplay(int digit, unsigned long displayTime, int displayPins[SEGMENT_
 
   // Get 7 segment display bitmap
   switch (lastDigit) {
-    case 0: {
+    case '0': {
       displayBitMap = ~0x3F;
+      break;
     }
-    case 1: {
+    case '1': {
       displayBitMap = ~0x06;
+      break;
     }
-    case 2: {
+    case '2': {
       displayBitMap = ~0x5B;
+      break;
     }
-    case 3: {
+    case '3': {
       displayBitMap = ~0x4F;
+      break;
     }
-    case 4: {
+    case '4': {
       displayBitMap = ~0x66;
+      break;
     }
-    case 5: {
+    case '5': {
       displayBitMap = ~0x6D;
+      break;
     }
-    case 6: {
+    case '6': {
       displayBitMap = ~0x7D;
+      break;
     }
-    case 7: {
+    case '7': {
       displayBitMap = ~0x07;
+      break;
     }
-    case 8: {
+    case '8': {
       displayBitMap = ~0x7F;
+      break;
     }
-    case 9: {
+    case '9': {
       displayBitMap = ~0x6F;
+      break;
+    }
+    case 'a': {
+      displayBitMap = ~0x77;
+      break;
+    }
+    case 'b': {
+      displayBitMap = ~0x7C;
+      break;
+    }
+    case 'c': {
+      displayBitMap = ~0x39;
+      break;
+    }
+    case 'd': {
+      displayBitMap = ~0x5E;
+      break;
+    }
+    case 'e': {
+      displayBitMap = ~0x79;
+      break;
+    }
+    case 'f': {
+      displayBitMap = ~0x71;
+      break;
+    }
+    case 'g': {
+      displayBitMap = ~0x6F;
+      break;
+    }
+    case 'h': {
+      displayBitMap = ~0x76;
+      break;
+    }
+    case 'i': {
+      displayBitMap = ~0x06;
+      break;
+    }
+    case 'j': {
+      displayBitMap = ~0x0E;
+      break;
+    }
+    case 'k': {
+      displayBitMap = ~0x70;
+      break;
+    }
+    case 'l': {
+      displayBitMap = ~0x38;
+      break;
+    }
+    case 'm': {
+      displayBitMap = ~0x55;
+      break;
+    }
+    case 'n': {
+      displayBitMap = ~0x54;
+      break;
+    }
+    case 'o': {
+      displayBitMap = ~0x5C;
+      break;
+    }
+    case 'p': {
+      displayBitMap = ~0x73;
+      break;
+    }
+    case 'q': {
+      // TODO
+      displayBitMap = ~0x7F;
+      break;
+    }
+    case 'r': {
+      // TODO
+      displayBitMap = ~0x7F;
+      break;
+    }
+    case 's': {
+      // TODO
+      displayBitMap = ~0x7F;
+      break;
+    }
+    case 't': {
+      // TODO
+      displayBitMap = ~0x7F;
+      break;
+    }
+    case 'u': {
+      // TODO
+      displayBitMap = ~0x7F;
+      break;
+    }
+    case 'v': {
+      // TODO
+      displayBitMap = ~0x7F;
+      break;
+    }
+    case 'w': {
+      // TODO
+      displayBitMap = ~0x7F;
+      break;
+    }
+    case 'x': {
+      // TODO
+      displayBitMap = ~0x7F;
+      break;
+    }
+    case 'y': {
+      // TODO
+      displayBitMap = ~0x7F;
+      break;
+    }
+    case 'z': {
+      // TODO
+      displayBitMap = ~0x7F;
+      break;
     }
     default: {
       displayBitMap = ~0x00;
+      break;
     }
   }
 
@@ -209,10 +320,10 @@ void setup()
 
   ble.verbose(false);  // debug info is a little annoying after this point!
 
-  /* Wait for connection */
-  while (!ble.isConnected()) {
-      delay(500);
-  }
+//  /* Wait for connection */
+//  while (!ble.isConnected()) {
+//      delay(500);
+//  }
 
   Serial.println(F("******************************"));
 
@@ -239,7 +350,7 @@ void setup()
 
 void loop() 
 {
-  static int lastButtonState[BUTTON_COUNT] = { LOW, LOW };
+  static int lastButtonState[BUTTON_COUNT] = { HIGH, HIGH };
   static int lastRotaryPosition = -1;
   
   static unsigned long lastButtonDebounceTime[BUTTON_COUNT] = { 0 };
@@ -268,47 +379,47 @@ void loop()
   int buttonState[BUTTON_COUNT];
   int currBank = lastBank;
   int currPreset = lastPreset;
-
+  
   // Get button states
-  rotaryPosition = debounce(getRotaryPosition(analogRead(gRotaryPin)), &lastRotaryPosition, &lastRotaryDebounceTime, gDebounceDelay);
-  buttonState[BUTTON_UP] = debounce(digitalRead(gButtonPins[BUTTON_UP]), &lastButtonState[BUTTON_UP], &lastButtonDebounceTime[BUTTON_UP], gDebounceDelay);
-  buttonState[BUTTON_DOWN] = debounce(digitalRead(gButtonPins[BUTTON_DOWN]), &lastButtonState[BUTTON_DOWN], &lastButtonDebounceTime[BUTTON_DOWN], gDebounceDelay);
-
+  rotaryPosition = getRotaryPosition(analogRead(gRotaryPin));
+  buttonState[BUTTON_UP] = digitalRead(gButtonPins[BUTTON_UP]);
+  buttonState[BUTTON_DOWN] = digitalRead(gButtonPins[BUTTON_DOWN]);
+  
   // If rotary switch has changed position
   if (rotaryPosition != lastRotaryPosition) {
-    lastRotaryPosition = rotaryPosition;
     currPreset = rotaryPosition + 1;
     Serial.println("Rotary switch position changed to " + String(rotaryPosition) + ".");
   }
+  lastRotaryPosition = rotaryPosition;
 
   // If bank up has been pressed
   if (buttonState[BUTTON_UP] == LOW && lastButtonState[BUTTON_UP] == HIGH) {
-    lastButtonState[BUTTON_UP] = buttonState[BUTTON_UP];
     currBank = (currBank - 1 + 1) % 16 + 1;
     Serial.println("BUTTON_UP has been pressed.");
   }
-
+  lastButtonState[BUTTON_UP] = buttonState[BUTTON_UP];
+  
   // If bank down has been pressed
   if (buttonState[BUTTON_DOWN] == LOW && lastButtonState[BUTTON_DOWN] == HIGH) {
-    lastButtonState[BUTTON_DOWN] = buttonState[BUTTON_DOWN];
     currBank = (currBank - 1 + 16 - 1) % 16 + 1;
     Serial.println("BUTTON_DOWN has been pressed.");
   }
+  lastButtonState[BUTTON_DOWN] = buttonState[BUTTON_DOWN];
 
   // Update 7 segment display to see if done
   updateDisplay(-1, 0, gDisplayPins);
 
   if (currPreset != lastPreset) {
-    jsonMessageOut = jsonMessageOut + ",\"preset\"=" + currPreset;
+    jsonMessageOut = jsonMessageOut + ",\"preset\":" + currPreset;
     lastPreset = currPreset;
-    updateDisplay(currPreset, gDisplayTime, gDisplayPins);
+    updateDisplay('1' - 1 + currPreset, gDisplayTime, gDisplayPins);
     Serial.println("Current preset changed to " + String(currPreset) + ".");
   }
 
   if (currBank != lastBank) {
-    jsonMessageOut = jsonMessageOut + ",\"bank\"=" + currBank;
+    jsonMessageOut = jsonMessageOut + ",\"bank\":" + currBank;
     lastBank = currBank;
-    updateDisplay(currBank, gDisplayTime, gDisplayPins);
+    updateDisplay('a' - 1 + currBank, gDisplayTime, gDisplayPins);
     Serial.println("Current bank changed to " + String(currBank) + ".");
   }
 

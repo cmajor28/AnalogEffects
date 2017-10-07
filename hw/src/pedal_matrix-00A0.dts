@@ -11,11 +11,11 @@
         "P9.18",    /* I2C1_SCL */
         "i2c1",     /* PCF8575 I2C */
     
-        "P9.26",    /* GPIO1_29 */
-        "gpio3_21", /* PCF8575 INT Presence */
+        "P8.26",    /* GPIO1_29 */
+        "gpio1_29", /* PCF8575 INT Presence */
 	
-        /* TODO: Change this to GPIO1_0 (P9.25) */ 
-        "P9.24",    /* GPIO1_1 */
+        /* TODO: Change this to GPIO1_0 (P8.25) */ 
+        "P8.24",    /* GPIO1_1 */
         "gpio1_1",	/* PCF8575 INT Buttons */
 
         "P8.23",    /* GPIO1_4 */
@@ -82,13 +82,13 @@
 
             bb_pcf8575_presence_pins: pinmux_bb_pcf8575_presence_pins {
                 pinctrl-single,pins = <
-                    0x180 0x37 /* BONE_P9_26 (SLEWCTRL_FAST | INPUT_PULLUP | MODE7) */
+                    0x07C 0x37 /* BONE_P8_26 (SLEWCTRL_FAST | INPUT_PULLUP | MODE7) */
                 >;
             };
 
             bb_pcf8575_button_pins: pinmux_bb_pcf8575_button_pins {
                 pinctrl-single,pins = <
-                    0x184 0x37 /* BONE_P9_24 (SLEWCTRL_FAST | INPUT_PULLUP | MODE7) */
+                    0x004 0x37 /* BONE_P8_24 (SLEWCTRL_FAST | INPUT_PULLUP | MODE7) */
                 >;
             };
 
