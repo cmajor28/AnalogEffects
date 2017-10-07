@@ -34,7 +34,6 @@ enum {
 };
 
 // Constants
-const unsigned long gDebounceDelay = 50;
 const unsigned long gDisplayTime = 2000;
 
 // Pins used
@@ -287,8 +286,8 @@ char * parseMessage(char c) {
 
 void setup() 
 {
-  while (!Serial);  // required for Flora & Micro
-  delay(500);
+//  while (!Serial);  // required for Flora & Micro
+//  delay(500);
 
   Serial.begin(115200);
   Serial.println(F("Pedal Matrix Remote"));
@@ -352,9 +351,6 @@ void loop()
 {
   static int lastButtonState[BUTTON_COUNT] = { HIGH, HIGH };
   static int lastRotaryPosition = -1;
-  
-  static unsigned long lastButtonDebounceTime[BUTTON_COUNT] = { 0 };
-  static unsigned long lastRotaryDebounceTime = 0;
   
   static int lastBank = -1;
   static int lastPreset = -1;
