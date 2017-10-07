@@ -1,3 +1,5 @@
 *.o
 *.so
 *aeffects
+*.idea*
+*__pychache__*

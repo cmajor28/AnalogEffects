@@ -17,7 +17,7 @@ static int gpio_irq_func(struct gpio_irq *irq) {
 
 	// Wait for irq
 	while (TRUE) {
-		ret = poll(&fds, 1, 0);
+		ret = poll(&fds, 1, -1);
 		if (ret != 0) {
 			return ret;
 		}
@@ -203,7 +203,7 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback
 
 	// Enable gpio export
 	snprintf(numStr, sizeof(numStr), "%d", gpioNumber);
-	ret = write_to_file("sys/class/gpio/export", numStr, strlen(numStr));
+	ret = write_to_file("/sys/class/gpio/export", numStr, strlen(numStr));
 	if (ret != 0) {
 		return ret;
 	}

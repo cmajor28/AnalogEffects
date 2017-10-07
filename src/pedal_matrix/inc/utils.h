@@ -24,6 +24,8 @@
 #define log2(val) (8*sizeof(val) - __builtin_clzll(val) - 1)
 #define pow2(val) ((uint64_t)1 << (val))
 
+#define PRINT(fmt, ...) fprintf(stderr, fmt,##__VA_ARGS__)
+
 enum time_units {
 	SECONDS      = 1,
 	MILLISECONDS = 1000,

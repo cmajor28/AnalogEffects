@@ -26,10 +26,10 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 		PCF8575_PIN_INITIALIZER(GPIO_PIN_INITIALIZER(NULL, -1))					/* int (no pin connected) */
 
 #define GPIO_EXT_PRESENCE_INIT()															\
-		PCF8575_PIN_INITIALIZER(GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO3], 21))	/* int */
+		PCF8575_PIN_INITIALIZER(GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO1], 29))	/* int */
 
 #define GPIO_EXT_BUTTONS_INIT()																\
-		PCF8575_PIN_INITIALIZER(GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO3], 24))	/* int */
+		PCF8575_PIN_INITIALIZER(GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO1], 1))	/* int */
 
 #define LED_PINS_INIT()																		\
 		LED_CONTROL_INITIALIZER(															\
@@ -93,18 +93,15 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 								&gGPIOBanks[GPIO0], 26,	/* strobe */	\
 								&gGPIOBanks[GPIO1], 14,	/* data */		\
 								&gGPIOBanks[GPIO0], 22,	/* ax0 */		\
-								&gGPIOBanks[GPIO0], 27,	/* ax1 */		\
+								&gGPIOBanks[GPIO0], 17,	/* ax1 */		\
 								&gGPIOBanks[GPIO1], 15,	/* ax2 */		\
 								&gGPIOBanks[GPIO1], 13,	/* ay0 */		\
 								&gGPIOBanks[GPIO1], 23,	/* ay1 */		\
 								&gGPIOBanks[GPIO1], 12)	/* ay2 */		\
 
-#define BYPASS_PINS_INIT()											\
-		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO1], 17)	/* en */
-
 #define CONTROL_PINS_INIT()											\
 {																	\
-		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO3], 14),	/* en_a */	\
+		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO0], 7),	/* en_a */	\
 		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO3], 16)	/* en_a */	\
 }
 
