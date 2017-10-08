@@ -9,6 +9,7 @@ static int gpio_ext_write(struct gpio_ext *gpioExt, uint16_t values) {
 	// Function is not reinterant
 	ret = pthread_mutex_lock(&funcMutex);
 	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
 		return ret;
 	}
 
@@ -36,6 +37,7 @@ static int gpio_ext_read(struct gpio_ext *gpioExt) {
 	// Function is not reinterant
 	ret = pthread_mutex_lock(&funcMutex);
 	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
 		return ret;
 	}
 
@@ -73,6 +75,8 @@ int gpio_ext_init(struct gpio_ext *gpioExt, enum pcf857x_pin_count numPins, stru
 
 	int ret;
 
+	PRINT("pcf857x-0x%2X: Initializing device.\n", i2c->address);
+
 	gpioExt->values = 0x0000;
 	gpioExt->i2c = i2c;
 	gpioExt->numPins = numPins;
@@ -102,6 +106,8 @@ int gpio_ext_uninit(struct gpio_ext *gpioExt) {
 
 	int ret;
 
+	PRINT("pcf857x-0x%2X: Uninitializing device.\n", gpioExt->i2c->address);
+
 	// Only remove irq if pin exists
 	if (gpioExt->gpioPin.gpio == NULL || gpioExt->gpioPin.pin == -1) {
 		ret = gpio_irq_uninit(&gpioExt->irq);
@@ -120,6 +126,8 @@ int gpio_ext_set_bit(struct gpio_ext *gpioExt, uint8_t bit, uint8_t set) {
 	int ret;
 	uint16_t values = gpioExt->values;
 
+	PRINT("pcf857x-0x%2X: Setting bit %u to %u.\n", gpioExt->i2c->address, bit, set);
+
 	// Calculate new values
 	values ^= (-set ^ values) & (1 << bit);
 
@@ -132,6 +140,8 @@ int gpio_ext_set_bits(struct gpio_ext *gpioExt, uint16_t bits, uint16_t value) {
 	int ret;
 	uint16_t values = gpioExt->values;
 
+	PRINT("pcf857x-0x%2X: Setting bits 0x%8X to 0x%8X.\n", gpioExt->i2c->address, bits, value);
+
 	// Calculate new values
 	values ^= (-bits ^ values) & value;
 
@@ -142,6 +152,7 @@ int gpio_ext_set_bits(struct gpio_ext *gpioExt, uint16_t bits, uint16_t value) {
 int gpio_ext_set_value(struct gpio_ext *gpioExt, uint16_t value) {
 
 	int ret;
+	PRINT("pcf857x-0x%2X: Setting to 0x%8X.\n", gpioExt->i2c->address, value);
 	ret = gpio_ext_write(gpioExt, value);
 	return ret;
 }
@@ -190,6 +201,7 @@ int gpio_ext_get_value(struct gpio_ext *gpioExt, uint16_t *value) {
 
 int gpio_ext_irq_init(struct gpio_ext_irq *extIrq, struct gpio_ext_pin *gpioExtPin, int (*callback)(void *), void *context, int direction, int sensitivity) {
 
+	PRINT("pcf857x-0x%2X: Initializing IRQ on pin %d.\n", gpioExtPin->gpioExt->i2c->address, gpioExtPin->pin);
 	extIrq->gpioExtPin = *gpioExtPin;
 	extIrq->callback = callback;
 	extIrq->context = context;
@@ -203,6 +215,7 @@ int gpio_ext_irq_init(struct gpio_ext_irq *extIrq, struct gpio_ext_pin *gpioExtP
 
 int gpio_ext_irq_uninit(struct gpio_ext_irq *extIrq) {
 
+	PRINT("pcf857x-0x%2X: Uninitializing IRQ on pin %d.\n", extIrq->gpioExtPin.gpioExt->i2c->address, extIrq->gpioExtPin.pin);
 	extIrq->gpioExtPin.gpioExt->irqList[extIrq->gpioExtPin.pin] = NULL;
 	memset(extIrq, 0, sizeof(*extIrq));
 
@@ -211,6 +224,7 @@ int gpio_ext_irq_uninit(struct gpio_ext_irq *extIrq) {
 
 int gpio_ext_irq_enable(struct gpio_ext_irq *extIrq, bool enable) {
 
+	PRINT("pcf857x-0x%2X: %s IRQ on pin %d.\n", extIrq->gpioExtPin.gpioExt->i2c->address, enable ? "Enabling" : "Disabling", extIrq->gpioExtPin.pin);
 	extIrq->enabled = enable;
 	return 0;
 }

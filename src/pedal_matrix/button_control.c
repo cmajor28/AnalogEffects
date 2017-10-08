@@ -50,6 +50,10 @@ static int button_state_changed(struct button_irq_context *context) {
 
 int button_control_init(struct button_control *buttons, int (*callback)(void *, enum ae_button, enum button_state), void *context) {
 
+	PRINT("button_control: Initializing control interface.\n");
+
+	PRINT("button_control: Creating button press IRQs.\n");
+
 	// Initialize all irqs
 	for (int i = 0; i < AE_BUTTON_COUNT; i++) {
 		// Set button update callback info
@@ -80,6 +84,8 @@ int button_control_init(struct button_control *buttons, int (*callback)(void *, 
 	buttons->callback = callback;
 	buttons->context = context;
 
+	PRINT("button_control: Enabling button press IRQs.\n");
+
 	// Enable irqs once init is done
 	for (int i = 0; i < AE_BUTTON_COUNT; i++) {
 		gpio_ext_irq_enable(&buttons->irqs[i], TRUE);
@@ -89,6 +95,8 @@ int button_control_init(struct button_control *buttons, int (*callback)(void *, 
 }
 
 int button_control_uninit(struct button_control *buttons) {
+
+	PRINT("button_control: Uninitializing interface.\n");
 
 	// Uninitialize all irqs
 	for (int i = 0; i < AE_BUTTON_COUNT; i++) {

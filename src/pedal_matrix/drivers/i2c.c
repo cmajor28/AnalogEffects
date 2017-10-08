@@ -12,16 +12,20 @@ int i2c_init(struct i2c *i2c, enum i2c_bus bus, uint8_t address) {
 	int fd;
 	char filename[12];
 
+	PRINT("i2c-%d: Initializing device 0x%2X.\n", bus, address);
+
 	// Open i2c bus
 	snprintf(filename, sizeof(filename), "/dev/i2c-%d", bus);
 	fd = open(filename, O_RDWR);
 	if (fd == -1) {
+		PRINT_LOG("open() failed!");
 		return -1;
 	}
 
 	// Set device address
 	ret = ioctl(fd, I2C_SLAVE, (int)address);
 	if (ret == -1) {
+		PRINT_LOG("ioctl() failed!");
 		return -1;
 	}
 
@@ -34,6 +38,7 @@ int i2c_init(struct i2c *i2c, enum i2c_bus bus, uint8_t address) {
 
 int i2c_uninit(struct i2c *i2c) {
 
+	PRINT("i2c-%d: Unnitializing device 0x%2X.\n", i2c->bus, i2c->address);
 	close(i2c->fd);
 	memset(i2c, 0, sizeof(*i2c));
 	return 0;
@@ -42,8 +47,10 @@ int i2c_uninit(struct i2c *i2c) {
 int i2c_read(struct i2c *i2c, void *buffer, unsigned int size) {
 
 	int ret;
+	PRINT("i2c-%d: Reading %u bytes from device 0x%2X.\n", i2c->bus, size, i2c->address);
 	ret = read(i2c->fd, buffer, size);
 	if (ret != size) {
+		PRINT_LOG("read() failed!");
 		return -1;
 	}
 
@@ -53,8 +60,10 @@ int i2c_read(struct i2c *i2c, void *buffer, unsigned int size) {
 int i2c_write(struct i2c *i2c, void *buffer, unsigned int size) {
 
 	int ret;
+	PRINT("i2c-%d: Writing %u bytes to device 0x%2X.\n", i2c->bus, size, i2c->address);
 	ret = write(i2c->fd, buffer, size);
 	if (ret != size) {
+		PRINT_LOG("write() failed!");
 		return -1;
 	}
 

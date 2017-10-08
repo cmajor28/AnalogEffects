@@ -13,6 +13,8 @@
 #include <pthread.h>
 #include <sys/mman.h>
 
+#define __file__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+
 #define TRUE true
 #define FALSE false
 
@@ -24,7 +26,19 @@
 #define log2(val) (8*sizeof(val) - __builtin_clzll(val) - 1)
 #define pow2(val) ((uint64_t)1 << (val))
 
-#define PRINT(fmt, ...) fprintf(stderr, fmt,##__VA_ARGS__)
+#define PRINT(fmt, ...) { \
+	flockfile(stderr); \
+	fprintf(stderr, fmt,##__VA_ARGS__); \
+	funlockfile(stderr); \
+}
+
+#define PRINT_LOG(fmt, ...) { \
+	flockfile(stderr); \
+	fprintf(stderr, "%s:%d (%s): ", __file__, __LINE__, __func__); \
+	fprintf(stderr, fmt,##__VA_ARGS__); \
+	fprintf(stderr, "\n"); \
+	funlockfile(stderr); \
+}
 
 enum time_units {
 	SECONDS      = 1,

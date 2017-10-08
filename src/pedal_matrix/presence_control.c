@@ -14,6 +14,10 @@ int presence_control_init(struct presence_control *presence, int (*callback)(voi
 
 	bool value;
 
+	PRINT("presence_control: Initializing control interface.\n");
+
+	PRINT("presence_control: Creating presence detect IRQs.\n");
+
 	// Initialize all irqs
 	for (int i = 0; i < AE_JACK_COUNT; i++) {
 		// Set presence detect update callback info
@@ -34,11 +38,15 @@ int presence_control_init(struct presence_control *presence, int (*callback)(voi
 	presence->callback = callback;
 	presence->context = context;
 
+	PRINT("presence_control: Getting initial presence values.\n");
+
 	// Get initial presence detect values
 	for (int i = 0; i < AE_JACK_COUNT; i++) {
 		gpio_ext_pin_get_value(&presence->irqs[i].gpioExtPin, &value);
 		initialPresence[i] = value;
 	}
+
+	PRINT("presence_control: Enabling presence detect IRQs.\n");
 
 	// Enable irqs once init is done
 	for (int i = 0; i < AE_JACK_COUNT; i++) {
@@ -49,6 +57,8 @@ int presence_control_init(struct presence_control *presence, int (*callback)(voi
 }
 
 int presence_control_uninit(struct presence_control *presence) {
+
+	PRINT("presence_control: Uninitializing control interface.\n");
 
 	// Uninitialize all irqs
 	for (int i = 0; i < AE_JACK_COUNT; i++) {

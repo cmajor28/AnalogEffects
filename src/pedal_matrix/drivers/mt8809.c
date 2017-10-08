@@ -3,6 +3,8 @@
 
 static int enable_switches(struct mt8809 *mt8809, bool enable) {
 
+	PRINT("mt8809: %s GPIO outputs.\n", enable ? "Enabling" : "Disabling");
+
 	// Set OE to 1 for each pin
 	for (int i = 0; i < MT8809_PIN_COUNT; i++) {
 		gpio_set_bit(mt8809->pinMap[i].gpio, GPIO_SETDATAOUT, mt8809->pinMap[i].pin, 0x1);
@@ -13,6 +15,8 @@ static int enable_switches(struct mt8809 *mt8809, bool enable) {
 }
 
 static int clear_switches(struct mt8809 *mt8809) {
+
+	PRINT("mt8809: Clearing switch matrix.\n");
 
 	// Set active low reset to 0
 	gpio_set_bit(mt8809->pinMap[MT8809_RESET].gpio, GPIO_SETDATAOUT, mt8809->pinMap[MT8809_RESET].pin, 0x0);
@@ -34,6 +38,8 @@ static int clear_switches(struct mt8809 *mt8809) {
 
 int mt8809_init(struct mt8809 *mt8809) {
 
+	PRINT("mt8809: Initializing device.\n");
+
 	// Enable gpio outputs
 	enable_switches(mt8809, TRUE);
 
@@ -44,6 +50,8 @@ int mt8809_init(struct mt8809 *mt8809) {
 }
 
 int mt8809_uninit(struct mt8809 *mt8809) {
+
+	PRINT("mt8809: Uninitializing device.\n");
 
 	// Clear gpio outputs
 	clear_switches(mt8809);
@@ -58,6 +66,8 @@ int mt8809_uninit(struct mt8809 *mt8809) {
 
 int mt8809_reset(struct mt8809 *mt8809) {
 
+	PRINT("mt8809: Resetting device.\n");
+
 	// Clear gpio outputs
 	clear_switches(mt8809);
 
@@ -65,6 +75,8 @@ int mt8809_reset(struct mt8809 *mt8809) {
 }
 
 int mt8809_set_switch(struct mt8809 *mt8809, uint8_t address, uint8_t set) {
+
+	PRINT("mt8809: Setting address 0x%2X to %d.\n", address, (int)set);
 
 	// Set active low cs to 0
 	gpio_set_bit(mt8809->pinMap[MT8809_CS].gpio, GPIO_SETDATAOUT, mt8809->pinMap[MT8809_CS].pin, 0x0);
@@ -103,6 +115,8 @@ int mt8809_set_switch(struct mt8809 *mt8809, uint8_t address, uint8_t set) {
 }
 
 int mt8809_set_switches(struct mt8809 *mt8809, uint64_t switchSet) {
+
+	PRINT("mt8809: Setting switches to 0x%16llX\n", (long long unsigned)switchSet);
 
 	// Set active low cs to 0
 	gpio_set_bit(mt8809->pinMap[MT8809_CS].gpio, GPIO_SETDATAOUT, mt8809->pinMap[MT8809_CS].pin, 0x0);

@@ -19,6 +19,7 @@ static int gpio_irq_func(struct gpio_irq *irq) {
 	while (TRUE) {
 		ret = poll(&fds, 1, -1);
 		if (ret != 0) {
+			PRINT_LOG("poll() failed!");
 			return ret;
 		}
 
@@ -35,6 +36,8 @@ int gpio_init(struct gpio *gpio, enum gpio_bank bank) {
 
 	off_t startAddr;
 	int size;
+
+	PRINT("gpio-%d: Initializing gpio.\n", bank);
 
 	// Get start address and size
 	switch (bank) {
@@ -63,6 +66,7 @@ int gpio_init(struct gpio *gpio, enum gpio_bank bank) {
 	// Open mem fd
 	fd = open("/dev/mem", O_RDWR);
 	if (fd == -1) {
+		PRINT_LOG("open() failed!");
 		return -1;
 	}
 
@@ -84,6 +88,8 @@ int gpio_init(struct gpio *gpio, enum gpio_bank bank) {
 
 int gpio_uninit(struct gpio *gpio) {
 
+	PRINT("gpio-%d: Uninitializing gpio.\n", gpio->bank);
+
 	// Unmap memory
 	munmap((void *)gpio->mmap_address, gpio->size);
 
@@ -93,6 +99,8 @@ int gpio_uninit(struct gpio *gpio) {
 }
 
 int gpio_set_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t set) {
+
+	PRINT("gpio-%d: Setting reg 0x%4x bit %u to %u.\n", gpio->bank, reg, bit, set);
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmap_address + reg;
@@ -107,6 +115,8 @@ int gpio_set_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t set) {
 
 int gpio_set_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t value) {
 
+	PRINT("gpio-%d: Setting reg 0x%4X bits 0x%8X to 0x%8X.\n", gpio->bank, reg, bits, value);
+
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmap_address + reg;
 	uint32_t tmp = *loc;
@@ -120,6 +130,8 @@ int gpio_set_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t value
 
 
 int gpio_set_value(struct gpio *gpio, uint32_t reg, uint32_t value) {
+
+	PRINT("gpio-%d: Setting reg 0x%4X to 0x%8X.\n", gpio->bank, reg, value);
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmap_address + reg;
@@ -170,6 +182,8 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback
 	char *senStr;
 	char numStr[4];
 
+	PRINT("gpio-%d: Initializing IRQ on pin %d.\n", gpioPin->gpio->bank, gpioPin->pin);
+
 	// Set direction string
 	switch (direction) {
 	case GPIO_DIR_IN:
@@ -201,6 +215,8 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback
 		return -1;
 	}
 
+	PRINT("gpio-%d: Pin %d IRQ - %s %s.\n", gpioPin->gpio->bank, gpioPin->pin, dirStr, senStr);
+
 	// Enable gpio export
 	snprintf(numStr, sizeof(numStr), "%d", gpioNumber);
 	ret = write_to_file("/sys/class/gpio/export", numStr, strlen(numStr));
@@ -226,12 +242,14 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback
 	snprintf(fileBuffer, sizeof(fileBuffer), "/sys/class/gpio/gpio%d/value", gpioNumber);
 	irq->fd = open(fileBuffer, O_RDONLY);
 	if (irq->fd == -1) {
+		PRINT_LOG("open() failed!");
 		return -1;
 	}
 
 	// Create thread to handle interrupt
 	ret = pthread_create(&irq->intThread, NULL, (void *(*)(void *))&gpio_irq_func, irq);
 	if (ret != 0) {
+		PRINT_LOG("pthread_create() failed!");
 		close(irq->fd);
 		return ret;
 	}
@@ -252,15 +270,19 @@ int gpio_irq_uninit(struct gpio_irq *irq) {
 	int ret;
 	char numStr[4];
 
+	PRINT("gpio-%d: Uninitializing IRQ on pin %d.\n", irq->gpioPin.gpio->bank, irq->gpioPin.pin);
+
 	// Cancel interrupt thread
 	ret = pthread_cancel(irq->intThread);
 	if (ret != 0) {
+		PRINT_LOG("pthread_cancel() failed!");
 		return ret;
 	}
 
 	// Wait for thread to exit
 	ret = pthread_join(irq->intThread, NULL);
 	if (ret != 0) {
+		PRINT_LOG("pthread_join() failed!");
 		return ret;
 	}
 
@@ -281,6 +303,7 @@ int gpio_irq_uninit(struct gpio_irq *irq) {
 
 int gpio_irq_enable(struct gpio_irq *irq, bool enable) {
 
+	PRINT("gpio-%d: %s IRQ on pin %d.\n", irq->gpioPin.gpio->bank, enable ? "Enabling" : "Disabling", irq->gpioPin.pin);
 	irq->enabled = enable;
 	return 0;
 }

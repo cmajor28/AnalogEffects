@@ -68,11 +68,16 @@ int write_to_file(const char *file, void *data, size_t size) {
 
 	fd = open(file, O_WRONLY);
 	if (fd == -1) {
+		PRINT_LOG("open() failed!");
 		return -1;
 	}
 
 	count = write(fd, data, size);
 	close(fd);
+
+	if (count != size) {
+		PRINT_LOG("write() failed!");
+	}
 
 	return (count == size ? 0 : -1);
 }
@@ -84,11 +89,16 @@ int read_from_file(const char *file, void *data, size_t size) {
 
 	fd = open(file, O_RDONLY);
 	if (fd == -1) {
+		PRINT_LOG("open() failed!");
 		return -1;
 	}
 
 	count = read(fd, data, size);
 	close(fd);
+
+	if (count != size) {
+		PRINT_LOG("read() failed!");
+	}
 
 	return (count == size ? 0 : -1);
 }
@@ -120,17 +130,20 @@ int timer_enable(struct timer *timer, bool enable) {
 		// Create timer thread
 		ret = pthread_create(&timer->timerThread, NULL, (void *(*)(void *))&timer_thread_func, (void *)timer);
 		if (ret != 0) {
+			PRINT_LOG("pthread_create() failed!");
 			return -1;
 		}
 	} else {
 		ret = pthread_mutex_lock(&timer->callbackMutex);
 		if (ret != 0) {
+			PRINT_LOG("pthread_mutex_lock() failed!");
 			return -1;
 		}
 		// Kill timer thread
 		ret = pthread_cancel(timer->timerThread);
 		pthread_mutex_unlock(&timer->callbackMutex);
 		if (ret != 0) {
+			PRINT_LOG("pthread_ccancel() failed!");
 			return -1;
 		}
 	}
