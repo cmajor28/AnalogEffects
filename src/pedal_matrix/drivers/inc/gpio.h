@@ -3,6 +3,21 @@
 
 #include "utils.h"
 
+#define L4_WKUP_START_ADDR	0x44C00000
+#define L4_WKUP_END_ADDR	0x45000000
+#define L4_WKUP_SIZE		(L4_WKUP_END_ADDR - L4_WKUP_START_ADDR)
+
+#define L4_WKUP_MODULEMODE_ENABLE_MASK	0x02
+#define L4_WKUP_IDLEST_MASK				(0x03 << 16)
+
+#define L4_WKUP_CM_WKUP_OFFSET	(0x44E00400 - L4_WKUP_START_ADDR)
+#define L4_WKUP_CM_PER_OFFSET	(0x44E00000 - L4_WKUP_START_ADDR)
+
+#define L4_WKUP_CM_WKUP_GPIO0_CLKCTRL_OFFSET	(L4_WKUP_CM_WKUP_OFFSET + 0x08)
+#define L4_WKUP_CM_PER_GPIO1_CLKCTRL_OFFSET		(L4_WKUP_CM_PER_OFFSET + 0xAC)
+#define L4_WKUP_CM_PER_GPIO2_CLKCTRL_OFFSET		(L4_WKUP_CM_PER_OFFSET + 0xB0)
+#define L4_WKUP_CM_PER_GPIO3_CLKCTRL_OFFSET		(L4_WKUP_CM_PER_OFFSET + 0xB4)
+
 #define GPIO0_START_ADDR	0x44E07000
 #define GPIO0_END_ADDR		0x44E09000
 #define GPIO0_SIZE			(GPIO0_END_ADDR - GPIO0_START_ADDR)
@@ -68,7 +83,7 @@ enum gpio_sensitivity {
 };
 
 struct gpio {
-	volatile void	*mmap_address;
+	volatile void	*mmapAddress;
 	unsigned int	size;
 	enum gpio_bank	bank;
 };
@@ -90,6 +105,8 @@ struct gpio_irq {
 };
 
 #define GPIO_PIN_INITIALIZER(gpioBank, pinNum) { .gpio = gpioBank, .pin = pinNum }
+
+int gpio_wakeup(bool wake);
 
 int gpio_init(struct gpio *gpio, enum gpio_bank bank);
 

@@ -14,7 +14,7 @@ extern pthread_mutex_t gPresetsMutex;
 extern struct ae_preset gPresets[AE_BANK_COUNT][AE_PRESET_COUNT];
 
 // Global GPIO banks
-struct gpio gGPIOBanks[GPIO_COUNT] = { 0 };
+struct gpio gGPIOBanks[GPIO_COUNT] = { { 0 } };
 struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT] = { GPIO_EXT_LEDS_INIT(), GPIO_EXT_PRESENCE_INIT(), GPIO_EXT_BUTTONS_INIT() };
 
 // Global device interfaces
@@ -499,6 +499,12 @@ int control_init() {
 
 	PRINT("control: Initializing GPIO banks.\n");
 
+	// We need to wake up gpio banks first
+	ret = gpio_wakeup(TRUE);
+	if (ret != 0) {
+		return ret;
+	}
+
 	// Initialize gpio banks
 	for (int i = 0; i < GPIO_COUNT; i++) {
 		ret = gpio_init(&gGPIOBanks[i], i);
@@ -569,7 +575,7 @@ int control_init() {
 
 	// Seek to max location
 	ret = lseek(fd, sizeof(*gConfig), SEEK_SET);
-	if (ret != 0) {
+	if (ret != sizeof(*gConfig)) {
 		PRINT_LOG("lseek() failed!");
 		pthread_mutex_unlock(&gConfigMutex);
 		return -1;
@@ -578,7 +584,7 @@ int control_init() {
 	// Write 0 to max location
 	// Note: This ensures we have enough space to write the config
 	ret = write(fd, "", 1);
-	if (ret != 1) {
+	if (ret < 1) {
 		PRINT_LOG("write() failed!");
 		pthread_mutex_unlock(&gConfigMutex);
 		return -1;
@@ -677,6 +683,9 @@ int control_uninit() {
 	for (int i = 0; i < GPIO_COUNT; i++) {
 		gpio_uninit(&gGPIOBanks[i]);
 	}
+
+	// Turn off gpio banks
+	gpio_wakeup(FALSE);
 
 	PRINT("control: Uninitializing control mutex.\n");
 

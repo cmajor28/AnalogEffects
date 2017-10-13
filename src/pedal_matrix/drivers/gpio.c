@@ -9,18 +9,30 @@
 static int gpio_irq_func(struct gpio_irq *irq) {
 
 	int ret;
+	char tmp;
 	struct pollfd fds;
-
-	fds.fd = irq->fd;
-	fds.events = POLLPRI | POLLERR;
-	fds.revents = 0;
 
 	// Wait for irq
 	while (TRUE) {
+		// Set fds fields
+		fds.fd = irq->fd;
+		fds.events = POLLPRI | POLLERR;
+		fds.revents = 0;
+
+		// Poll for input
+		read(fds.fd, &tmp, sizeof(tmp)); // Dummy read
 		ret = poll(&fds, 1, -1);
-		if (ret != 0) {
+		if (ret < 0) {
 			PRINT_LOG("poll() failed!");
 			return ret;
+		} else if (ret == 0) {
+			// This shouldn't happen
+			continue;
+		} else {
+			if (fds.revents & POLLERR) {
+				PRINT_LOG("poll() failed!");
+				continue;
+			}
 		}
 
 		// Call isr
@@ -28,6 +40,86 @@ static int gpio_irq_func(struct gpio_irq *irq) {
 			irq->callback(irq->context);
 		}
 	}
+
+	return 0;
+}
+
+int gpio_wakeup(bool wake) {
+
+	volatile void *mmapAddress;
+	int fd;
+
+	// Open mem fd
+	fd = open("/dev/mem", O_RDWR);
+	if (fd == -1) {
+		PRINT_LOG("open() failed!");
+		return -1;
+	}
+
+	// Do memory map of registers
+	mmapAddress = mmap(0, L4_WKUP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, L4_WKUP_START_ADDR);
+
+	// Don't need fd after mmap
+	close(fd);
+
+	if (mmapAddress == MAP_FAILED) {
+		return -1;
+	}
+
+	if (wake) {
+		// Wake GPIO interfaces
+		for (int i = 0; i < GPIO_COUNT; i++) {
+			volatile uint32_t *loc;
+			switch (i) {
+			case GPIO0:
+				loc = mmapAddress + L4_WKUP_CM_WKUP_GPIO0_CLKCTRL_OFFSET;
+				break;
+			case GPIO1:
+				loc = mmapAddress + L4_WKUP_CM_PER_GPIO1_CLKCTRL_OFFSET;
+				break;
+			case GPIO2:
+				loc = mmapAddress + L4_WKUP_CM_PER_GPIO2_CLKCTRL_OFFSET;
+				break;
+			case GPIO3:
+				loc = mmapAddress + L4_WKUP_CM_PER_GPIO3_CLKCTRL_OFFSET;
+				break;
+			}
+
+			// Enable module
+			if (*loc & L4_WKUP_IDLEST_MASK) {
+				*loc |= L4_WKUP_MODULEMODE_ENABLE_MASK;
+				while (*loc & L4_WKUP_IDLEST_MASK);
+			}
+		}
+	} else {
+		// Idle GPIO interfaces
+		for (int i = GPIO_COUNT-1; i >= 0; i--) {
+			volatile uint32_t *loc;
+			switch (i) {
+			case GPIO0:
+				loc = mmapAddress + L4_WKUP_CM_WKUP_GPIO0_CLKCTRL_OFFSET;
+				break;
+			case GPIO1:
+				loc = mmapAddress + L4_WKUP_CM_PER_GPIO1_CLKCTRL_OFFSET;
+				break;
+			case GPIO2:
+				loc = mmapAddress + L4_WKUP_CM_PER_GPIO2_CLKCTRL_OFFSET;
+				break;
+			case GPIO3:
+				loc = mmapAddress + L4_WKUP_CM_PER_GPIO3_CLKCTRL_OFFSET;
+				break;
+			}
+
+			// Disable module
+			if (!(*loc & L4_WKUP_IDLEST_MASK)) {
+				*loc &= (~L4_WKUP_MODULEMODE_ENABLE_MASK);
+				while (!(*loc & L4_WKUP_IDLEST_MASK));
+			}
+		}
+	}
+
+	// We don't need this memory anymore
+	munmap((void *)mmapAddress, L4_WKUP_SIZE);
 
 	return 0;
 }
@@ -71,12 +163,12 @@ int gpio_init(struct gpio *gpio, enum gpio_bank bank) {
 	}
 
 	// Do memory map of registers
-	gpio->mmap_address = mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, startAddr);
+	gpio->mmapAddress = mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, startAddr);
 
 	// Don't need fd after mmap
 	close(fd);
 
-	if (gpio->mmap_address == MAP_FAILED) {
+	if (gpio->mmapAddress == MAP_FAILED) {
 		return -1;
 	}
 
@@ -91,7 +183,7 @@ int gpio_uninit(struct gpio *gpio) {
 	PRINT("gpio-%d: Uninitializing gpio.\n", gpio->bank);
 
 	// Unmap memory
-	munmap((void *)gpio->mmap_address, gpio->size);
+	munmap((void *)gpio->mmapAddress, gpio->size);
 
 	memset(gpio, 0, sizeof(*gpio));
 
@@ -100,10 +192,10 @@ int gpio_uninit(struct gpio *gpio) {
 
 int gpio_set_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t set) {
 
-	PRINT("gpio-%d: Setting reg 0x%4x bit %u to %u.\n", gpio->bank, reg, bit, set);
+	PRINT("gpio-%d: Setting reg 0x%04X bit %u to %u.\n", gpio->bank, reg, bit, set);
 
 	// Calculate register location
-	volatile uint32_t *loc = gpio->mmap_address + reg;
+	volatile uint32_t *loc = gpio->mmapAddress + reg;
 	uint32_t tmp = *loc;
 
 	// Set bit to value
@@ -115,10 +207,10 @@ int gpio_set_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t set) {
 
 int gpio_set_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t value) {
 
-	PRINT("gpio-%d: Setting reg 0x%4X bits 0x%8X to 0x%8X.\n", gpio->bank, reg, bits, value);
+	PRINT("gpio-%d: Setting reg 0x%04X bits 0x%08X to 0x%08X.\n", gpio->bank, reg, bits, value);
 
 	// Calculate register location
-	volatile uint32_t *loc = gpio->mmap_address + reg;
+	volatile uint32_t *loc = gpio->mmapAddress + reg;
 	uint32_t tmp = *loc;
 
 	// Set bit to value
@@ -131,10 +223,10 @@ int gpio_set_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t value
 
 int gpio_set_value(struct gpio *gpio, uint32_t reg, uint32_t value) {
 
-	PRINT("gpio-%d: Setting reg 0x%4X to 0x%8X.\n", gpio->bank, reg, value);
+	PRINT("gpio-%d: Setting reg 0x%04X to 0x%08X.\n", gpio->bank, reg, value);
 
 	// Calculate register location
-	volatile uint32_t *loc = gpio->mmap_address + reg;
+	volatile uint32_t *loc = gpio->mmapAddress + reg;
 
 	*loc = value;
 
@@ -144,7 +236,7 @@ int gpio_set_value(struct gpio *gpio, uint32_t reg, uint32_t value) {
 int gpio_get_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t *set) {
 
 	// Calculate register location
-	volatile uint32_t *loc = gpio->mmap_address + reg;
+	volatile uint32_t *loc = gpio->mmapAddress + reg;
 
 	// Set bit to value
 	*set = (*loc & (1 << bit)) >> bit;
@@ -155,7 +247,7 @@ int gpio_get_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t *set) {
 int gpio_get_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t *value) {
 
 	// Calculate register location
-	volatile uint32_t *loc = gpio->mmap_address + reg;
+	volatile uint32_t *loc = gpio->mmapAddress + reg;
 
 	// Set bit to value
 	*value = *loc & bits;
@@ -166,7 +258,7 @@ int gpio_get_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t *valu
 int gpio_get_value(struct gpio *gpio, uint32_t reg, uint32_t *value) {
 
 	// Calculate register location
-	volatile uint32_t *loc = gpio->mmap_address + reg;
+	volatile uint32_t *loc = gpio->mmapAddress + reg;
 
 	*value = *loc;
 
@@ -215,32 +307,33 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback
 		return -1;
 	}
 
-	PRINT("gpio-%d: Pin %d IRQ - %s %s.\n", gpioPin->gpio->bank, gpioPin->pin, dirStr, senStr);
+	PRINT("gpio-%d: Pin %d IRQ - dir=%s sen=%s.\n", gpioPin->gpio->bank, gpioPin->pin, dirStr, senStr);
 
 	// Enable gpio export
 	snprintf(numStr, sizeof(numStr), "%d", gpioNumber);
-	ret = write_to_file("/sys/class/gpio/export", numStr, strlen(numStr));
+	write_to_file("/sys/class/gpio/unexport", numStr, strlen(numStr)+1); // Just in case
+	ret = write_to_file("/sys/class/gpio/export", numStr, strlen(numStr)+1);
 	if (ret != 0) {
 		return ret;
 	}
 
 	// Set direction
 	snprintf(fileBuffer, sizeof(fileBuffer), "/sys/class/gpio/gpio%d/direction", gpioNumber);
-	ret = write_to_file(fileBuffer, dirStr, strlen(dirStr));
+	ret = write_to_file(fileBuffer, dirStr, strlen(dirStr)+1);
 	if (ret != 0) {
 		return ret;
 	}
 
 	// Set sensitivity
 	snprintf(fileBuffer, sizeof(fileBuffer), "/sys/class/gpio/gpio%d/edge", gpioNumber);
-	ret = write_to_file(fileBuffer, senStr, strlen(senStr));
+	ret = write_to_file(fileBuffer, senStr, strlen(senStr)+1);
 	if (ret != 0) {
 		return ret;
 	}
 
 	// Open file for int
 	snprintf(fileBuffer, sizeof(fileBuffer), "/sys/class/gpio/gpio%d/value", gpioNumber);
-	irq->fd = open(fileBuffer, O_RDONLY);
+	irq->fd = open(fileBuffer, O_RDONLY | O_NONBLOCK);
 	if (irq->fd == -1) {
 		PRINT_LOG("open() failed!");
 		return -1;
@@ -291,7 +384,7 @@ int gpio_irq_uninit(struct gpio_irq *irq) {
 
 	// Disable gpio export
 	snprintf(numStr, sizeof(numStr), "%d", gpioNumber);
-	ret = write_to_file("sys/class/gpio/unexport", numStr, strlen(numStr));
+	ret = write_to_file("/sys/class/gpio/unexport", numStr, strlen(numStr)+1);
 	if (ret != 0) {
 		return ret;
 	}
