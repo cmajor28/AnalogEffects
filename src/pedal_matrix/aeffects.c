@@ -9,7 +9,7 @@ int aeffects_init(struct ae_preset presets[AE_BANK_COUNT][AE_PRESET_COUNT]) {
 
 	int ret;
 
-	PRINT("aeffects: Initializing library\n");
+	PRINT("aeffects: Initializing library.\n");
 
 	// Initialize mutex
 	pthread_mutex_init(&gPresetsMutex, NULL);
@@ -33,7 +33,7 @@ int aeffects_update(struct ae_preset *preset) {
 
 	int ret;
 
-	PRINT("aeffects: Updating preset %d.", preset->preset);
+	PRINT("aeffects: Updating preset %d.\n", preset->preset);
 
 	ret = pthread_mutex_lock(&gPresetsMutex);
 	if (ret != 0) {
@@ -75,7 +75,7 @@ int aeffects_uninit() {
 	pthread_mutex_unlock(&gPresetsMutex);
 	pthread_mutex_destroy(&gPresetsMutex);
 
-	PRINT("aeffects: Finished uninitializing library.");
+	PRINT("aeffects: Finished uninitializing library.\n");
 
 	return 0;
 }

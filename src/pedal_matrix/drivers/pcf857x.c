@@ -109,7 +109,7 @@ int gpio_ext_uninit(struct gpio_ext *gpioExt) {
 	PRINT("pcf857x-0x%02X: Uninitializing device.\n", gpioExt->i2c->address);
 
 	// Only remove irq if pin exists
-	if (gpioExt->gpioPin.gpio == NULL || gpioExt->gpioPin.pin == -1) {
+	if (gpioExt->gpioPin.gpio != NULL && gpioExt->gpioPin.pin != -1) {
 		ret = gpio_irq_uninit(&gpioExt->irq);
 		if (ret != 0) {
 			return ret;

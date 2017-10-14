@@ -85,7 +85,7 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 	for (int i = 0; i < AE_MAX_EFFECTS; i++) {
 		pedal = pedalOrder[i];
 		if (pedal > 0) { // If pedal exists
-			if (enabled[pedal]) { // If enabled
+			if (enabled[pedal-1]) { // If enabled
 				if (presenceDetect[pedal][OUT] && presenceDetect[pedal][IN]) { // If presence detected
 					address = lastInput + (pedal << 3); // Get crosspoint address for last pedal input and new pedal output
 					switchSet |= ((uint64_t)1 << address);
@@ -107,18 +107,18 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 		switchSet &= (~0x0101010101010101);
 	}
 
-	// Calculate switch sets with input disconnected for mute
+	// Calculate switch sets with input disconnected
 	uint64_t switchSetNoInput = switchSet & (~0x0101010101010101);
 	uint64_t lastSwitchSetNoInput = lastSwitchSet & (~0x0101010101010101);
 
-	// Calculate switch sets with input routed to output for bypass
-	uint64_t switchSetNoRoute = switchSet & (~((uint64_t)1 << lastInput));
-	uint64_t lastSwitchSetNoRoute = lastSwitchSet & (~((uint64_t)1 << lastInput));
+	// Calculate switch sets with output disconnected
+	uint64_t switchSetNoOutput = switchSet & (~0xFF);
+	uint64_t lastSwitchSetNoOutput = switchSet & (~0xFF);
 
 	if (lastMute && !mute && (switchSetNoInput == lastSwitchSetNoInput)) { // We are unmuting only
 		// Route input on mt8809
 		PRINT("control: Disabling mute configuration.\n");
-		int address = __builtin_ctzll(switchSet ^ switchSetNoInput) + 1; // __builtin_ctzll() counts the number of trailing zeros
+		int address = __builtin_ctzll(switchSet ^ switchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
 		ret = mt8809_set_switch(&gSwitchMatrix, address, 0x1);
 		if (ret != 0) {
 			return ret;
@@ -126,16 +126,16 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 	} else if (!lastMute && mute && (switchSetNoInput == lastSwitchSetNoInput)) { // We are muting only
 		// Unroute input on mt8809
 		PRINT("control: Enabling mute configuration.\n");
-		int address = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoInput) + 1; // __builtin_ctzll() counts the number of trailing zeros
+		uint8_t address = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
 		ret = mt8809_set_switch(&gSwitchMatrix, address, 0x0);
 		if (ret != 0) {
 			return ret;
 		}
-	} else if (lastBypass && !bypass && (switchSetNoRoute == lastSwitchSetNoRoute)) { // We are unbypassing only
+	} else if (lastBypass && !bypass && (switchSetNoOutput == lastSwitchSetNoOutput)) { // We are unbypassing only
 		// Route signal on mt8809
 		PRINT("control: Disabling bypass configuration.\n");
-		int address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoRoute) + 1; // __builtin_ctzll() counts the number of trailing zeros
-		int address2 = __builtin_ctzll(switchSet ^ switchSetNoInput) + 1; // __builtin_ctzll() counts the number of trailing zeros
+		uint8_t address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+		uint8_t address2 = __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
 		ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x0);
 		if (ret != 0) {
 			return ret;
@@ -144,11 +144,11 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 		if (ret != 0) {
 			return ret;
 		}
-	} else if (!lastBypass && bypass && (switchSetNoRoute == lastSwitchSetNoRoute)) { // We are bypassing only
+	} else if (!lastBypass && bypass && (switchSetNoOutput == lastSwitchSetNoOutput)) { // We are bypassing only
 		// Unroute signal on mt8809
 		PRINT("control: Enabling bypass configuration\n");
-		int address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoInput) + 1; // __builtin_ctzll() counts the number of trailing zeros
-		int address2 = __builtin_ctzll(switchSet ^ switchSetNoRoute) + 1; // __builtin_ctzll() counts the number of trailing zeros
+		uint8_t address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+		uint8_t address2 = __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
 		ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x0);
 		if (ret != 0) {
 			return ret;
@@ -181,7 +181,7 @@ static int load_preset(int bank, int preset) {
 
 	int ret;
 
-	PRINT("control: Loading bank %d preset %d.\n", bank, preset);
+	PRINT("control: Loading bank %d preset %d.\n", bank+1, preset+1);
 
 	// Lock preset mutex
 	ret = pthread_mutex_lock(&gPresetsMutex);
@@ -205,16 +205,10 @@ static int set_new_preset(int preset) {
 
 	int ret;
 
-	PRINT("control: Setting preset to %d.\n", preset);
+	PRINT("control: Setting preset to %d.\n", preset+1);
 
 	// Load new preset into config
 	ret = load_preset(gConfig->currBank, preset);
-	if (ret != 0) {
-		return ret;
-	}
-
-	// Apply new switch configuration
-	ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, gConfig->bypassEnabled, gConfig->muteEnabled);
 	if (ret != 0) {
 		return ret;
 	}
@@ -225,6 +219,13 @@ static int set_new_preset(int preset) {
 		leds_set_one_hot(preset);
 	}
 
+	return 0;
+}
+
+static int set_new_bank(int bank) {
+
+	PRINT("control: Setting bank to %d.\n", bank+1);
+	gConfig->currBank = bank;
 	return 0;
 }
 
@@ -248,7 +249,7 @@ static int set_pedal_enabled(int pedal, bool enable) {
 
 	gConfig->currPreset.enabled[pedal] = enable;
 
-	PRINT("control: %s pedal %d.\n", enable ? "Enabling" : "Disabling", pedal);
+	PRINT("control: %s pedal %d.\n", enable ? "Enabling" : "Disabling", pedal+1);
 
 	// Apply new switch configuration
 	ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, gConfig->bypassEnabled, gConfig->muteEnabled);
@@ -358,19 +359,17 @@ static int handle_button_pressed_event(enum ae_button button) {
 			break;
 		case AE_BUTTON_BU:
 			// Increment bank
-			gConfig->currBank = (gConfig->currBank + 1) % AE_BANK_COUNT;
+			ret = set_new_bank((gConfig->currBank + 1) % AE_BANK_COUNT);
 			if (gControlCallbacks.bankChanged) {
 				gControlCallbacks.bankChanged(gConfig->currBank+1);
 			}
-			ret = 0;
 			break;
 		case AE_BUTTON_BD:
 			// Decrement bank
-			gConfig->currBank = (gConfig->currBank + AE_BANK_COUNT - 1) % AE_BANK_COUNT;
+			ret = set_new_bank((gConfig->currBank + AE_BANK_COUNT - 1) % AE_BANK_COUNT);
 			if (gControlCallbacks.bankChanged) {
 				gControlCallbacks.bankChanged(gConfig->currBank+1);
 			}
-			ret = 0;
 			break;
 		default:
 			ret = -1;
@@ -734,9 +733,9 @@ int set_bank(int bank) {
 		return -1;
 	}
 
-	gConfig->currBank = bank;
+	ret = set_new_bank(bank);
 	pthread_mutex_unlock(&gConfigMutex);
-	return 0;
+	return ret;
 }
 
 int set_mode(bool pedalMode) {
