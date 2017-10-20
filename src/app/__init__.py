@@ -16,9 +16,9 @@ class AE_PRESET(Structure):
                 ("enabled", c_bool * 7),
                 ("controlEnabled", c_bool * 2)]
 
-@app.route('/')
+"""@app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html')"""
 
 @app.route('/Pedal_Inventory', methods=['POST'])
 def pedal_inventory():
@@ -41,94 +41,321 @@ def pedal_inventory():
     return "Success"
 
 
-@app.route('/Presets', methods=['POST'])
+@app.route('/', methods=['GET', 'POST'])
 def preset_order():
-    pedal = [0, 0, 0, 0, 0, 0, 0]
-    enable = [0, 0, 0, 0, 0, 0, 0]
-    controlEnabled = [0, 0]
+    if request.method == 'GET':
+        return """
+<!DOCTYPE html>
+<html lang="en-US">
+<body>
+<form method="POST">
+    <p>Control Enabled1:<br>
+        <select name="controlEnabled1">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+        </select>
+    </p>
 
-    controlEnabled[0] = request.json['controlEnabled1']
-    controlEnabled[1] = request.json['controlEnabled2']
+    <p>Control Enabled2:<br>
+        <select name="controlEnabled2">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+        </select>
+    </p>
 
-    bank_name = request.json['bank_name']
-    bank_num = request.json['bank_num']
-    preset_name = request.json['preset_name']
-    preset_num = request.json['preset_num']
+    <p>
+        <input name="bank_name" type="text" size="25">
+    </p>
 
-    pedal_pos1_name = request.json['pedal_pos1_name']
-    pedal_pos2_name = request.json['pedal_pos2_name']
-    pedal_pos3_name = request.json['pedal_pos3_name']
-    pedal_pos4_name = request.json['pedal_pos4_name']
-    pedal_pos5_name = request.json['pedal_pos5_name']
-    pedal_pos6_name = request.json['pedal_pos6_name']
-    pedal_pos7_name = request.json['pedal_pos7_name']
+    <p>
+        <input name="bank_num" type="text" size="25">
+    </p>
 
-    pedal[0] = request.json['pedal_pos1']
-    pedal[1] = request.json['pedal_pos2']
-    pedal[2] = request.json['pedal_pos3']
-    pedal[3] = request.json['pedal_pos4']
-    pedal[4] = request.json['pedal_pos5']
-    pedal[5] = request.json['pedal_pos6']
-    pedal[6] = request.json['pedal_pos7']
+    <p>
+        <input name="preset_name" type="text" size="25">
+    </p>
 
-    enable[0] = request.json['enabled_pos1']
-    enable[1] = request.json['enabled_pos2']
-    enable[2] = request.json['enabled_pos3']
-    enable[3] = request.json['enabled_pos4']
-    enable[4] = request.json['enabled_pos5']
-    enable[5] = request.json['enabled_pos6']
-    enable[6] = request.json['enabled_pos7']
+    <p>
+        <input name="preset_num" type="text" size="25">
+    </p>
 
-    new_preset = AE_PRESET()
-    new_preset.preset = preset_num
-    new_preset.bank = bank_num
-    new_preset.pedalOrder = (c_int * 7)(*pedal)
-    new_preset.enabled = (c_bool * 7)(*enable)
-    new_preset.controlEnabled = (c_bool * 2)(*controlEnabled)
+    <p>Pedal 1:<br>
+        <select name="pedal_pos1">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
 
-    c_lib.aeffects_update(byref(new_preset))
+    <p>Pedal 2:<br>
+        <select name="pedal_pos2">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
 
-    # 0 indicates unused pedal, 8 indicates final output
-    data = {
-        'controlEnabled1': controlEnabled[0],
-        'controlEnabled2': controlEnabled[1],
-        'bank_name': bank_name,
-        'bank_num': bank_num,
-        'preset_name': preset_name,
-        'preset_num': preset_num,
-        "pedal_pos1_name": pedal_pos1_name,
-        "pedal_pos2_name": pedal_pos2_name,
-        "pedal_pos3_name": pedal_pos3_name,
-        "pedal_pos4_name": pedal_pos4_name,
-        "pedal_pos5_name": pedal_pos5_name,
-        "pedal_pos6_name": pedal_pos6_name,
-        "pedal_pos7_name": pedal_pos7_name,
-        'pedal_pos1': pedal[0],
-        'pedal_pos2': pedal[1],
-        'pedal_pos3': pedal[2],
-        'pedal_pos4': pedal[3],
-        'pedal_pos5': pedal[4],
-        'pedal_pos6': pedal[5],
-        'pedal_pos7': pedal[6],
-        "enabled_pos1": enable[0],
-        "enabled_pos2": enable[1],
-        "enabled_pos3": enable[2],
-        "enabled_pos4": enable[3],
-        "enabled_pos5": enable[4],
-        "enabled_pos6": enable[5],
-        "enabled_pos7": enable[6]
-    }
+    <p>Pedal 3:<br>
+        <select name="pedal_pos3">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
 
-    # Write to JSON
-    filename = "%d_%d" % (bank_num, preset_num)
-    with open('presets_' + filename + '.json', 'w') as f:
-        json.dump(data, f)
+    <p>Pedal 4:<br>
+        <select name="pedal_pos4">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
 
-    # Read JSON
-    """with open('data.json', 'r') as f:
-        data = json.load(f)"""
+    <p>Pedal 5:<br>
+        <select name="pedal_pos5">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
 
-    return "Success"
+    <p>Pedal 6:<br>
+        <select name="pedal_pos6">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 7:<br>
+        <select name="pedal_pos7">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 1:<br>
+        <select name="enabled_pos1">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 2:<br>
+        <select name="enabled_pos2">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 3:<br>
+        <select name="enabled_pos3">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 4:<br>
+        <select name="enabled_pos4">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 5:<br>
+        <select name="enabled_pos5">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 6:<br>
+        <select name="enabled_pos6">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 7:<br>
+        <select name="enabled_pos7">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>
+        <input type="submit" value="Submit">
+    </p>
+</form>
+</body>
+</html>
+    """
+    else:
+        pedal = [0, 0, 0, 0, 0, 0, 0]
+        enable = [0, 0, 0, 0, 0, 0, 0]
+        controlEnabled = [0, 0]
+
+        controlEnabled[0] = request.form['controlEnabled1']
+        controlEnabled[1] = request.form['controlEnabled2']
+
+        bank_name = request.form['bank_name']
+        bank_num = int(request.form['bank_num'])
+        preset_name = request.form['preset_name']
+        preset_num = int(request.form['preset_num'])
+
+
+        #pedal_pos1_name = request.json['pedal_pos1_name']
+        #pedal_pos2_name = request.json['pedal_pos2_name']
+        #pedal_pos3_name = request.json['pedal_pos3_name']
+        #pedal_pos4_name = request.json['pedal_pos4_name']
+        #pedal_pos5_name = request.json['pedal_pos5_name']
+        #pedal_pos6_name = request.json['pedal_pos6_name']
+        #pedal_pos7_name = request.json['pedal_pos7_name']
+
+        pedal[0] = int(request.form['pedal_pos1'])
+        pedal[1] = int(request.form['pedal_pos2'])
+        pedal[2] = int(request.form['pedal_pos3'])
+        pedal[3] = int(request.form['pedal_pos4'])
+        pedal[4] = int(request.form['pedal_pos5'])
+        pedal[5] = int(request.form['pedal_pos6'])
+        pedal[6] = int(request.form['pedal_pos7'])
+
+        enable[0] = int(request.form['enabled_pos1'])
+        enable[1] = int(request.form['enabled_pos2'])
+        enable[2] = int(request.form['enabled_pos3'])
+        enable[3] = int(request.form['enabled_pos4'])
+        enable[4] = int(request.form['enabled_pos5'])
+        enable[5] = int(request.form['enabled_pos6'])
+        enable[6] = int(request.form['enabled_pos7'])
+
+        new_preset = AE_PRESET()
+        new_preset.preset = preset_num
+        new_preset.bank = bank_num
+        new_preset.pedalOrder = (c_int * 7)(*pedal)
+        new_preset.enabled = (c_bool * 7)(*enable)
+        new_preset.controlEnabled = (c_bool * 2)(*controlEnabled)
+
+        c_lib.aeffects_update(byref(new_preset))
+
+        # 0 indicates unused pedal, 8 indicates final output
+        data = {
+            'controlEnabled1': controlEnabled[0],
+            'controlEnabled2': controlEnabled[1],
+            'bank_name': bank_name,
+            'bank_num': bank_num,
+            'preset_name': preset_name,
+            'preset_num': preset_num,
+            #"pedal_pos1_name": pedal_pos1_name,
+            #"pedal_pos2_name": pedal_pos2_name,
+            #"pedal_pos3_name": pedal_pos3_name,
+            #"pedal_pos4_name": pedal_pos4_name,
+            #"pedal_pos5_name": pedal_pos5_name,
+            #"pedal_pos6_name": pedal_pos6_name,
+            #"pedal_pos7_name": pedal_pos7_name,
+            'pedal_pos1': pedal[0],
+            'pedal_pos2': pedal[1],
+            'pedal_pos3': pedal[2],
+            'pedal_pos4': pedal[3],
+            'pedal_pos5': pedal[4],
+            'pedal_pos6': pedal[5],
+            'pedal_pos7': pedal[6],
+            "enabled_pos1": enable[0],
+            "enabled_pos2": enable[1],
+            "enabled_pos3": enable[2],
+            "enabled_pos4": enable[3],
+            "enabled_pos5": enable[4],
+            "enabled_pos6": enable[5],
+            "enabled_pos7": enable[6]
+        }
+
+        # Write to JSON
+        filename = "%d_%d" % (bank_num, preset_num)
+        with open('presets_' + filename + '.json', 'w') as f:
+            json.dump(data, f)
+
+        # Read JSON
+        """with open('data.json', 'r') as f:
+            data = json.load(f)"""
+
+        return "Success"
 
 # add controlEnabled bool array for init function
 def init_c_lib():

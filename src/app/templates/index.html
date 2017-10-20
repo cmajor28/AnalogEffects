@@ -1,1 +1,222 @@
-{% extends "bootstrap/base.html" %}
+<!DOCTYPE html>
+<html lang="en-US">
+<body>
+<form method="POST">
+    <p>Control Enabled1:<br>
+        <select name="controlEnabled1">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+        </select>
+    </p>
+
+    <p>Control Enabled2:<br>
+        <select name="controlEnabled2">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+        </select>
+    </p>
+
+    <p>
+        <input name="bank_name" type="text" size="25">
+    </p>
+
+    <p>
+        <input name="bank_num" type="text" size="25">
+    </p>
+
+    <p>
+        <input name="preset_name" type="text" size="25">
+    </p>
+
+    <p>
+        <input name="preset_num" type="text" size="25">
+    </p>
+
+    <p>Pedal 1:<br>
+        <select name="pedal_pos1">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 2:<br>
+        <select name="pedal_pos2">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 3:<br>
+        <select name="pedal_pos3">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 4:<br>
+        <select name="pedal_pos4">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 5:<br>
+        <select name="pedal_pos5">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 6:<br>
+        <select name="pedal_pos6">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 7:<br>
+        <select name="pedal_pos7">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 1:<br>
+        <select name="enabled_pos1">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 2:<br>
+        <select name="enabled_pos2">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 3:<br>
+        <select name="enabled_pos3">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 4:<br>
+        <select name="enabled_pos4">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 5:<br>
+        <select name="enabled_pos5">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 6:<br>
+        <select name="enabled_pos6">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>Pedal 7:<br>
+        <select name="enabled_pos7">
+          <option value="0" selected="selected">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="2">5</option>
+          <option value="3">6</option>
+          <option value="4">7</option>
+        </select>
+    </p>
+
+    <p>
+        <input type="submit" value="Submit">
+    </p>
+</form>
+</body>
+</html>
