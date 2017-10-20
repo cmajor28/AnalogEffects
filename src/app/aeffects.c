@@ -8,7 +8,6 @@ struct ae_preset gPresets[AE_BANK_COUNT][AE_PRESET_COUNT];
 int aeffects_init(struct ae_preset presets[AE_BANK_COUNT][AE_PRESET_COUNT]) {
 
 	int ret;
-
 	// Store list of presets
 	memcpy(gPresets, presets, sizeof(presets[0][0]) * AE_BANK_COUNT * AE_PRESET_COUNT);
 
@@ -24,7 +23,6 @@ int aeffects_init(struct ae_preset presets[AE_BANK_COUNT][AE_PRESET_COUNT]) {
 int aeffects_update(struct ae_preset *preset) {
 
 	int ret;
-
 	ret = pthread_mutex_lock(&gPresetsMutex);
 	if (ret != 0) {
 		return -1;

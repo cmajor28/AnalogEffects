@@ -1,16 +1,24 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
+from flask_bootstrap import Bootstrap
 import json
 import os.path
 from ctypes import *
 
 app = Flask(__name__)
+Bootstrap(app)
+
 c_lib = cdll.LoadLibrary("./aeffects.so")  # call construct at startup, def __init (in essence, calling C constructor)
 
 class AE_PRESET(Structure):
     _fields_ = [("bank", c_int),
                 ("preset", c_int),
                 ("pedalOrder", c_int * 7),
-                ("enabled", c_bool * 7)]
+                ("enabled", c_bool * 7),
+                ("controlEnabled", c_bool * 2)]
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/Pedal_Inventory', methods=['POST'])
 def pedal_inventory():
@@ -37,6 +45,10 @@ def pedal_inventory():
 def preset_order():
     pedal = [0, 0, 0, 0, 0, 0, 0]
     enable = [0, 0, 0, 0, 0, 0, 0]
+    controlEnabled = [0, 0]
+
+    controlEnabled[0] = request.json['controlEnabled1']
+    controlEnabled[1] = request.json['controlEnabled2']
 
     bank_name = request.json['bank_name']
     bank_num = request.json['bank_num']
@@ -72,11 +84,14 @@ def preset_order():
     new_preset.bank = bank_num
     new_preset.pedalOrder = (c_int * 7)(*pedal)
     new_preset.enabled = (c_bool * 7)(*enable)
+    new_preset.controlEnabled = (c_bool * 2)(*controlEnabled)
 
     c_lib.aeffects_update(byref(new_preset))
 
     # 0 indicates unused pedal, 8 indicates final output
     data = {
+        'controlEnabled1': controlEnabled[0],
+        'controlEnabled2': controlEnabled[1],
         'bank_name': bank_name,
         'bank_num': bank_num,
         'preset_name': preset_name,
@@ -115,7 +130,7 @@ def preset_order():
 
     return "Success"
 
-
+# add controlEnabled bool array for init function
 def init_c_lib():
     new_preset = (16 * 8 * AE_PRESET)()
     for bank_num in range(0, 16):
