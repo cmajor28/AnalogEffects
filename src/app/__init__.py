@@ -64,18 +64,22 @@ def preset_order():
     </p>
 
     <p>
+        Bank Name:
         <input name="bank_name" type="text" size="25">
     </p>
 
     <p>
+        Bank Number:
         <input name="bank_num" type="text" size="25">
     </p>
 
     <p>
+        Preset Name:
         <input name="preset_name" type="text" size="25">
     </p>
 
     <p>
+        Preset Number:
         <input name="preset_num" type="text" size="25">
     </p>
 
@@ -86,9 +90,9 @@ def preset_order():
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
         </select>
     </p>
 
@@ -99,9 +103,9 @@ def preset_order():
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
         </select>
     </p>
 
@@ -112,9 +116,9 @@ def preset_order():
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
         </select>
     </p>
 
@@ -125,9 +129,9 @@ def preset_order():
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
         </select>
     </p>
 
@@ -138,9 +142,9 @@ def preset_order():
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
         </select>
     </p>
 
@@ -151,9 +155,9 @@ def preset_order():
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
         </select>
     </p>
 
@@ -164,100 +168,58 @@ def preset_order():
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
         </select>
     </p>
 
-    <p>Pedal 1:<br>
+    <p>Pedal 1 Enabled:<br>
         <select name="enabled_pos1">
           <option value="0" selected="selected">0</option>
           <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
         </select>
     </p>
 
-    <p>Pedal 2:<br>
+    <p>Pedal 2 Enabled:<br>
         <select name="enabled_pos2">
           <option value="0" selected="selected">0</option>
           <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
         </select>
     </p>
 
-    <p>Pedal 3:<br>
+    <p>Pedal 3 Enabled:<br>
         <select name="enabled_pos3">
           <option value="0" selected="selected">0</option>
           <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
         </select>
     </p>
 
-    <p>Pedal 4:<br>
+    <p>Pedal 4 Enabled:<br>
         <select name="enabled_pos4">
           <option value="0" selected="selected">0</option>
           <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
         </select>
     </p>
 
-    <p>Pedal 5:<br>
+    <p>Pedal 5 Enabled:<br>
         <select name="enabled_pos5">
           <option value="0" selected="selected">0</option>
           <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
         </select>
     </p>
 
-    <p>Pedal 6:<br>
+    <p>Pedal 6 Enabled:<br>
         <select name="enabled_pos6">
           <option value="0" selected="selected">0</option>
           <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
         </select>
     </p>
 
-    <p>Pedal 7:<br>
+    <p>Pedal 7 Enabled:<br>
         <select name="enabled_pos7">
           <option value="0" selected="selected">0</option>
           <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
         </select>
     </p>
 
