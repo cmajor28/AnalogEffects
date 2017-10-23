@@ -26,6 +26,7 @@
 #define log2(val) (8*sizeof(val) - __builtin_clzll(val) - 1)
 #define pow2(val) ((uint64_t)1 << (val))
 
+#ifdef DEBUG
 #define PRINT(fmt, ...) { \
 	flockfile(stderr); \
 	fprintf(stderr, fmt,##__VA_ARGS__); \
@@ -39,6 +40,10 @@
 	fprintf(stderr, "\n"); \
 	funlockfile(stderr); \
 }
+#else
+#define PRINT(fmt, ...)
+#define PRINT_LOG(fmt, ...)
+#endif
 
 enum time_units {
 	SECONDS      = 1,

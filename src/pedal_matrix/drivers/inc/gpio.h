@@ -118,6 +118,8 @@ int gpio_set_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t value
 
 int gpio_set_value(struct gpio *gpio, uint32_t reg, uint32_t value);
 
+int gpio_set_one_hot(struct gpio *gpio, uint32_t reg, uint8_t bit);
+
 int gpio_get_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t *set);
 
 int gpio_get_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t *value);

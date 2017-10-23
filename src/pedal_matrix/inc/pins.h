@@ -93,10 +93,10 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 								&gGPIOBanks[GPIO0], 26,	/* strobe */	\
 								&gGPIOBanks[GPIO1], 14,	/* data */		\
 								&gGPIOBanks[GPIO0], 22,	/* ax0 */		\
-								&gGPIOBanks[GPIO0], 17,	/* ax1 */		\
+								&gGPIOBanks[GPIO0], 27,	/* ax1 */		\
 								&gGPIOBanks[GPIO1], 15,	/* ax2 */		\
-								&gGPIOBanks[GPIO1], 13,	/* ay0 */		\
-								&gGPIOBanks[GPIO1], 23,	/* ay1 */		\
+								&gGPIOBanks[GPIO0], 23,	/* ay0 */		\
+								&gGPIOBanks[GPIO1], 13,	/* ay1 */		\
 								&gGPIOBanks[GPIO1], 12)	/* ay2 */		\
 
 #define CONTROL_PINS_INIT()											\
