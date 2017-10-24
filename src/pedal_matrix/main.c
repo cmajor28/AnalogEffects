@@ -58,6 +58,8 @@ void test_i2c() {
 	int result;
 	result = read(file, buf, 2);
 
+	fprintf(stderr, "I2C Result: 0x%04X\n", (unsigned)buf[0] | (unsigned)buf[1] << 8);
+
 	close(file);
 }
 
