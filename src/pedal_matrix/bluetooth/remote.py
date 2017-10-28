@@ -16,15 +16,16 @@ class Remote:
         self.uart = None
 
         # Initialize the BLE system.  MUST be called before other BLE calls!
-        ble.initialize()
+        Remote.ble.initialize()
 
         # The BLE loop will run in another thread
-        threading.Thread(target=ble.run_mainloop_with, args=(self.__ble_loop,)).start()
+        threading.Thread(target=Remote.ble.run_mainloop_with, args=(self.__ble_loop,)).start()
 
     def updateInfo(self, info):
         if "id" not in info or info["id"] == None:
-            self.device.disconnect()
-            self.info["id"] = None
+            if self.device != None:
+                self.device.disconnect()
+                self.info["id"] = None
         if self.uart != None:
             self.info = info
             self.uart.write(json.dumps({"bank":info["bank"]}, seperators=(',',':')))
@@ -37,10 +38,10 @@ class Remote:
     def __ble_loop(self):
         # Clear any cached data because both bluez and CoreBluetooth have issues with
         # caching data and it going stale.
-        ble.clear_cached_data()
+        Remote.ble.clear_cached_data()
 
         # Get the first available BLE network adapter and make sure it's powered on.
-        self.adapter = ble.get_default_adapter()
+        self.adapter = Remote.ble.get_default_adapter()
         self.adapter.power_on()
         print('Using adapter: {0}'.format(self.adapter.name))
 
@@ -63,8 +64,10 @@ class Remote:
                 self.adapter.stop_scan()
 
             print('Connecting to device...')
-            self.device.connect()  # Will time out after 60 seconds, specify timeout_sec parameter
-            # to change the timeout.
+            self.device.connect()  # Will time out after 60 seconds, specify timeout_sec parameter to change the timeout.
+
+            # TODO check to see if device connected
+            #if self.device.
 
             self.info["id"] = self.device.id
 
@@ -85,7 +88,9 @@ class Remote:
                     if received is not None:
                         # Received data, print it out.
                         print('Received: {0}'.format(received))
+
             finally:
                 # Make sure device is disconnected on exit.
                 self.device.disconnect()
+                self.device = None
                 self.info["id"] = None

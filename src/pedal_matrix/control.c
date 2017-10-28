@@ -788,3 +788,78 @@ int set_mute(bool enabled) {
 	pthread_mutex_unlock(&gConfigMutex);
 	return ret;
 }
+
+int get_preset(int *preset) {
+
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+	*preset = gConfig->currPreset.preset + 1;
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
+}
+
+int get_bank(int *bank) {
+
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+	*bank = gConfig->currBank + 1;
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
+}
+
+int get_mode(bool *pedalMode) {
+
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+	*pedalMode = gConfig->pedalMode;
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
+}
+
+int get_bypass(bool *enabled) {
+
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+    *enabled = gConfig->bypassEnabled;
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
+}
+
+int get_mute(bool *enabled) {
+
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+	*enabled = gConfig->muteEnabled;
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
+}

@@ -1,7 +1,7 @@
 import sys
 from PySide.QtCore import *
 from PySide.QtGui import *
-from lcdWindow import Ui_MainWindow
+from .lcdWindow import Ui_MainWindow
 
 class LCDWindow(QMainWindow, Ui_MainWindow):
 
@@ -53,7 +53,6 @@ class LCDWindow(QMainWindow, Ui_MainWindow):
         self.checkBoxPaired.setChecked(info["remotePaired"])
 
 if __name__ == '__main__':
-
     app = QApplication(sys.argv)
     window = LCDWindow()
     window.show()

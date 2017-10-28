@@ -19,6 +19,32 @@ class AE_PRESET(Structure):
                 ("enabled", c_bool * 7),
                 ("controlEnabled", c_bool * 2)]
 
+class AE_CALLBACKS(Structure):
+    _fields_ = [("presetChanged", CFUNCTYPE(c_int, c_int)),
+                ("bankChanged", CFUNCTYPE(c_int, c_int)),
+                ("modeChanged", CFUNCTYPE(c_int, c_bool)),
+                ("bypassEnabled", CFUNCTYPE(c_int, c_bool)),
+                ("muteEnabled", CFUNCTYPE(c_int, c_bool))]
+
+
+# These are created later
+remote = None
+lcd = None
+
+remoteInfo = {"id": "",
+              "bank": -1}
+
+lcdInfo = {"bank": -1,
+           "preset": -1,
+           "presetName": "",
+           "webAddress": "",
+           "remoteID": "",
+           "pedalMode": False,
+           "bypassMode": False,
+           "muteMode": False,
+           "webEnabled": False,
+           "remotePaired": False}
+
 """@app.route('/')
 def index():
     return render_template('index.html')"""
@@ -347,7 +373,7 @@ def init_c_lib():
             new_preset[bank_num * 8 + preset_num].enabled = (c_bool * 7)(*read_enable)
 
     c_lib.aeffects_init(new_preset)  # convert 2d tuple of presets to 2d array passed through init
-    return 0
+    return
 
 
 def set_bank_c(bank):
@@ -379,40 +405,65 @@ def set_bank_py(bank):
     info = {}
     info["bank"] = int(bank)
     Remote.updateInfo(info)
-    LCD.updateInfo(info)
-    return
+    lcd.updateInfo(info)
+    return c_int(0)
 
 
 def set_preset_py(preset):
     info = {}
     info["preset"] = int(preset)
     Remote.updateInfo(info)
-    LCD.updateInfo(info)
-    return
+    lcd.updateInfo(info)
+    return c_int(0)
 
 
 def set_mode_py(mode):
     info = {}
     info["mode"] = bool(mode)
-    LCD.updateInfo(info)
-    return
+    lcd.updateInfo(info)
+    return c_int(0)
 
 
 def set_bypass_py(bypass):
     info = {}
     info["bypass"] = bool(bypass)
-    LCD.updateInfo(info)
-    return
+    lcd.updateInfo(info)
+    return c_int(0)
 
 
 def set_mute_py(mute):
     info = {}
     info["mute"] = bool(mute)
-    LCD.updateInfo(info)
-    return
+    lcd.updateInfo(info)
+    return c_int(0)
+
+
+def init_control():
+    global lcd, remote, lcdInfo, remoteInfo
+    callbacks = AE_PRESET()
+
+    c_int_arg_func = CFUNCTYPE(c_int, c_int)
+    c_bool_arg_func = CFUNCTYPE(c_int, c_bool)
+
+    callbacks.presetChanged = c_int_arg_func(set_preset_py)
+    callbacks.bankChanged = c_int_arg_func(set_bank_py)
+    callbacks.modeChanged = c_bool_arg_func(set_mode_py)
+    callbacks.bypassEnabled = c_bool_arg_func(set_bypass_py)
+    callbacks.muteEnabled = c_bool_arg_func(set_mute_py)
+
+    c_lib.register_callbacks(byref(callbacks))
+    
+
+def run_gui(info):
+    global lcdInfo
+    app = QApplication(sys.argv)
+    window = LCDWindow(lcdInfo)
+    window.show()
+    sys.exit(app.exec_())
+
 
 if __name__ == "__main__":
-    #init_c_lib()
-    global Remote   # need to specify object
-    global LCD      # need to specify object
+    init_c_lib()
+    init_control()
+    threading.Thread(target=run_gui, args=(lcdInfo,)).start()
     app.run(host='0.0.0.0', port=5052, debug=True)

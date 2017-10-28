@@ -35,11 +35,16 @@ enum {
 
 // Constants
 const unsigned long gDisplayTime = 2000;
+const unsigned long gBlinkTime = 500;
+const float gBattLowVoltage = 3.5;
+const float gBattOkayVoltage = 3.6;
 
 // Pins used
 const int gRotaryPin = A0;
+const int gBatteryPin = A9;
+const int gLedPin = A3;
 const int gButtonPins[BUTTON_COUNT] = { A1, A2 };
-const int gDisplayPins[SEGMENT_COUNT] =  { 2, 3, 5, 6, 9, 10, 11 };
+const int gDisplayPins[SEGMENT_COUNT] =  { 2, 3, 5, 6, 10, 11, 12 };
 
 /* ...hardware SPI, using SCK/MOSI/MISO hardware SPI pins and then user selected CS/IRQ/RST */
 Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
@@ -60,6 +65,17 @@ int getRotaryPosition(int value) {
   bin = 7 * (value + 1024/7/2) / 1024;
   bin = bin < 0 ? 0 : bin;
   return bin;
+}
+
+// Get battery voltage 
+float getBatteryVoltage() {
+
+  int adcValue = analogRead(gBatteryPin);
+  float measuredVBat = adcValue;
+  measuredVBat *= 2; // we divided by 2, so multiply back
+  measuredVBat *= 3.3; // Multiply by 3.3V, our reference voltage
+  measuredVBat /= 1024; // convert to voltage
+  return measuredVBat;
 }
 
 // Update 7 segment display
@@ -340,6 +356,7 @@ void setup()
   Serial.println(F("******************************"));
 
   // Setup pins
+  pinMode(gLedPin, OUTPUT);
   pinMode(gButtonPins[BUTTON_UP], INPUT);
   pinMode(gButtonPins[BUTTON_DOWN], INPUT);
   for (int i = 0; i < SEGMENT_COUNT; i++) {
@@ -369,6 +386,29 @@ void loop()
         Serial.println("Setting current bank to " + String(lastBank) + ".");
       }
     }
+  }
+  
+  static unsigned long blinkStart = 0;
+  static bool blinkEnabled = false;
+  float batteryVoltage;
+  
+  batteryVoltage = getBatteryVoltage();
+  
+  // Blink led if power is low
+  if (batteryVoltage <= gBattLowVoltage) {
+    if (blinkEnabled) {
+      if (blinkStart - millis() >= gBlinkTime) {
+      	blinkStart = millis();
+      	gLedPin = !gLedPin;
+      }
+    } else {
+      blinkEnabled = true;
+      blinkStart = millis();
+      gLedPin = High;
+    }
+  } else if (batteryVoltage >= gBattOkayVoltage) {
+    blinkEnabled = false;
+    gLedPin = Low;
   }
   
   int rotaryPosition;

@@ -88,7 +88,7 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 		)
 
 #define MT8809_PINS_INIT()												\
-		MT8809_PIN_INITIALIZER(	&gGPIOBanks[GPIO1], 4,	/* reset */		\
+		MT8809_PIN_INITIALIZER(	&gGPIOBanks[GPIO2], 4,	/* reset */		\
 								&gGPIOBanks[GPIO2], 1,	/* cs */		\
 								&gGPIOBanks[GPIO0], 26,	/* strobe */	\
 								&gGPIOBanks[GPIO1], 14,	/* data */		\

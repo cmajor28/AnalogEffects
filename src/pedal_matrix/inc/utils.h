@@ -26,6 +26,8 @@
 #define log2(val) (8*sizeof(val) - __builtin_clzll(val) - 1)
 #define pow2(val) ((uint64_t)1 << (val))
 
+#undef DEBUG
+
 #ifdef DEBUG
 #define PRINT(fmt, ...) { \
 	flockfile(stderr); \

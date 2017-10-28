@@ -8,7 +8,7 @@ static int enable_switches(struct mt8809 *mt8809, bool enable) {
 	// Set output enable
 	for (int i = 0; i < MT8809_PIN_COUNT; i++) {
 		gpio_set_bit(mt8809->pinMap[i].gpio, GPIO_OE, mt8809->pinMap[i].pin, enable ? 0x0 : 0x1);
-		gpio_set_one_hot(mt8809->pinMap[i].gpio, GPIO_SETDATAOUT, mt8809->pinMap[i].pin);
+		gpio_set_one_hot(mt8809->pinMap[i].gpio, i == MT8809_RESET ? GPIO_CLEARDATAOUT : GPIO_SETDATAOUT, mt8809->pinMap[i].pin);
 	}
 
 	return 0;
@@ -18,14 +18,14 @@ static int clear_switches(struct mt8809 *mt8809) {
 
 	PRINT("mt8809: Clearing switch matrix.\n");
 
-	// Set active low reset to 0
-	gpio_set_one_hot(mt8809->pinMap[MT8809_RESET].gpio, GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_RESET].pin);
+	// Set active low reset to 0 (swapped due to level shifter)
+	gpio_set_one_hot(mt8809->pinMap[MT8809_RESET].gpio, GPIO_SETDATAOUT, mt8809->pinMap[MT8809_RESET].pin);
 
 	// Minimum 40ns pulse width
 	//sleep2(NANOSECONDS, 40);
 
-	// Set active low reset to 1
-	gpio_set_one_hot(mt8809->pinMap[MT8809_RESET].gpio, GPIO_SETDATAOUT, mt8809->pinMap[MT8809_RESET].pin);
+	// Set active low reset to 1 (swapped due to level shifter)
+	gpio_set_one_hot(mt8809->pinMap[MT8809_RESET].gpio, GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_RESET].pin);
 
 	// Minimum 10ns setup time
 	//sleep2(NANOSECONDS, 10);
@@ -81,21 +81,18 @@ int mt8809_set_switch(struct mt8809 *mt8809, uint8_t address, uint8_t set) {
 	// Set active low cs to 0
 	gpio_set_one_hot(mt8809->pinMap[MT8809_CS].gpio, GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_CS].pin);
 
-	// Minimum 10ns setup time
-	//sleep2(NANOSECONDS, 10);
-
-	// Set active low strobe to 0
-	gpio_set_one_hot(mt8809->pinMap[MT8809_STROBE].gpio, GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_STROBE].pin);
-
-	// Minimum 10ns setup time
-	//sleep2(NANOSECONDS, 10);
-
 	// Set data and address lines
 	gpio_set_one_hot(mt8809->pinMap[MT8809_DATA].gpio, set ? GPIO_SETDATAOUT : GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_DATA].pin);
 	for (int i = 0, j = MT8809_AX0; j <= MT8809_AY2; i++, j++) {
 		bool pin = (address & (1 << i)) ? TRUE : FALSE;
 		gpio_set_one_hot(mt8809->pinMap[j].gpio, pin ? GPIO_SETDATAOUT : GPIO_CLEARDATAOUT, mt8809->pinMap[j].pin);
 	}
+
+	// Minimum 10ns setup time
+	//sleep2(NANOSECONDS, 10);
+
+	// Set active low strobe to 0
+	gpio_set_one_hot(mt8809->pinMap[MT8809_STROBE].gpio, GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_STROBE].pin);
 
 	// Minimum 10ns setup time
 	//sleep2(NANOSECONDS, 10);
@@ -124,16 +121,7 @@ int mt8809_set_switches(struct mt8809 *mt8809, uint64_t switchSet) {
 	// Set active low cs to 0
 	gpio_set_one_hot(mt8809->pinMap[MT8809_CS].gpio, GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_CS].pin);
 
-	// Minimum 10ns setup time
-	//sleep2(NANOSECONDS, 10);
-
 	for (int i = 0; i < 64; i++) {
-		// Set active low strobe to 0
-		gpio_set_one_hot(mt8809->pinMap[MT8809_STROBE].gpio, GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_STROBE].pin);
-
-		// Minimum 10ns setup time
-		//sleep2(NANOSECONDS, 10);
-
 		// Set data and address lines
 		bool set = (switchSet & (1 << i)) ? TRUE : FALSE;
 		gpio_set_one_hot(mt8809->pinMap[MT8809_DATA].gpio, set ? GPIO_SETDATAOUT : GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_DATA].pin);
@@ -141,6 +129,12 @@ int mt8809_set_switches(struct mt8809 *mt8809, uint64_t switchSet) {
 			bool pin = (i & (1 << j)) ? TRUE : FALSE;
 			gpio_set_one_hot(mt8809->pinMap[k].gpio, pin ? GPIO_SETDATAOUT : GPIO_CLEARDATAOUT, mt8809->pinMap[k].pin);
 		}
+
+		// Minimum 10ns setup time
+		//sleep2(NANOSECONDS, 10);
+
+		// Set active low strobe to 0
+		gpio_set_one_hot(mt8809->pinMap[MT8809_STROBE].gpio, GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_STROBE].pin);
 
 		// Minimum 10ns setup time
 		//sleep2(NANOSECONDS, 10);
