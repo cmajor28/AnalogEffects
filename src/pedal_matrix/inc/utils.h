@@ -26,15 +26,6 @@
 #define log2(val) (8*sizeof(val) - __builtin_clzll(val) - 1)
 #define pow2(val) ((uint64_t)1 << (val))
 
-#undef DEBUG
-
-#ifdef DEBUG
-#define PRINT(fmt, ...) { \
-	flockfile(stderr); \
-	fprintf(stderr, fmt,##__VA_ARGS__); \
-	funlockfile(stderr); \
-}
-
 #define PRINT_LOG(fmt, ...) { \
 	flockfile(stderr); \
 	fprintf(stderr, "%s:%d (%s): ", __file__, __LINE__, __func__); \
@@ -42,9 +33,21 @@
 	fprintf(stderr, "\n"); \
 	funlockfile(stderr); \
 }
+
+#ifdef DEBUG
+#define PRINT(fmt, ...) { \
+	flockfile(stderr); \
+	fprintf(stderr, fmt,##__VA_ARGS__); \
+	funlockfile(stderr); \
+}
+#ifdef VERBOSE
+#define PRINTV(fmt, ...) PRINT(fmt, __VA_ARGS__)
+#else
+#define PRINTV(fmt, ...)
+#endif
 #else
 #define PRINT(fmt, ...)
-#define PRINT_LOG(fmt, ...)
+#define PRINTV(fmt, ...)
 #endif
 
 enum time_units {

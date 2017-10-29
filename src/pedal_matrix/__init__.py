@@ -1,7 +1,7 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, request
 from flask_bootstrap import Bootstrap
-import json
-import os.path
+import os
+import signal
 from ctypes import *
 from bluetooth.remote import *
 from gui.lcd import *
@@ -402,44 +402,43 @@ def set_mute_c(mute):
 
 
 def set_bank_py(bank):
-    info = {}
-    info["bank"] = int(bank)
-    Remote.updateInfo(info)
-    lcd.updateInfo(info)
+    global remoteInfo, lcdInfo
+    remoteInfo["bank"] = int(bank)
+    lcdInfo["bank"] = bank
+    remote.updateInfo(remoteInfo)
+    lcd.updateInfo(lcdInfo)
     return c_int(0)
 
 
 def set_preset_py(preset):
-    info = {}
-    info["preset"] = int(preset)
-    Remote.updateInfo(info)
-    lcd.updateInfo(info)
+    global lcdInfo
+    lcdInfo["preset"] = int(preset)
+    lcd.updateInfo(lcdInfo)
     return c_int(0)
 
 
 def set_mode_py(mode):
-    info = {}
-    info["mode"] = bool(mode)
-    lcd.updateInfo(info)
+    global lcdInfo
+    lcdInfo["mode"] = bool(mode)
+    lcd.updateInfo(lcdInfo)
     return c_int(0)
 
 
 def set_bypass_py(bypass):
-    info = {}
-    info["bypass"] = bool(bypass)
-    lcd.updateInfo(info)
+    global lcdInfo
+    lcdInfo["bypass"] = bool(bypass)
+    lcd.updateInfo(lcdInfo)
     return c_int(0)
 
 
 def set_mute_py(mute):
-    info = {}
-    info["mute"] = bool(mute)
-    lcd.updateInfo(info)
+    global lcdInfo
+    lcdInfo["mute"] = bool(mute)
+    lcd.updateInfo(lcdInfo)
     return c_int(0)
 
 
 def init_control():
-    global lcd, remote, lcdInfo, remoteInfo
     callbacks = AE_PRESET()
 
     c_int_arg_func = CFUNCTYPE(c_int, c_int)
@@ -452,18 +451,52 @@ def init_control():
     callbacks.muteEnabled = c_bool_arg_func(set_mute_py)
 
     c_lib.register_callbacks(byref(callbacks))
-    
 
-def run_gui(info):
-    global lcdInfo
+
+def lcdUpdate(info):
+    global lcdInfo, remoteInfo
+    if info["pedalMode"] != lcdInfo["pedalMode"]:
+        set_mode_c(info["pedalMode"])
+    if info["bypassMode"] != lcdInfo["bypassMode"]:
+        set_bypass_c(info["bypassMode"])
+    if info["muteMode"] != lcdInfo["muteMode"]:
+        set_mute_c(info["muteMode"])
+    if info["webEnabled"] != lcdInfo["webEnabled"]:
+        if info["webEnabled"]:
+            os.system("ifconfig wlan0 up")
+        else:
+            os.system("ifconfig wlan0 down")
+    if info["remotePaired"] != lcdInfo["remotePaired"]:
+        remoteInfo["id"] = None
+        remote.updateInfo(remoteInfo)
+    lcdInfo = info
+
+
+def remoteUpdate(info):
+    global lcdInfo, remoteInfo
+    if info["bank"] != remoteInfo["bank"]:
+        set_bank_py(info["bank"])
+    if info["id"] != remoteInfo["id"]:
+        lcdInfo["remoteID"] = info["id"]
+        lcdInfo["remotePaired"] = (info["id"] != None)
+    remoteInfo = info
+
+
+def run_gui():
     app = QApplication(sys.argv)
-    window = LCDWindow(lcdInfo)
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+    window = LCDWindow(lcdInfo, lcdUpdate)
     window.show()
     sys.exit(app.exec_())
+
+def run_app():
+    #app.run(host='0.0.0.0', port=5052, debug=True)
+    app.run(host='0.0.0.0', port=5052)
 
 
 if __name__ == "__main__":
     init_c_lib()
     init_control()
-    threading.Thread(target=run_gui, args=(lcdInfo,)).start()
-    app.run(host='0.0.0.0', port=5052, debug=True)
+    remote = Remote(remoteInfo, remoteUpdate)
+    threading.Thread(target=run_gui).start()
+    run_app()

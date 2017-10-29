@@ -56,7 +56,7 @@ class Remote:
             try:
                 self.adapter.start_scan()
                 # Search for the first UART device found.
-                self.device = UART.find_device(timeout_sec=None)
+                self.device = UART.find_device(timeout_sec=float("inf"))
                 if self.device is None:
                     raise RuntimeError('Failed to find UART device!')
             finally:
@@ -66,8 +66,8 @@ class Remote:
             print('Connecting to device...')
             self.device.connect()  # Will time out after 60 seconds, specify timeout_sec parameter to change the timeout.
 
-            # TODO check to see if device connected
-            #if self.device.
+            if self.device.is_connected():
+                continue
 
             self.info["id"] = self.device.id
 
