@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 #if not defined (_VARIANT_ARDUINO_DUE_X_) && not defined (_VARIANT_ARDUINO_ZERO_)
-  #include <SoftwareSerial.h>
+#include <SoftwareSerial.h>
 #endif
 
 #include "Adafruit_BLE.h"
@@ -357,10 +357,12 @@ void setup()
 
   // Setup pins
   pinMode(gLedPin, OUTPUT);
+  digitalWrite(gLedPin, HIGH);
   pinMode(gButtonPins[BUTTON_UP], INPUT);
   pinMode(gButtonPins[BUTTON_DOWN], INPUT);
   for (int i = 0; i < SEGMENT_COUNT; i++) {
     pinMode(gDisplayPins[i], OUTPUT);
+    digitalWrite(gDisplayPins[i], HIGH);
   }
 }
 
@@ -397,20 +399,20 @@ void loop()
   // Blink led if power is low
   if (batteryVoltage <= gBattLowVoltage) {
     if (blinkEnabled) {
-      if (blinkStart - millis() >= gBlinkTime) {
+      if (blinkStart + gBlinkTime <= millis()) {
       	blinkStart = millis();
       	digitalWrite(gLedPin, !digitalRead(gLedPin));
       }
     } else {
       blinkEnabled = true;
       blinkStart = millis();
-      digitalWrite(gLedPin, HIGH);
-      Serial1.println("Battery low!");
+      digitalWrite(gLedPin, LOW);
+      Serial.println("Battery low!");
     }
-  } else if (batteryVoltage >= gBattOkayVoltage) {
-    Serial1.println("Battery okay!");
+  } else if (blinkEnabled && batteryVoltage >= gBattOkayVoltage) {
+    Serial.println("Battery okay!");
     blinkEnabled = false;
-    digitalWrite(gLedPin, LOW);
+    digitalWrite(gLedPin, HIGH);
   }
   
   int rotaryPosition;
