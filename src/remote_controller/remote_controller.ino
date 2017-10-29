@@ -36,8 +36,8 @@ enum {
 // Constants
 const unsigned long gDisplayTime = 2000;
 const unsigned long gBlinkTime = 500;
-const float gBattLowVoltage = 3.5;
-const float gBattOkayVoltage = 3.6;
+const float gBattLowVoltage = 3.3;
+const float gBattOkayVoltage = 3.35;
 
 // Pins used
 const int gRotaryPin = A0;
@@ -399,16 +399,18 @@ void loop()
     if (blinkEnabled) {
       if (blinkStart - millis() >= gBlinkTime) {
       	blinkStart = millis();
-      	gLedPin = !gLedPin;
+      	digitalWrite(gLedPin, !digitalRead(gLedPin));
       }
     } else {
       blinkEnabled = true;
       blinkStart = millis();
-      gLedPin = High;
+      digitalWrite(gLedPin, HIGH);
+      Serial1.println("Battery low!");
     }
   } else if (batteryVoltage >= gBattOkayVoltage) {
+    Serial1.println("Battery okay!");
     blinkEnabled = false;
-    gLedPin = Low;
+    digitalWrite(gLedPin, LOW);
   }
   
   int rotaryPosition;
