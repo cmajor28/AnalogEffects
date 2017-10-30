@@ -1,11 +1,15 @@
 from flask import Flask, request
 from flask_bootstrap import Bootstrap
 import os
+import time
 import signal
 from ctypes import *
 from bluetooth.remote import *
 from gui.lcd import *
 import threading
+import socket
+import fcntl
+import struct
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -403,39 +407,100 @@ def set_mute_c(mute):
 
 def set_bank_py(bank):
     global remoteInfo, lcdInfo
-    remoteInfo["bank"] = int(bank)
-    lcdInfo["bank"] = bank
-    remote.updateInfo(remoteInfo)
-    lcd.updateInfo(lcdInfo)
+    remoteInfo["bank"] = c_int(bank).value
+    lcdInfo["bank"] = c_int(bank).value
+    if remote is not None:
+        remote.updateInfo(remoteInfo)
+    if lcd is not None:
+        lcd.updateInfo(lcdInfo)
     return c_int(0)
 
 
 def set_preset_py(preset):
     global lcdInfo
-    lcdInfo["preset"] = int(preset)
-    lcd.updateInfo(lcdInfo)
+    lcdInfo["preset"] = c_int(preset).value
+    if lcd is not None:
+        lcd.updateInfo(lcdInfo)
     return c_int(0)
 
 
 def set_mode_py(mode):
     global lcdInfo
-    lcdInfo["mode"] = bool(mode)
-    lcd.updateInfo(lcdInfo)
+    lcdInfo["mode"] = c_bool(mode).value
+    if lcd is not None:
+        lcd.updateInfo(lcdInfo)
     return c_int(0)
 
 
 def set_bypass_py(bypass):
     global lcdInfo
-    lcdInfo["bypass"] = bool(bypass)
-    lcd.updateInfo(lcdInfo)
+    lcdInfo["bypass"] = c_bool(bypass).value
+    if lcd is not None:
+        lcd.updateInfo(lcdInfo)
     return c_int(0)
 
 
 def set_mute_py(mute):
     global lcdInfo
-    lcdInfo["mute"] = bool(mute)
-    lcd.updateInfo(lcdInfo)
+    lcdInfo["mute"] = c_bool(mute).value
+    if lcd is not None:
+        lcd.updateInfo(lcdInfo)
     return c_int(0)
+
+
+def get_ip_address(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        ip = socket.inet_ntoa(fcntl.ioctl(
+            s.fileno(),
+            0x8915,  # SIOCGIFADDR
+            struct.pack('256s', bytes(ifname[:15], 'utf-8'))
+        )[20:24])
+        ip = ip + ":5052"
+    except:
+        ip = ''
+    finally:
+        return ip
+
+
+def update_ip_address():
+    global lcdInfo
+    while True:
+        ip = get_ip_address("wlan0")
+        if ip != lcdInfo["webAddress"]:
+            print("Web Address Changed: '" + ip + "'")
+            lcdInfo["webAddress"] = ip
+            if lcd is not None:
+                lcd.updateInfo()
+        time.sleep(5)
+
+
+def init_structs():
+    global lcdInfo, remoteInfo
+    bank = c_int(0)
+    c_lib.get_bank(byref(bank))
+    preset = c_int(0)
+    c_lib.get_preset(byref(preset))
+    mode = c_bool(False)
+    c_lib.get_mode(byref(mode))
+    bypass = c_bool(False)
+    c_lib.get_bypass(byref(bypass))
+    mute = c_bool(False)
+    c_lib.get_mute(byref(mute))
+    lcdInfo["bank"] = remoteInfo["bank"] = bank.value
+    lcdInfo["preset"] = preset.value
+    lcdInfo["presetName"] = None # TODO Lucca I need the preset name
+    lcdInfo["webAddress"] = get_ip_address("wlan0")
+    lcdInfo["remoteID"] = None
+    lcdInfo["pedalMode"] = mode.value
+    lcdInfo["bypassMode"] = bypass.value
+    lcdInfo["muteMode"] = mute.value
+    lcdInfo["webEnabled"] = True
+    lcdInfo["remotePaired"] = False
+
+    print("Web Address: '" + lcdInfo["webAddress"] + "'")
+
+    threading.Thread(target=update_ip_address).start()
 
 
 def init_control():
@@ -463,13 +528,15 @@ def lcdUpdate(info):
         set_mute_c(info["muteMode"])
     if info["webEnabled"] != lcdInfo["webEnabled"]:
         if info["webEnabled"]:
+            print("Enabling wlan0...")
             os.system("ifconfig wlan0 up")
         else:
+            print("Disabling wlan0...")
             os.system("ifconfig wlan0 down")
     if info["remotePaired"] != lcdInfo["remotePaired"]:
         remoteInfo["id"] = None
         remote.updateInfo(remoteInfo)
-    lcdInfo = info
+    lcdInfo = info.copy()
 
 
 def remoteUpdate(info):
@@ -479,13 +546,13 @@ def remoteUpdate(info):
     if info["id"] != remoteInfo["id"]:
         lcdInfo["remoteID"] = info["id"]
         lcdInfo["remotePaired"] = (info["id"] != None)
-    remoteInfo = info
+    remoteInfo = info.copy()
 
 
 def run_gui():
     app = QApplication(sys.argv)
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
-    window = LCDWindow(lcdInfo, lcdUpdate)
+    #signal.signal(signal.SIGINT, signal.SIG_DFL)
+    window = LCDWindow(lcdInfo.copy(), lcdUpdate)
     window.show()
     sys.exit(app.exec_())
 
@@ -497,6 +564,7 @@ def run_app():
 if __name__ == "__main__":
     init_c_lib()
     init_control()
-    remote = Remote(remoteInfo, remoteUpdate)
+    init_structs()
+    remote = Remote(remoteInfo.copy(), remoteUpdate)
     threading.Thread(target=run_gui).start()
     run_app()

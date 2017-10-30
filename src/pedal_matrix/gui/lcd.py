@@ -11,32 +11,33 @@ class LCDWindow(QMainWindow, Ui_MainWindow):
         self.showMaximized()
         self.setWindowFlags(Qt.FramelessWindowHint)
 
-        self.info = info
+        self.updateInfo(info)
+
         self.updateInfoCallback = updateInfoCallback
         self.checkBoxPedalMode.clicked.connect(self.pedalModeChecked)
         self.checkBoxBypass.clicked.connect(self.bypassModeChecked)
-        self.checkBoxMute.clicked.connect(self.muteModeeChecked)
+        self.checkBoxMute.clicked.connect(self.muteModeChecked)
         self.checkBoxEnabled.clicked.connect(self.webEnabledChecked)
         self.checkBoxPaired.clicked.connect(self.remotePairedChecked)
 
-    def pedalModeChecked(self, checked):
-        self.info["pedalMode"] = checked
+    def pedalModeChecked(self):
+        self.info["pedalMode"] = self.checkBoxPedalMode.isChecked()
         self.updateInfoCallback(self.info)
 
-    def bypassModeChecked(self, checked):
-        self.info["bypassMode"] = checked
+    def bypassModeChecked(self):
+        self.info["bypassMode"] = self.checkBoxBypass.isChecked()
         self.updateInfoCallback(self.info)
 
-    def muteModeChecked(self, checked):
-        self.info["muteMode"] = checked
+    def muteModeChecked(self):
+        self.info["muteMode"] = self.checkBoxMute.isChecked()
         self.updateInfoCallback(self.info)
 
-    def webEnabledChecked(self, checked):
-        self.info["webEnabled"] = checked
+    def webEnabledChecked(self):
+        self.info["webEnabled"] = self.checkBoxEnabled.isChecked()
         self.updateInfoCallback(self.info)
 
-    def remotePairedChecked(self, checked):
-        self.info["remotePaired"] = checked
+    def remotePairedChecked(self):
+        self.info["remotePaired"] = self.checkBoxPaired.isChecked()
         self.updateInfoCallback(self.info)
 
     def updateInfo(self, info):

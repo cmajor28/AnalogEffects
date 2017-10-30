@@ -2,6 +2,7 @@ import Adafruit_BluefruitLE
 from Adafruit_BluefruitLE.services import UART
 import json
 import threading
+import time
 
 class Remote:
     # Get the BLE provider for the current platform.
@@ -53,20 +54,22 @@ class Remote:
         while (True):
             # Scan for UART devices.
             print('Searching for UART device...')
-            try:
+            while (True):
                 self.adapter.start_scan()
                 # Search for the first UART device found.
-                self.device = UART.find_device(timeout_sec=float("inf"))
-                if self.device is None:
-                    raise RuntimeError('Failed to find UART device!')
-            finally:
-                # Make sure scanning is stopped before exiting.
+                self.device = UART.find_device(timeout_sec=50)
                 self.adapter.stop_scan()
+                if self.device is None:
+                    time.sleep(10)
+                    continue
+                else:
+                    break
 
             print('Connecting to device...')
             self.device.connect()  # Will time out after 60 seconds, specify timeout_sec parameter to change the timeout.
 
-            if self.device.is_connected():
+            if not self.device.is_connected():
+                print('Failed to connect to device...')
                 continue
 
             self.info["id"] = self.device.id
@@ -91,6 +94,7 @@ class Remote:
 
             finally:
                 # Make sure device is disconnected on exit.
+                print('Disconnecting from device...')
                 self.device.disconnect()
                 self.device = None
                 self.info["id"] = None
