@@ -2,6 +2,22 @@ import sys
 from PySide.QtCore import *
 from PySide.QtGui import *
 from .lcdWindow import Ui_MainWindow
+from queue import Queue
+
+class Invoker(QObject):
+    def __init__(self):
+        super(Invoker, self).__init__()
+        self.queue = Queue()
+
+    def invoke(self, func, *args):
+        f = lambda: func(*args)
+        self.queue.put(f)
+        QMetaObject.invokeMethod(self, "handler", QtCore.Qt.QueuedConnection)
+
+    @Slot()
+    def handler(self):
+        f = self.queue.get()
+        f()
 
 class LCDWindow(QMainWindow, Ui_MainWindow):
 

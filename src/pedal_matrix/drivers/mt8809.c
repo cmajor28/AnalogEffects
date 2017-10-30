@@ -116,7 +116,7 @@ int mt8809_set_switch(struct mt8809 *mt8809, uint8_t address, uint8_t set) {
 
 int mt8809_set_switches(struct mt8809 *mt8809, uint64_t switchSet) {
 
-	PRINT("mt8809: Setting switches to 0x%016llX\n", (long long unsigned)switchSet);
+	PRINT("mt8809: Setting switches to 0x%016llX.\n", (long long unsigned)switchSet);
 
 	// Set active low cs to 0
 	gpio_set_one_hot(mt8809->pinMap[MT8809_CS].gpio, GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_CS].pin);

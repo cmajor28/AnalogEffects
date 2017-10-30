@@ -57,7 +57,10 @@ class Remote:
             while (True):
                 self.adapter.start_scan()
                 # Search for the first UART device found.
-                self.device = UART.find_device(timeout_sec=50)
+                try:
+                    self.device = UART.find_device(timeout_sec=50)
+                except:
+                    pass
                 self.adapter.stop_scan()
                 if self.device is None:
                     time.sleep(10)
@@ -91,6 +94,13 @@ class Remote:
                     if received is not None:
                         # Received data, print it out.
                         print('Received: {0}'.format(received))
+
+                        msg = json.loads(received)
+                        if "preset" in msg:
+                            self.info["preset"] = msg["preset"]
+                        if "bank" in  msg:
+                            self.info["bank"] = msg["bank"]
+                        self.updateInfoCallback(self.info)
 
             finally:
                 # Make sure device is disconnected on exit.

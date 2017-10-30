@@ -35,8 +35,12 @@ class AE_CALLBACKS(Structure):
 remote = None
 lcd = None
 
+# Used for qt
+guiInvoker = None
+
 remoteInfo = {"id": "",
-              "bank": -1}
+              "bank": -1,
+              "preset": -1}
 
 lcdInfo = {"bank": -1,
            "preset": -1,
@@ -412,15 +416,16 @@ def set_bank_py(bank):
     if remote is not None:
         remote.updateInfo(remoteInfo)
     if lcd is not None:
-        lcd.updateInfo(lcdInfo)
+        guiInvoker.invoke(lcd.updateInfo, lcdInfo)
     return c_int(0)
 
 
 def set_preset_py(preset):
-    global lcdInfo
+    global remoteInfo, lcdInfo
     lcdInfo["preset"] = c_int(preset).value
+    remoteInfo["preset"] = c_int(preset).value
     if lcd is not None:
-        lcd.updateInfo(lcdInfo)
+        guiInvoker.invoke(lcd.updateInfo, lcdInfo)
     return c_int(0)
 
 
@@ -428,7 +433,7 @@ def set_mode_py(mode):
     global lcdInfo
     lcdInfo["mode"] = c_bool(mode).value
     if lcd is not None:
-        lcd.updateInfo(lcdInfo)
+        guiInvoker.invoke(lcd.updateInfo, lcdInfo)
     return c_int(0)
 
 
@@ -436,7 +441,7 @@ def set_bypass_py(bypass):
     global lcdInfo
     lcdInfo["bypass"] = c_bool(bypass).value
     if lcd is not None:
-        lcd.updateInfo(lcdInfo)
+        guiInvoker.invoke(lcd.updateInfo, lcdInfo)
     return c_int(0)
 
 
@@ -444,7 +449,7 @@ def set_mute_py(mute):
     global lcdInfo
     lcdInfo["mute"] = c_bool(mute).value
     if lcd is not None:
-        lcd.updateInfo(lcdInfo)
+        guiInvoker.invoke(lcd.updateInfo, lcdInfo)
     return c_int(0)
 
 
@@ -466,12 +471,12 @@ def get_ip_address(ifname):
 def update_ip_address():
     global lcdInfo
     while True:
-        ip = get_ip_address("wlan0")
+        ip = get_ip_address("usb0")
         if ip != lcdInfo["webAddress"]:
             print("Web Address Changed: '" + ip + "'")
             lcdInfo["webAddress"] = ip
             if lcd is not None:
-                lcd.updateInfo()
+                guiInvoker.invoke(lcd.updateInfo, lcdInfo)
         time.sleep(5)
 
 
@@ -542,10 +547,15 @@ def lcdUpdate(info):
 def remoteUpdate(info):
     global lcdInfo, remoteInfo
     if info["bank"] != remoteInfo["bank"]:
-        set_bank_py(info["bank"])
+        lcdInfo["bank"] = info["bank"]
+        set_bank_c(info["bank"])
+    if info["preset"] != remoteInfo["preset"]:
+        lcdInfo["preset"] = info["preset"]
+        set_preset_c(info["preset"])
     if info["id"] != remoteInfo["id"]:
         lcdInfo["remoteID"] = info["id"]
         lcdInfo["remotePaired"] = (info["id"] != None)
+    guiInvoker.invoke(lcd.updateInfo, lcdInfo)
     remoteInfo = info.copy()
 
 
@@ -554,6 +564,7 @@ def run_gui():
     #signal.signal(signal.SIGINT, signal.SIG_DFL)
     window = LCDWindow(lcdInfo.copy(), lcdUpdate)
     window.show()
+    guiInvoker = Invoker()
     sys.exit(app.exec_())
 
 def run_app():
