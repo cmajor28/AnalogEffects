@@ -1,0 +1,93 @@
+(ExpressProject ""
+  (ProjectVersion "19981106")
+  (ProjectType "PCB")
+  (Folder "Design Resources"
+    (Folder "Library"
+      (File ".\library2.olb"
+        (Type "Schematic Library"))
+      (File ".\master schematic.olb"
+        (Type "Schematic Library")))
+    (File ".\master schematic.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x")
+    (NoModify)
+    (Netlist_TAB "3")
+    (LAYOUT_Netlist_File "MASTER SCHEMATIC.MNL")
+    (LAYOUT_PCB_Footprint "{PCB Footprint}")
+    (FALSE)
+    (LAYOUT_Units "0")
+    (Board_sim_option "VHDL_flow")
+    (FALSE)
+    (FALSE)
+    (FALSE)
+    (FALSE))
+  (Folder "Outputs"
+    (File ".\master schematic.mnl"
+      (Type "LAYOUT Netlist File")))
+  (Folder "Referenced Projects")
+  (PartMRUSelector
+    (OFFPAGELEFT-R
+      (LibraryName "D:\ANALOG FX\NEW\MASTER SCHEMATIC.OLB")
+      (DeviceIndex "0"))
+    (MAX4544
+      (FullPartName "MAX4544.Normal")
+      (LibraryName "D:\ANALOG FX\NEW\LIBRARY2.OLB")
+      (DeviceIndex "0"))
+    (0
+      (LibraryName "D:\ANALOG FX\NEW\MASTER SCHEMATIC.OLB")
+      (DeviceIndex "0"))
+    (R
+      (FullPartName "R.Normal")
+      (LibraryName "D:\ANALOG FX\NEW\DISCRETE.OLB")
+      (DeviceIndex "0"))
+    (MMBT3904/SOT
+      (FullPartName "MMBT3904/SOT.Normal")
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\TRANSISTOR.OLB")
+      (DeviceIndex "0"))
+    (CON6
+      (FullPartName "CON6.Normal")
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\CONNECTOR.OLB")
+      (DeviceIndex "0"))
+    (C
+      (FullPartName "C.Normal")
+      (LibraryName "D:\ANALOG FX\NEW\ANALOG.OLB")
+      (DeviceIndex "0"))
+    ("Beaglebone Black"
+      (FullPartName "Beaglebone Black.Normal")
+      (LibraryName "D:\ANALOG FX\NEW\LIBRARY2.OLB")
+      (DeviceIndex "0"))
+    (DG449
+      (FullPartName "DG449.Normal")
+      (LibraryName "D:\ANALOG FX\NEW\LIBRARY2.OLB")
+      (DeviceIndex "0")))
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources" "E:\Analog FX\new\master schematic.dsn")
+      (Path "Design Resources" "E:\Analog FX\new\master schematic.dsn"
+         "SCHEMATIC1")
+      (Path "Design Resources" "Library")
+      (Path "Design Resources" "Library"
+         "E:\Analog FX\new\master schematic.olb")
+      (Path "Outputs")
+      (Select "Design Resources" "E:\Analog FX\new\master schematic.dsn"
+         "SCHEMATIC1" "MATRIX"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -30 0 200 0 681"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -1 -1 25 2147 25 735")
+        (Scroll "-277 27")
+        (Zoom "100")
+        (Occurrence "/"))
+      (Path "E:\ANALOG FX\NEW\MASTER SCHEMATIC.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "MATRIX")))
+  (MPSSessionName "meadows")
+  (ISPCBBASICLICENSE "false"))

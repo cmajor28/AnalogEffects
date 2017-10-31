@@ -1,0 +1,172 @@
+(ExpressProject "Master Schematic"
+  (ProjectVersion "19981106")
+  (ProjectType "PCB")
+  (Folder "Design Resources"
+    (Folder "Library"
+      (File ".\library2.olb"
+        (Type "Schematic Library")))
+    (NoModify)
+    (File ".\master schematic.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x")
+    (Netlist_TAB "3")
+    (LAYOUT_Netlist_File "MASTER SCHEMATIC.MNL")
+    (LAYOUT_PCB_Footprint "{PCB Footprint}")
+    (FALSE)
+    (LAYOUT_Units "0")
+    (CrossRef_Scope "0")
+    (Crossref__Mode "0")
+    (CrossRef_Sorting "0")
+    (CrossRef_Destination_File "E:\ANALOG FX\MASTER SCHEMATIC.CSV")
+    (Crossref__Outputtype "1")
+    (CrossRef_XY "FALSE")
+    (CrossRef_Unused "FALSE")
+    (XRF_View_Output "TRUE")
+    ( "FALSE"))
+  (Folder "Outputs"
+    (File ".\master schematic.mnl"
+      (Type "LAYOUT Netlist File"))
+    (File ".\master schematic.csv"
+      (Type "Report")))
+  (Folder "Referenced Projects")
+  (PartMRUSelector
+    (VCC
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (OFFPAGELEFT-R
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (0
+      (LibraryName
+         "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\PSPICE\SOURCE.OLB")
+      (DeviceIndex "0"))
+    (C
+      (FullPartName "C.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\PSPICE\ANALOG.OLB")
+      (DeviceIndex "0"))
+    ("RCA JACK"
+      (FullPartName "RCA JACK.Normal")
+      (LibraryName "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\CONNECTOR.OLB")
+      (DeviceIndex "0"))
+    (LM2950/TO
+      (FullPartName "LM2950/TO.Normal")
+      (LibraryName "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\REGULATOR.OLB")
+      (DeviceIndex "0"))
+    (CON26
+      (FullPartName "CON26.Normal")
+      (LibraryName "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\CONNECTOR.OLB")
+      (DeviceIndex "0"))
+    (CON25
+      (FullPartName "CON25.Normal")
+      (LibraryName "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\CONNECTOR.OLB")
+      (DeviceIndex "0"))
+    (CON20
+      (FullPartName "CON20.Normal")
+      (LibraryName "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\CONNECTOR.OLB")
+      (DeviceIndex "0"))
+    ("SW SPDT"
+      (FullPartName "SW SPDT.Normal")
+      (LibraryName "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\DISCRETE.OLB")
+      (DeviceIndex "0"))
+    (PCF8575
+      (FullPartName "PCF8575.Normal")
+      (LibraryName "E:\ANALOG FX\LIBRARY2.OLB")
+      (DeviceIndex "0"))
+    (GND_SIGNAL
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (R
+      (FullPartName "R.Normal")
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\DISCRETE.OLB")
+      (DeviceIndex "0"))
+    (C_elect
+      (FullPartName "C_elect.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\PSPICE\ANALOG.OLB")
+      (DeviceIndex "0"))
+    ("GND_FIELD SIGNAL"
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    ("CONN JACK PWR"
+      (FullPartName "CONN JACK PWR.Normal")
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\CONNECTOR.OLB")
+      (DeviceIndex "0"))
+    (TS5A3159
+      (FullPartName "TS5A3159.Normal")
+      (LibraryName "D:\ANALOG FX\LIBRARY2.OLB")
+      (DeviceIndex "0"))
+    (MT8809
+      (FullPartName "MT8809.Normal")
+      (LibraryName "D:\ANALOG FX\LIBRARY2.OLB")
+      (DeviceIndex "0"))
+    ("HEADER 23x2"
+      (FullPartName "HEADER 23x2.Normal")
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\CONNECTOR.OLB")
+      (DeviceIndex "0"))
+    ("HEADER 46x2"
+      (FullPartName "HEADER 46x2.Normal")
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\CONNECTOR.OLB")
+      (DeviceIndex "0"))
+    (CON24A
+      (FullPartName "CON24A.Normal")
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\CONNECTOR.OLB")
+      (DeviceIndex "0")))
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources" ".\master schematic.dsn")
+      (Path "Design Resources" ".\master schematic.dsn" "SCHEMATIC1")
+      (Path "Design Resources" "Library")
+      (Path "Outputs")
+      (Select "Design Resources" ".\master schematic.dsn"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 2 3 -1 -1 -8 -31 0 200 0 707"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 597 1290 215 769")
+        (Scroll "0 59")
+        (Zoom "102")
+        (Occurrence "/"))
+      (Path "E:\ANALOG FX\MASTER SCHEMATIC.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "BEAGLEBONE_BLACK"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 -7 663 6 461")
+        (Scroll "0 0")
+        (Zoom "102")
+        (Occurrence "/"))
+      (Path "E:\ANALOG FX\MASTER SCHEMATIC.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "LCD"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 1241 1839 -1 454")
+        (Scroll "0 0")
+        (Zoom "102")
+        (Occurrence "/"))
+      (Path "E:\ANALOG FX\MASTER SCHEMATIC.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "WIRELESS"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 156 1766 156 701")
+        (Scroll "0 281")
+        (Zoom "130")
+        (Occurrence "/"))
+      (Path "E:\ANALOG FX\MASTER SCHEMATIC.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "MATRIX")))
+  (MPSSessionName "wm482")
+  (ISPCBBASICLICENSE "false")
+  (LastUsedLibraryBrowseDirectory "C:\Cadence\SPB_17.2\tools\capture\library"))

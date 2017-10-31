@@ -1,0 +1,202 @@
+
+**** 08/27/17 16:23:31 ****** PSpice 17.2.0 (March 2016) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-test"  [ E:\Analog FX\scrap-pspicefiles\schematic1\test.sim ] 
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "test.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of C:\Users\wm482\cdssetup\OrCAD_PSpice\17.2.0\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.TRAN  0 1m 0 .1u 
+.FOUR 1k 5 V([VOUT]) 
+.OPTIONS ADVCONV
+.PROBE64 V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+
+**** INCLUDING SCHEMATIC1.net ****
+* source SCRAP
+C_C1         N00219 N00197  10uF  TC=0,0 
+R_R1         GND_SIGNAL N00197  1k TC=0,0 
+V_V2         N00703 0 5VDC
+X_U1         N00197 VOUT N00703 0 VOUT uA741
+R_R3         GND_SIGNAL VOUT  1.5k TC=0,0 
+R_R5         N00703 GND_SIGNAL  10k TC=0,0 
+R_R6         GND_SIGNAL 0  10k TC=0,0 
+C_C3         N00703 GND_SIGNAL  220u  TC=0,0 
+C_C4         GND_SIGNAL 0  220u  TC=0,0 
+V_V3         N00219 GND_SIGNAL  
++SIN 0 1 1k 0 0 0
+
+**** RESUMING test.cir ****
+.END
+
+**** 08/27/17 16:23:31 ****** PSpice 17.2.0 (March 2016) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-test"  [ E:\Analog FX\scrap-pspicefiles\schematic1\test.sim ] 
+
+
+ ****     Diode MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               X_U1.dx         X_U1.dy         
+          IS  800.000000E-18  800.000000E-18 
+          RS    1               1.000000E-03 
+         CJO                   10.000000E-12 
+
+
+**** 08/27/17 16:23:31 ****** PSpice 17.2.0 (March 2016) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-test"  [ E:\Analog FX\scrap-pspicefiles\schematic1\test.sim ] 
+
+
+ ****     BJT MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               X_U1.qx         
+               NPN             
+       LEVEL    1            
+          IS  800.000000E-18 
+          BF   93.75         
+          NF    1            
+          BR    1            
+          NR    1            
+         ISS    0            
+          RE    0            
+          RC    0            
+         CJE    0            
+         VJE     .75         
+         CJC    0            
+         VJC     .75         
+         MJC     .33         
+        XCJC    1            
+         CJS    0            
+         VJS     .75         
+          KF    0            
+          AF    1            
+          CN    2.42         
+           D     .87         
+
+
+**** 08/27/17 16:23:31 ****** PSpice 17.2.0 (March 2016) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-test"  [ E:\Analog FX\scrap-pspicefiles\schematic1\test.sim ] 
+
+
+ ****     INITIAL TRANSIENT SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+( VOUT)    2.4993  (N00197)    2.4993 (N00219)    2.4994 (N00703)    5.0000     
+
+(X_U1.6) 61.44E-09 (X_U1.7)    2.4993 (X_U1.8)    2.4993 (X_U1.9)    0.0000     
+
+(X_U1.10)    1.8917                   (X_U1.11)    4.9603                       
+
+(X_U1.12)    4.9603                   (X_U1.13)    1.9055                       
+
+(X_U1.14)    1.9055                   (X_U1.53)    4.0000                       
+
+(X_U1.54)    1.0000                   (X_U1.90) 39.47E-06                       
+
+(X_U1.91)   40.0000                   (X_U1.92)  -40.0000                       
+
+(X_U1.99)    2.5000                   (GND_SIGNAL)    2.4994                
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    V_V2        -5.403E-04
+    V_V3         0.000E+00
+    X_U1.vb      6.144E-13
+    X_U1.vc      1.501E-12
+    X_U1.ve      1.363E-12
+    X_U1.vlim    3.947E-08
+    X_U1.vlp    -4.000E-11
+    X_U1.vln    -4.000E-11
+
+    TOTAL POWER DISSIPATION   2.70E-03  WATTS
+
+
+**** 08/27/17 16:23:31 ****** PSpice 17.2.0 (March 2016) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-test"  [ E:\Analog FX\scrap-pspicefiles\schematic1\test.sim ] 
+
+
+ ****     FOURIER ANALYSIS                 TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+FOURIER COMPONENTS OF TRANSIENT RESPONSE V(VOUT)
+
+
+
+ DC COMPONENT =   2.4844E+00
+
+ HARMONIC   FREQUENCY     FOURIER     NORMALIZED     PHASE     NORMALIZED
+    NO         (HZ)      COMPONENT     COMPONENT     (DEG)     PHASE (DEG)
+
+     1    1.0000E+03   9.9936E-01   1.0000E+00   8.3864E-01   0.0000E+00
+     2    2.0000E+03   2.3562E-04   2.3577E-04  -1.7957E+02  -1.8124E+02
+     3    3.0000E+03   1.5821E-04   1.5831E-04  -1.7974E+02  -1.8225E+02
+     4    4.0000E+03   1.1866E-04   1.1873E-04  -1.7983E+02  -1.8318E+02
+     5    5.0000E+03   9.4927E-05   9.4988E-05  -1.7989E+02  -1.8408E+02
+
+
+     TOTAL HARMONIC DISTORTION =   3.2213E-02 PERCENT
+
+
+          JOB CONCLUDED
+
+**** 08/27/17 16:23:31 ****** PSpice 17.2.0 (March 2016) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-test"  [ E:\Analog FX\scrap-pspicefiles\schematic1\test.sim ] 
+
+
+ ****     JOB STATISTICS SUMMARY
+
+
+******************************************************************************
+
+
+
+  Total job time (using Solver 1)   =         .45
+

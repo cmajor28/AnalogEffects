@@ -1,0 +1,56 @@
+AutoECO Report
+FILE-A: C:\CADENCE\SPB_16.2\TOOLS\LAYOUT_PLUS\DATA\_DEFAULT.TCH
+FILE-B: E:\ANALOG FX\NEW\MINIPB.MNL
+If "*EOF*" immediately follows, no changes were made
+Adding footprint SM/R_0805
+Adding footprint BUTTON_SM_WHITETILE
+Adding footprint BLKCON.100/VH/TM2OE/W.200/26
+Adding package LED
+Adding package JUMPER2
+Adding package R
+Adding package CON26
+Adding component D2
+Adding component JP1
+Adding component R1
+Adding component JP5
+Adding component JP2
+Adding component D3
+Adding component R4
+Adding component JP6
+Adding component R2
+Adding component JP3
+Adding component D4
+Adding component D1
+Adding component JP4
+Adding component J17
+Adding component R3
+Adding net 0
+Adding net SW8
+Adding net SW_UP
+Adding net SW_DOWN
+Adding net LED3
+Adding net LED2
+Adding net LED1
+Adding net LED10
+Adding net LED9
+Adding net LED8
+Adding net SW7
+Adding net SW6
+Adding net SW5
+Adding net SW4
+Adding net SW3
+Adding net SW2
+Adding net SW1
+Adding net LED7
+Adding net LED6
+Adding net LED5
+Adding net LED4
+Adding net N180936
+Adding net N181284
+Adding net N181403
+Adding net N181646
+Adding net VDD_3V3B
+Adding net N176839
+Deleting net DEFAULT
+*EOF*
+No errors found
