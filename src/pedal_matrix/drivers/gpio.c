@@ -192,7 +192,7 @@ int gpio_uninit(struct gpio *gpio) {
 
 int gpio_set_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t set) {
 
-	PRINT("gpio-%d: Setting reg 0x%04X bit %u to %u.\n", gpio->bank, reg, bit, set);
+	PRINTV("gpio-%d: Setting reg 0x%04X bit %u to %u.\n", gpio->bank, reg, bit, set);
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmapAddress + reg;
@@ -207,7 +207,7 @@ int gpio_set_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t set) {
 
 int gpio_set_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t value) {
 
-	PRINT("gpio-%d: Setting reg 0x%04X bits 0x%08X to 0x%08X.\n", gpio->bank, reg, bits, value);
+	PRINTV("gpio-%d: Setting reg 0x%04X bits 0x%08X to 0x%08X.\n", gpio->bank, reg, bits, value);
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmapAddress + reg;
@@ -223,7 +223,7 @@ int gpio_set_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t value
 
 int gpio_set_value(struct gpio *gpio, uint32_t reg, uint32_t value) {
 
-	PRINT("gpio-%d: Setting reg 0x%04X to 0x%08X.\n", gpio->bank, reg, value);
+	PRINTV("gpio-%d: Setting reg 0x%04X to 0x%08X.\n", gpio->bank, reg, value);
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmapAddress + reg;
@@ -235,7 +235,7 @@ int gpio_set_value(struct gpio *gpio, uint32_t reg, uint32_t value) {
 
 int gpio_set_one_hot(struct gpio *gpio, uint32_t reg, uint8_t bit) {
 
-	PRINT("gpio-%d: Setting reg 0x%04X to 0x%08X.\n", gpio->bank, reg, 1 << bit);
+	PRINTV("gpio-%d: Setting reg 0x%04X to 0x%08X.\n", gpio->bank, reg, 1 << bit);
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmapAddress + reg;

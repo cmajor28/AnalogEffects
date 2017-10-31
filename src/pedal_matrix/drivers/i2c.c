@@ -47,7 +47,7 @@ int i2c_uninit(struct i2c *i2c) {
 int i2c_read(struct i2c *i2c, void *buffer, unsigned int size) {
 
 	int ret;
-	PRINT("i2c-%d: Reading %u bytes from device 0x%02X.\n", i2c->bus, size, i2c->address);
+	PRINTV("i2c-%d: Reading %u bytes from device 0x%02X.\n", i2c->bus, size, i2c->address);
 //	ret = read(i2c->fd, buffer, size);
 //	if (ret != size) {
 //		PRINT_LOG("read() failed!");
@@ -60,7 +60,7 @@ int i2c_read(struct i2c *i2c, void *buffer, unsigned int size) {
 int i2c_write(struct i2c *i2c, void *buffer, unsigned int size) {
 
 	int ret;
-	PRINT("i2c-%d: Writing %u bytes to device 0x%02X.\n", i2c->bus, size, i2c->address);
+	PRINTV("i2c-%d: Writing %u bytes to device 0x%02X.\n", i2c->bus, size, i2c->address);
 //	ret = write(i2c->fd, buffer, size);
 //	if (ret != size) {
 //		PRINT_LOG("write() failed!");

@@ -126,7 +126,7 @@ int gpio_ext_set_bit(struct gpio_ext *gpioExt, uint8_t bit, uint8_t set) {
 	int ret;
 	uint16_t values = gpioExt->values;
 
-	PRINT("pcf857x-0x%02X: Setting bit %u to %u.\n", gpioExt->i2c->address, bit, set);
+	PRINTV("pcf857x-0x%02X: Setting bit %u to %u.\n", gpioExt->i2c->address, bit, set);
 
 	// Calculate new values
 	values ^= (-set ^ values) & (1 << bit);
@@ -140,7 +140,7 @@ int gpio_ext_set_bits(struct gpio_ext *gpioExt, uint16_t bits, uint16_t value) {
 	int ret;
 	uint16_t values = gpioExt->values;
 
-	PRINT("pcf857x-0x%02X: Setting bits 0x%08X to 0x%08X.\n", gpioExt->i2c->address, bits, value);
+	PRINTV("pcf857x-0x%02X: Setting bits 0x%08X to 0x%08X.\n", gpioExt->i2c->address, bits, value);
 
 	// Calculate new values
 	values ^= (-bits ^ values) & value;
@@ -152,7 +152,7 @@ int gpio_ext_set_bits(struct gpio_ext *gpioExt, uint16_t bits, uint16_t value) {
 int gpio_ext_set_value(struct gpio_ext *gpioExt, uint16_t value) {
 
 	int ret;
-	PRINT("pcf857x-0x%02X: Setting to 0x%08X.\n", gpioExt->i2c->address, value);
+	PRINTV("pcf857x-0x%02X: Setting to 0x%08X.\n", gpioExt->i2c->address, value);
 	ret = gpio_ext_write(gpioExt, value);
 	return ret;
 }
