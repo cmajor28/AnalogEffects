@@ -424,6 +424,18 @@ def set_preset_py(preset):
     global remoteInfo, lcdInfo
     lcdInfo["preset"] = c_int(preset).value
     remoteInfo["preset"] = c_int(preset).value
+	
+	bank = c_int(0)
+    c_lib.get_bank(byref(bank))
+	filename = "%d_%d" % (bank.value, c_int(preset).value)
+            if not os.path.isfile('presets_' + filename + '.json'):
+                break
+
+            with open('presets_' + filename + '.json', 'r') as f:
+                data = json.load(f)
+	
+	lcdInfo["presetName"] = data["preset_name"]
+	
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo)
     return c_int(0)
@@ -494,7 +506,16 @@ def init_structs():
     c_lib.get_mute(byref(mute))
     lcdInfo["bank"] = remoteInfo["bank"] = bank.value
     lcdInfo["preset"] = preset.value
-    lcdInfo["presetName"] = None # TODO Lucca I need the preset name
+	
+	# read from file for preset name
+	filename = "%d_%d" % (bank.value, preset.value)
+            if not os.path.isfile('presets_' + filename + '.json'):
+                break
+
+            with open('presets_' + filename + '.json', 'r') as f:
+                data = json.load(f)
+	
+	lcdInfo["presetName"] = data['preset_name']
     lcdInfo["webAddress"] = get_ip_address("wlan0")
     lcdInfo["remoteID"] = None
     lcdInfo["pedalMode"] = mode.value
