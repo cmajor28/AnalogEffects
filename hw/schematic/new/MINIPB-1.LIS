@@ -1,56 +1,182 @@
-AutoECO Report
-FILE-A: C:\CADENCE\SPB_16.2\TOOLS\LAYOUT_PLUS\DATA\_DEFAULT.TCH
-FILE-B: E:\ANALOG FX\NEW\MINIPB.MNL
-If "*EOF*" immediately follows, no changes were made
-Adding footprint SM/R_0805
-Adding footprint BUTTON_SM_WHITETILE
-Adding footprint BLKCON.100/VH/TM2OE/W.200/26
-Adding package LED
-Adding package JUMPER2
-Adding package R
-Adding package CON26
-Adding component D2
-Adding component JP1
-Adding component R1
-Adding component JP5
-Adding component JP2
-Adding component D3
-Adding component R4
-Adding component JP6
-Adding component R2
-Adding component JP3
-Adding component D4
-Adding component D1
-Adding component JP4
-Adding component J17
-Adding component R3
-Adding net 0
-Adding net SW8
-Adding net SW_UP
-Adding net SW_DOWN
-Adding net LED3
-Adding net LED2
-Adding net LED1
-Adding net LED10
-Adding net LED9
-Adding net LED8
-Adding net SW7
-Adding net SW6
-Adding net SW5
-Adding net SW4
-Adding net SW3
-Adding net SW2
-Adding net SW1
-Adding net LED7
-Adding net LED6
-Adding net LED5
-Adding net LED4
-Adding net N180936
-Adding net N181284
-Adding net N181403
-Adding net N181646
-Adding net VDD_3V3B
-Adding net N176839
-Deleting net DEFAULT
-*EOF*
-No errors found
+Post Processor Report
+OrCAD FILE: H:\NEW\MINIPB-1.MAX
+Tue Oct 31 20:52:37 2017
+
+*********************************************************
+
+Output file: H:\NEW\MINIPB-1.TOP
+
+Aperture totals for H:\NEW\MINIPB-1.TOP:
+---------------------------------------------------------
+D10:  0.0500 SQUARE --       0 Draws,      10 Flashes
+D11:  0.0580 ROUND  --       0 Draws,      23 Flashes
+D12:  0.0580 SQUARE --       0 Draws,       3 Flashes
+D13:  0.0590 ROUND  --       0 Draws,      24 Flashes
+D14:  0.0500 ROUND  --       0 Draws,       2 Flashes
+D15:  0.1300 ROUND  --      16 Draws,       0 Flashes
+D16:  0.0500 ROUND  --     988 Draws,       0 Flashes
+D17:  0.0500 ROUND  --       0 Draws,       2 Flashes
+D18:  0.0250 ROUND  --      45 Draws,       0 Flashes
+D19:  0.0500 ROUND  --       0 Draws,      11 Flashes
+D20:  0.0200 ROUND  --      50 Draws,       0 Flashes
+---------------------------------------------------------
+ 11 D-Codes      -----    1099 Draws,      75 Flashes
+
+*********************************************************
+
+Output file: H:\NEW\MINIPB-1.BOT
+
+Aperture totals for H:\NEW\MINIPB-1.BOT:
+---------------------------------------------------------
+D10:  0.0500 SQUARE --       0 Draws,       6 Flashes
+D11:  0.0580 ROUND  --       0 Draws,      23 Flashes
+D12:  0.0580 SQUARE --       0 Draws,       3 Flashes
+D13:  0.0590 ROUND  --       0 Draws,      24 Flashes
+D14:  0.0500 ROUND  --       0 Draws,       2 Flashes
+D16:  0.0500 ROUND  --     840 Draws,       0 Flashes
+D17:  0.0500 ROUND  --       0 Draws,       2 Flashes
+D18:  0.0250 ROUND  --     118 Draws,       0 Flashes
+D19:  0.0500 ROUND  --       0 Draws,      11 Flashes
+---------------------------------------------------------
+  9 D-Codes      -----     958 Draws,      71 Flashes
+
+*********************************************************
+
+Output file: H:\NEW\MINIPB-1.GND
+
+Aperture totals for H:\NEW\MINIPB-1.GND:
+---------------------------------------------------------
+D16:  0.0500 ROUND  --       4 Draws,       0 Flashes
+D21:  0.0780 ROUND  --       0 Draws,      23 Flashes
+D22:  0.0780 SQUARE --       0 Draws,       3 Flashes
+D23:  0.0750 ROUND  --       0 Draws,       2 Flashes
+D24:  0.0750 ROUND  --       0 Draws,      13 Flashes
+---------------------------------------------------------
+  5 D-Codes      -----       4 Draws,      41 Flashes
+
+*********************************************************
+
+Output file: H:\NEW\MINIPB-1.PWR
+
+Aperture totals for H:\NEW\MINIPB-1.PWR:
+---------------------------------------------------------
+D16:  0.0500 ROUND  --       4 Draws,       0 Flashes
+D21:  0.0780 ROUND  --       0 Draws,      23 Flashes
+D22:  0.0780 SQUARE --       0 Draws,       3 Flashes
+D23:  0.0750 ROUND  --       0 Draws,       2 Flashes
+D24:  0.0750 ROUND  --       0 Draws,      13 Flashes
+---------------------------------------------------------
+  5 D-Codes      -----       4 Draws,      41 Flashes
+
+*********************************************************
+
+Output file: H:\NEW\MINIPB-1.SMT
+
+Aperture totals for H:\NEW\MINIPB-1.SMT:
+---------------------------------------------------------
+D10:  0.0500 SQUARE --       0 Draws,      10 Flashes
+D11:  0.0580 ROUND  --       0 Draws,      23 Flashes
+D12:  0.0580 SQUARE --       0 Draws,       3 Flashes
+D25:  0.0630 ROUND  --       0 Draws,      24 Flashes
+D26:  0.0550 ROUND  --       0 Draws,       2 Flashes
+D27:  0.0550 ROUND  --       0 Draws,      13 Flashes
+---------------------------------------------------------
+  6 D-Codes      -----       0 Draws,      75 Flashes
+
+*********************************************************
+
+Output file: H:\NEW\MINIPB-1.SMB
+
+Aperture totals for H:\NEW\MINIPB-1.SMB:
+---------------------------------------------------------
+D10:  0.0500 SQUARE --       0 Draws,       6 Flashes
+D11:  0.0580 ROUND  --       0 Draws,      23 Flashes
+D12:  0.0580 SQUARE --       0 Draws,       3 Flashes
+D25:  0.0630 ROUND  --       0 Draws,      24 Flashes
+D26:  0.0550 ROUND  --       0 Draws,       2 Flashes
+D27:  0.0550 ROUND  --       0 Draws,      13 Flashes
+---------------------------------------------------------
+  6 D-Codes      -----       0 Draws,      71 Flashes
+
+*********************************************************
+
+Output file: H:\NEW\MINIPB-1.SST
+
+Aperture totals for H:\NEW\MINIPB-1.SST:
+---------------------------------------------------------
+D28:  0.0060 ROUND  --      74 Draws,       0 Flashes
+D29:  0.0098 ROUND  --     108 Draws,       0 Flashes
+---------------------------------------------------------
+  2 D-Codes      -----     182 Draws,       0 Flashes
+
+*********************************************************
+
+Output file: H:\NEW\MINIPB-1.AST
+
+Aperture totals for H:\NEW\MINIPB-1.AST:
+---------------------------------------------------------
+D10:  0.0500 SQUARE --       0 Draws,      10 Flashes
+D11:  0.0580 ROUND  --       0 Draws,      23 Flashes
+D12:  0.0580 SQUARE --       0 Draws,       3 Flashes
+D16:  0.0500 ROUND  --       4 Draws,       0 Flashes
+D28:  0.0060 ROUND  --     140 Draws,       0 Flashes
+D29:  0.0098 ROUND  --     348 Draws,       0 Flashes
+---------------------------------------------------------
+  6 D-Codes      -----     492 Draws,      36 Flashes
+
+*********************************************************
+
+Output file: H:\NEW\MINIPB-1.DRD
+
+Aperture totals for H:\NEW\MINIPB-1.DRD:
+---------------------------------------------------------
+D16:  0.0500 ROUND  --       4 Draws,       0 Flashes
+D30:  0.0100 ROUND  --     377 Draws,       0 Flashes
+---------------------------------------------------------
+  2 D-Codes      -----     381 Draws,       0 Flashes
+
+*********************************************************
+
+Output file: H:\NEW\MINIPB-1.FAB
+
+Aperture totals for H:\NEW\MINIPB-1.FAB:
+---------------------------------------------------------
+D16:  0.0500 ROUND  --       4 Draws,       0 Flashes
+D31:  0.0280 ROUND  --       0 Draws,       2 Flashes
+D32:  0.0280 ROUND  --       0 Draws,      13 Flashes
+---------------------------------------------------------
+  3 D-Codes      -----       4 Draws,      15 Flashes
+
+
+*********************************************************
+
+Aperture totals for entire project:
+---------------------------------------------------------
+D10:  0.0500 SQUARE --       0 Draws,      42 Flashes
+D11:  0.0580 ROUND  --       0 Draws,     115 Flashes
+D12:  0.0580 SQUARE --       0 Draws,      15 Flashes
+D13:  0.0590 ROUND  --       0 Draws,      48 Flashes
+D14:  0.0500 ROUND  --       0 Draws,       4 Flashes
+D15:  0.1300 ROUND  --      16 Draws,       0 Flashes
+D16:  0.0500 ROUND  --    1848 Draws,       0 Flashes
+D17:  0.0500 ROUND  --       0 Draws,       4 Flashes
+D18:  0.0250 ROUND  --     163 Draws,       0 Flashes
+D19:  0.0500 ROUND  --       0 Draws,      22 Flashes
+D20:  0.0200 ROUND  --      50 Draws,       0 Flashes
+D21:  0.0780 ROUND  --       0 Draws,      46 Flashes
+D22:  0.0780 SQUARE --       0 Draws,       6 Flashes
+D23:  0.0750 ROUND  --       0 Draws,       4 Flashes
+D24:  0.0750 ROUND  --       0 Draws,      26 Flashes
+D25:  0.0630 ROUND  --       0 Draws,      48 Flashes
+D26:  0.0550 ROUND  --       0 Draws,       4 Flashes
+D27:  0.0550 ROUND  --       0 Draws,      26 Flashes
+D28:  0.0060 ROUND  --     214 Draws,       0 Flashes
+D29:  0.0098 ROUND  --     456 Draws,       0 Flashes
+D30:  0.0100 ROUND  --     377 Draws,       0 Flashes
+D31:  0.0280 ROUND  --       0 Draws,       2 Flashes
+D32:  0.0280 ROUND  --       0 Draws,      13 Flashes
+---------------------------------------------------------
+ 23 D-Codes      -----    3124 Draws,     425 Flashes
+
+
+No warnings or errors.
