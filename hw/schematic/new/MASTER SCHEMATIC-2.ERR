@@ -1,0 +1,12 @@
+AutoECO Error Report
+FILE-A: C:\CADENCE\SPB_16.2\TOOLS\LAYOUT_PLUS\DATA\_DEFAULT.TCH
+FILE-B: D:\ANALOG FX\NEW\MASTER SCHEMATIC.MNL
+ERROR: Electrical package MMBT3904/SOT for comp Q2 has at least one pin (2)                        
+which has no corresponding pin on footprint SM/SOT23_BEC.                        
+You may create or modify a footprint, choose another,                        
+or press Cancel at the main dialog to skip this component.
+ERROR: Electrical package MMBT3904/SOT for comp Q1 has at least one pin (2)                        
+which has no corresponding pin on footprint SM/SOT23_BEC.                        
+You may create or modify a footprint, choose another,                        
+or press Cancel at the main dialog to skip this component.
+ECO cancelled by user
