@@ -10,16 +10,30 @@ static int gpio_irq_func(struct gpio_irq *irq) {
 
 	int ret;
 	char tmp;
+	bool val;
+	bool lastVal;
 	struct pollfd fds;
+	bool debounceEnable = irq->debounceTime > 0;
+
+	// Read initial value
+	if (debounceEnable) {
+		ret = gpio_pin_get_value(&irq->gpioPin, &val);
+		if (ret != 0) {
+			return ret;
+		}
+	}
 
 	// Wait for irq
 	while (TRUE) {
+		lastVal = val;
+
 		// Set fds fields
 		fds.fd = irq->fd;
 		fds.events = POLLPRI | POLLERR;
 		fds.revents = 0;
 
 		// Poll for input
+		lseek(fds.fd, 0, SEEK_SET);
 		read(fds.fd, &tmp, sizeof(tmp)); // Dummy read
 		ret = poll(&fds, 1, -1);
 		if (ret < 0) {
@@ -29,8 +43,40 @@ static int gpio_irq_func(struct gpio_irq *irq) {
 			// This shouldn't happen
 			continue;
 		} else {
-			if (fds.revents & POLLERR) {
-				PRINT_LOG("poll() failed!");
+//			if (fds.revents & POLLERR) {
+//				PRINT_LOG("poll() failed!");
+//				continue;
+//			}
+		}
+
+		// Debounce signal
+		if (debounceEnable) {
+			sleep2(MILLISECONDS, irq->debounceTime);
+
+			// Read new value
+			ret = gpio_pin_get_value(&irq->gpioPin, &val);
+			if (ret != 0) {
+				return ret;
+			}
+
+			// Check for valid change
+			switch (irq->sensitivity) {
+			case GPIO_SEN_RISING:
+				if (val) {
+					break;
+				}
+				continue;
+			case GPIO_SEN_FALLING:
+				if (!val) {
+					break;
+				}
+				continue;
+			case GPIO_SEN_BOTH:
+				if (val != lastVal) {
+					break;
+				}
+				continue;
+			default:
 				continue;
 			}
 		}
@@ -279,7 +325,7 @@ int gpio_get_value(struct gpio *gpio, uint32_t reg, uint32_t *value) {
 	return 0;
 }
 
-int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity) {
+int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity, int debounceTime) {
 
 	int gpioNumber = gpioPin->gpio->bank * 32 + gpioPin->pin;
 	int ret;
@@ -353,6 +399,14 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback
 		return -1;
 	}
 
+	irq->gpioPin = *gpioPin;
+	irq->callback = callback;
+	irq->context = context;
+	irq->direction = direction;
+	irq->sensitivity = sensitivity;
+	irq->debounceTime = debounceTime;
+	irq->enabled = FALSE;
+
 	// Create thread to handle interrupt
 	ret = pthread_create(&irq->intThread, NULL, (void *(*)(void *))&gpio_irq_func, irq);
 	if (ret != 0) {
@@ -360,13 +414,6 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback
 		close(irq->fd);
 		return ret;
 	}
-
-	irq->gpioPin = *gpioPin;
-	irq->callback = callback;
-	irq->context = context;
-	irq->direction = direction;
-	irq->sensitivity = sensitivity;
-	irq->enabled = FALSE;
 
 	return 0;
 }
@@ -431,6 +478,6 @@ int gpio_pin_set_value(struct gpio_pin *gpioPin, bool value) {
 int gpio_pin_get_value(struct gpio_pin *gpioPin, bool *value) {
 
 	int ret;
-	ret = gpio_get_bit(gpioPin->gpio, GPIO_SETDATAOUT, gpioPin->pin, (uint8_t *)value);
+	ret = gpio_get_bit(gpioPin->gpio, GPIO_DATAIN, gpioPin->pin, (uint8_t *)value);
 	return ret;
 }

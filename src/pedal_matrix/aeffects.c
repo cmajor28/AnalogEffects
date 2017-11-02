@@ -33,7 +33,7 @@ int aeffects_update(struct ae_preset *preset) {
 
 	int ret;
 
-	PRINT("aeffects: Updating preset %d.\n", preset->preset);
+	PRINT("aeffects: Updating bank %d preset %d.\n", preset->bank, preset->preset);
 
 	ret = pthread_mutex_lock(&gPresetsMutex);
 	if (ret != 0) {
