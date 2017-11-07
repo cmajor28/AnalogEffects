@@ -77,210 +77,19 @@ def pedal_inventory():
 
     return "Success"
 
-
 @app.route('/', methods=['GET', 'POST'])
 def preset_order():
     if request.method == 'GET':
-        return """
-<!DOCTYPE html>
-<html lang="en-US">
-<body>
-<form method="POST">
-    <p>Control Enabled1:<br>
-        <select name="controlEnabled1">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-        </select>
-    </p>
-
-    <p>Control Enabled2:<br>
-        <select name="controlEnabled2">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-        </select>
-    </p>
-
-    <p>
-        Bank Name:
-        <input name="bank_name" type="text" size="25">
-    </p>
-
-    <p>
-        Bank Number:
-        <input name="bank_num" type="text" size="25">
-    </p>
-
-    <p>
-        Preset Name:
-        <input name="preset_name" type="text" size="25">
-    </p>
-
-    <p>
-        Preset Number:
-        <input name="preset_num" type="text" size="25">
-    </p>
-
-    <p>Pedal 1:<br>
-        <select name="pedal_pos1">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-        </select>
-    </p>
-
-    <p>Pedal 2:<br>
-        <select name="pedal_pos2">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-        </select>
-    </p>
-
-    <p>Pedal 3:<br>
-        <select name="pedal_pos3">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-        </select>
-    </p>
-
-    <p>Pedal 4:<br>
-        <select name="pedal_pos4">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-        </select>
-    </p>
-
-    <p>Pedal 5:<br>
-        <select name="pedal_pos5">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-        </select>
-    </p>
-
-    <p>Pedal 6:<br>
-        <select name="pedal_pos6">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-        </select>
-    </p>
-
-    <p>Pedal 7:<br>
-        <select name="pedal_pos7">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-        </select>
-    </p>
-
-    <p>Pedal 1 Enabled:<br>
-        <select name="enabled_pos1">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-        </select>
-    </p>
-
-    <p>Pedal 2 Enabled:<br>
-        <select name="enabled_pos2">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-        </select>
-    </p>
-
-    <p>Pedal 3 Enabled:<br>
-        <select name="enabled_pos3">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-        </select>
-    </p>
-
-    <p>Pedal 4 Enabled:<br>
-        <select name="enabled_pos4">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-        </select>
-    </p>
-
-    <p>Pedal 5 Enabled:<br>
-        <select name="enabled_pos5">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-        </select>
-    </p>
-
-    <p>Pedal 6 Enabled:<br>
-        <select name="enabled_pos6">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-        </select>
-    </p>
-
-    <p>Pedal 7 Enabled:<br>
-        <select name="enabled_pos7">
-          <option value="0" selected="selected">0</option>
-          <option value="1">1</option>
-        </select>
-    </p>
-
-    <p>
-        <input type="submit" value="Submit">
-    </p>
-</form>
-</body>
-</html>
-    """
-    else:
+        return app.send_static_file('test1.html')
+    
+	else:
         pedal = [0, 0, 0, 0, 0, 0, 0]
         enable = [0, 0, 0, 0, 0, 0, 0]
         controlEnabled = [0, 0]
-
-        controlEnabled[0] = request.form['controlEnabled1']
-        controlEnabled[1] = request.form['controlEnabled2']
-
         bank_name = request.form['bank_name']
         bank_num = int(request.form['bank_num'])
         preset_name = request.form['preset_name']
         preset_num = int(request.form['preset_num'])
-
-
         #pedal_pos1_name = request.json['pedal_pos1_name']
         #pedal_pos2_name = request.json['pedal_pos2_name']
         #pedal_pos3_name = request.json['pedal_pos3_name']
@@ -290,20 +99,28 @@ def preset_order():
         #pedal_pos7_name = request.json['pedal_pos7_name']
 
         pedal[0] = int(request.form['pedal_pos1'])
+		pedal[1] = int(request.form['pedal_pos2'])
         pedal[2] = int(request.form['pedal_pos3'])
-        pedal[1] = int(request.form['pedal_pos2'])
         pedal[3] = int(request.form['pedal_pos4'])
         pedal[4] = int(request.form['pedal_pos5'])
         pedal[5] = int(request.form['pedal_pos6'])
         pedal[6] = int(request.form['pedal_pos7'])
 
-        enable[0] = int(request.form['enabled_pos1'])
-        enable[1] = int(request.form['enabled_pos2'])
-        enable[2] = int(request.form['enabled_pos3'])
-        enable[3] = int(request.form['enabled_pos4'])
-        enable[4] = int(request.form['enabled_pos5'])
-        enable[5] = int(request.form['enabled_pos6'])
-        enable[6] = int(request.form['enabled_pos7'])
+        for num in range(0,7):
+            if request.form.get('enabled_pos' + "%d" % (num)) is None:
+                enable[num] = bool(0)
+            else:
+                enable[num] = bool(1)
+        
+        if request.form.get('controlEnabled1') is None:
+            controlEnabled[0] = bool(0)
+        else:
+            controlEnabled[0] = bool(1)
+
+        if request.form.get('controlEnabled2') is None:
+            controlEnabled[1] = bool(0)
+        else:
+            controlEnabled[1] = bool(1)
 
         new_preset = AE_PRESET()
         new_preset.preset = preset_num
@@ -311,7 +128,6 @@ def preset_order():
         new_preset.pedalOrder = (c_int * 7)(*pedal)
         new_preset.enabled = (c_bool * 7)(*enable)
         new_preset.controlEnabled = (c_bool * 2)(*controlEnabled)
-
         c_lib.aeffects_update(byref(new_preset))
 
         # 0 indicates unused pedal, 8 indicates final output
@@ -347,6 +163,7 @@ def preset_order():
 
         # Write to JSON
         filename = "%d_%d" % (bank_num, preset_num)
+
         with open('presets_' + filename + '.json', 'w') as f:
             json.dump(data, f)
 
