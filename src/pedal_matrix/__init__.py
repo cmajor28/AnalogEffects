@@ -31,7 +31,6 @@ class AE_CALLBACKS(Structure):
                 ("bypassEnabled", CFUNCTYPE(c_int, c_bool)),
                 ("muteEnabled", CFUNCTYPE(c_int, c_bool))]
 
-
 # These are created later
 remote = None
 lcd = None

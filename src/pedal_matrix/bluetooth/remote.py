@@ -29,6 +29,7 @@ class Remote:
                 self.info["id"] = None
         if self.uart != None:
             self.info = info
+            print("Updating remote...")
             self.uart.write(json.dumps({"bank":info["bank"]}, seperators=(',',':')))
 
     # Main function implements the program logic so it can run in a background
@@ -95,11 +96,15 @@ class Remote:
                 # time out after 60 seconds (specify timeout_sec parameter to override).
                 print('Discovering services...')
                 UART.discover(self.device)
-                print('Waiting for UART input...')
 
                 # Once service discovery is complete create an instance of the service
                 # and start interacting with it.
                 self.uart = UART(self.device)
+
+                print("Updating remote...")
+                self.uart.write(json.dumps({"bank": self.info["bank"]}, seperators=(',', ':')))
+
+                print('Waiting for UART input...')
 
                 while self.device.is_connected:
                     received = self.uart.read(timeout_sec=5)
