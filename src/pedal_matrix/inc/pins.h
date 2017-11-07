@@ -19,7 +19,7 @@ enum {
 
 #define PCF8575_I2C_ADDR(gpioExt) (0x20 | (1 << (gpioExt))) // 0b0100<A2><A1><A0> with one hot encoding
 
-#define PCF8575_INT_DEBOUNCE_TIME(gpioExt) ((gpioExt) == GPIO_EXT_PRESENCE ? 50 : ((gpioExt) == GPIO_EXT_BUTTONS ? 10 : -1))
+#define PCF8575_INT_DEBOUNCE_TIME(gpioExt) ((gpioExt) == GPIO_EXT_PRESENCE ? 50 : ((gpioExt) == GPIO_EXT_BUTTONS ? 1 : -1)) // Debounce time in ms
 
 extern struct gpio gGPIOBanks[GPIO_COUNT];
 extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];

@@ -357,7 +357,7 @@ void setup()
 
   // Setup pins
   pinMode(gLedPin, OUTPUT);
-  digitalWrite(gLedPin, HIGH);
+  digitalWrite(gLedPin, LOW);
   pinMode(gButtonPins[BUTTON_UP], INPUT);
   pinMode(gButtonPins[BUTTON_DOWN], INPUT);
   for (int i = 0; i < SEGMENT_COUNT; i++) {
@@ -406,13 +406,13 @@ void loop()
     } else {
       blinkEnabled = true;
       blinkStart = millis();
-      digitalWrite(gLedPin, LOW);
+      digitalWrite(gLedPin, HIGH);
       Serial.println("Battery low!");
     }
   } else if (blinkEnabled && batteryVoltage >= gBattOkayVoltage) {
     Serial.println("Battery okay!");
     blinkEnabled = false;
-    digitalWrite(gLedPin, HIGH);
+    digitalWrite(gLedPin, LOW);
   }
   
   int rotaryPosition;

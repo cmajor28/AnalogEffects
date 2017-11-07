@@ -55,7 +55,13 @@ class Remote:
             # Scan for UART devices.
             print('Searching for UART device...')
             while (True):
-                self.adapter.start_scan()
+                try:
+                    self.adapter.start_scan()
+                except:
+                    print("Adapter scan failed...")
+                    time.sleep(10)
+                    continue
+
                 # Search for the first UART device found.
                 try:
                     self.device = UART.find_device(timeout_sec=50)
@@ -69,7 +75,11 @@ class Remote:
                     break
 
             print('Connecting to device...')
-            self.device.connect()  # Will time out after 60 seconds, specify timeout_sec parameter to change the timeout.
+
+            try:
+                self.device.connect()  # Will time out after 60 seconds, specify timeout_sec parameter to change the timeout.
+            except:
+                pass # This is handled in the next check
 
             if not self.device.is_connected:
                 print('Failed to connect to device...')
@@ -85,13 +95,14 @@ class Remote:
                 # time out after 60 seconds (specify timeout_sec parameter to override).
                 print('Discovering services...')
                 UART.discover(self.device)
+                print('Waiting for UART input...')
 
                 # Once service discovery is complete create an instance of the service
                 # and start interacting with it.
                 self.uart = UART(self.device)
 
                 while self.device.is_connected:
-                    received = self.uart.read(timeout_sec=10)
+                    received = self.uart.read(timeout_sec=5)
                     if received is not None:
                         # Received data, print it out.
                         print('Received: {0}'.format(received))
@@ -109,6 +120,9 @@ class Remote:
             finally:
                 # Make sure device is disconnected on exit.
                 print('Disconnecting from device...')
-                self.device.disconnect()
+                try:
+                    self.device.disconnect(timeout_sec=5)
+                except:
+                    pass
                 self.device = None
                 self.info["id"] = None
