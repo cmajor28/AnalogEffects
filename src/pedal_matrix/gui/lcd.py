@@ -12,7 +12,7 @@ class Invoker(QObject):
     def invoke(self, func, *args):
         f = lambda: func(*args)
         self.queue.put(f)
-        QMetaObject.invokeMethod(self, "handler", QtCore.Qt.QueuedConnection)
+        QMetaObject.invokeMethod(self, "handler", Qt.QueuedConnection)
 
     @Slot()
     def handler(self):

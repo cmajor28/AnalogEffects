@@ -39,7 +39,7 @@ struct gpio_ext_irq {
 
 #define GPIO_EXT_PIN_INITIALIZER(gpioExtBank, pinNum) { .gpioExt = gpioExtBank, .pin = pinNum }
 
-int gpio_ext_init(struct gpio_ext *gpioExt, enum pcf857x_pin_count numPins, struct i2c *i2c);
+int gpio_ext_init(struct gpio_ext *gpioExt, enum pcf857x_pin_count numPins, struct i2c *i2c, int intdebounceTime);
 
 int gpio_ext_uninit(struct gpio_ext *gpioExt);
 

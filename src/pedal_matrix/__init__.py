@@ -10,6 +10,7 @@ import threading
 import socket
 import fcntl
 import struct
+import json
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -312,7 +313,7 @@ def preset_order():
         new_preset.enabled = (c_bool * 7)(*enable)
         new_preset.controlEnabled = (c_bool * 2)(*controlEnabled)
 
-        #c_lib.aeffects_update(byref(new_preset))
+        c_lib.aeffects_update(byref(new_preset))
 
         # 0 indicates unused pedal, 8 indicates final output
         data = {
@@ -410,7 +411,7 @@ def set_mute_c(mute):
 
 
 def set_bank_py(bank):
-    global remoteInfo, lcdInfo
+    global lcd, remote, lcdInfo, remoteInfo
     remoteInfo["bank"] = c_int(bank).value
     lcdInfo["bank"] = c_int(bank).value
     if remote is not None:
@@ -421,20 +422,22 @@ def set_bank_py(bank):
 
 
 def set_preset_py(preset):
-    global remoteInfo, lcdInfo
+    global lcd, remote, lcdInfo, remoteInfo
     lcdInfo["preset"] = c_int(preset).value
     remoteInfo["preset"] = c_int(preset).value
-	
-	bank = c_int(0)
-    c_lib.get_bank(byref(bank))
-	filename = "%d_%d" % (bank.value, c_int(preset).value)
-            if not os.path.isfile('presets_' + filename + '.json'):
-                break
 
-            with open('presets_' + filename + '.json', 'r') as f:
-                data = json.load(f)
+    bank = c_int(0)
+    c_lib.get_bank(byref(bank))
+
+    # read from file for preset name
+    filename = "%d_%d" % (bank.value, c_int(preset).value)
+    presetName = ''
+    if os.path.isfile('presets_' + filename + '.json'):
+        with open('presets_' + filename + '.json', 'r') as f:
+            data = json.load(f)
+            presetName = data['preset_name']
 	
-	lcdInfo["presetName"] = data["preset_name"]
+    lcdInfo["presetName"] = presetName
 	
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo)
@@ -442,7 +445,7 @@ def set_preset_py(preset):
 
 
 def set_mode_py(mode):
-    global lcdInfo
+    global lcd, remote, lcdInfo, remoteInfo
     lcdInfo["mode"] = c_bool(mode).value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo)
@@ -450,7 +453,7 @@ def set_mode_py(mode):
 
 
 def set_bypass_py(bypass):
-    global lcdInfo
+    global lcd, remote, lcdInfo, remoteInfo
     lcdInfo["bypass"] = c_bool(bypass).value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo)
@@ -458,7 +461,7 @@ def set_bypass_py(bypass):
 
 
 def set_mute_py(mute):
-    global lcdInfo
+    global lcd, remote, lcdInfo, remoteInfo
     lcdInfo["mute"] = c_bool(mute).value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo)
@@ -506,16 +509,16 @@ def init_structs():
     c_lib.get_mute(byref(mute))
     lcdInfo["bank"] = remoteInfo["bank"] = bank.value
     lcdInfo["preset"] = preset.value
-	
-	# read from file for preset name
-	filename = "%d_%d" % (bank.value, preset.value)
-            if not os.path.isfile('presets_' + filename + '.json'):
-                break
 
-            with open('presets_' + filename + '.json', 'r') as f:
-                data = json.load(f)
+    # read from file for preset name
+    filename = "%d_%d" % (bank.value, preset.value)
+    presetName = ''
+    if os.path.isfile('presets_' + filename + '.json'):
+        with open('presets_' + filename + '.json', 'r') as f:
+            data = json.load(f)
+            presetName = data['preset_name']
 	
-	lcdInfo["presetName"] = data['preset_name']
+    lcdInfo["presetName"] = presetName
     lcdInfo["webAddress"] = get_ip_address("wlan0")
     lcdInfo["remoteID"] = None
     lcdInfo["pedalMode"] = mode.value
@@ -545,7 +548,7 @@ def init_control():
 
 
 def lcdUpdate(info):
-    global lcdInfo, remoteInfo
+    global lcd, remote, lcdInfo, remoteInfo
     if info["pedalMode"] != lcdInfo["pedalMode"]:
         set_mode_c(info["pedalMode"])
     if info["bypassMode"] != lcdInfo["bypassMode"]:
@@ -566,7 +569,7 @@ def lcdUpdate(info):
 
 
 def remoteUpdate(info):
-    global lcdInfo, remoteInfo
+    global lcd, remote, lcdInfo, remoteInfo
     if info["bank"] != remoteInfo["bank"]:
         lcdInfo["bank"] = info["bank"]
         set_bank_c(info["bank"])
@@ -581,10 +584,11 @@ def remoteUpdate(info):
 
 
 def run_gui():
+    global lcd, guiInvoker
     app = QApplication(sys.argv)
     #signal.signal(signal.SIGINT, signal.SIG_DFL)
-    window = LCDWindow(lcdInfo.copy(), lcdUpdate)
-    window.show()
+    lcd = LCDWindow(lcdInfo.copy(), lcdUpdate)
+    lcd.show()
     guiInvoker = Invoker()
     sys.exit(app.exec_())
 

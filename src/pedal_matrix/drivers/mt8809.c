@@ -123,7 +123,7 @@ int mt8809_set_switches(struct mt8809 *mt8809, uint64_t switchSet) {
 
 	for (int i = 0; i < 64; i++) {
 		// Set data and address lines
-		bool set = (switchSet & (1 << i)) ? TRUE : FALSE;
+		bool set = (switchSet & ((uint64_t)1 << i)) ? TRUE : FALSE;
 		gpio_set_one_hot(mt8809->pinMap[MT8809_DATA].gpio, set ? GPIO_SETDATAOUT : GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_DATA].pin);
 		for (int j = 0, k = MT8809_AX0; k <= MT8809_AY2; j++, k++) {
 			bool pin = (i & (1 << j)) ? TRUE : FALSE;

@@ -48,12 +48,13 @@ static int gpio_ext_read(struct gpio_ext *gpioExt) {
 		return ret;
 	}
 
-	values = (bytes[1] << 8) | bytes[0];
+	values = gpioExt->values;
+	gpioExt->values = ((uint16_t)bytes[1] << 8) | (uint16_t)bytes[0];
 
 	for (int i = 0; i < gpioExt->numPins; i++) {
 		// Calculate values
-		old = gpioExt->values & (1 << i);
-		new = values & (1 << i);
+		old = values & (1 << i);
+		new = gpioExt->values & (1 << i);
 
 		// Generate callback
 		if (gpioExt->irqList[i] && gpioExt->irqList[i]->enabled && gpioExt->irqList[i]->callback &&
@@ -65,22 +66,26 @@ static int gpio_ext_read(struct gpio_ext *gpioExt) {
 		}
 	}
 
-	gpioExt->values = values;
-
 	pthread_mutex_unlock(&funcMutex);
 	return 0;
 }
 
-int gpio_ext_init(struct gpio_ext *gpioExt, enum pcf857x_pin_count numPins, struct i2c *i2c) {
+int gpio_ext_init(struct gpio_ext *gpioExt, enum pcf857x_pin_count numPins, struct i2c *i2c, int intDebounceTime) {
 
 	int ret;
 
 	PRINT("pcf857x-0x%02X: Initializing device.\n", i2c->address);
 
-	gpioExt->values = 0x0000;
+	gpioExt->values = 0xFFFF;
 	gpioExt->i2c = i2c;
 	gpioExt->numPins = numPins;
 	memset(gpioExt->irqList, 0, sizeof(gpioExt->irqList));
+
+	// Read initial GPIO values
+	ret = gpio_ext_read(gpioExt);
+	if (ret != 0) {
+		return ret;
+	}
 
 	// We don't have to have an int pin
 	if (gpioExt->gpioPin.gpio == NULL || gpioExt->gpioPin.pin == -1) {
@@ -88,7 +93,7 @@ int gpio_ext_init(struct gpio_ext *gpioExt, enum pcf857x_pin_count numPins, stru
 	}
 
 	// Setup irq for interrupt pin
-	ret = gpio_irq_init(&gpioExt->irq, &gpioExt->gpioPin, (int (*)(void *))&gpio_ext_read, gpioExt, GPIO_DIR_IN, GPIO_SEN_FALLING);
+	ret = gpio_irq_init(&gpioExt->irq, &gpioExt->gpioPin, (int (*)(void *))&gpio_ext_read, gpioExt, GPIO_DIR_IN, GPIO_SEN_FALLING, intDebounceTime);
 	if (ret != 0) {
 		return ret;
 	}
@@ -159,43 +164,20 @@ int gpio_ext_set_value(struct gpio_ext *gpioExt, uint16_t value) {
 
 int gpio_ext_get_bit(struct gpio_ext *gpioExt, uint8_t bit, uint8_t *set) {
 
-	int ret;
-
-	ret = gpio_ext_read(gpioExt);
-	if (ret != 0) {
-		return ret;
-	}
-
-	*set = (gpioExt->values & (1 << bit)) >> bit;
-
+	*set = (gpioExt->values & (1 << bit)) ? TRUE : FALSE;
 	return 0;
 }
 
 int gpio_ext_get_bits(struct gpio_ext *gpioExt, uint16_t bits, uint16_t *value) {
 
-	int ret;
-
-	ret = gpio_ext_read(gpioExt);
-	if (ret != 0) {
-		return ret;
-	}
 
 	*value = gpioExt->values & bits;
-
 	return 0;
 }
 
 int gpio_ext_get_value(struct gpio_ext *gpioExt, uint16_t *value) {
 
-	int ret;
-
-	ret = gpio_ext_read(gpioExt);
-	if (ret != 0) {
-		return ret;
-	}
-
 	*value = gpioExt->values;
-
 	return 0;
 }
 

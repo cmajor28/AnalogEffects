@@ -19,6 +19,8 @@ enum {
 
 #define PCF8575_I2C_ADDR(gpioExt) (0x20 | (1 << (gpioExt))) // 0b0100<A2><A1><A0> with one hot encoding
 
+#define PCF8575_INT_DEBOUNCE_TIME(gpioExt) ((gpioExt) == GPIO_EXT_PRESENCE ? 50 : ((gpioExt) == GPIO_EXT_BUTTONS ? 10 : -1))
+
 extern struct gpio gGPIOBanks[GPIO_COUNT];
 extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 
@@ -29,7 +31,7 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 		PCF8575_PIN_INITIALIZER(GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO1], 29))	/* int */
 
 #define GPIO_EXT_BUTTONS_INIT()																\
-		PCF8575_PIN_INITIALIZER(GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO1], 1))	/* int */
+		PCF8575_PIN_INITIALIZER(GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO0], 20))	/* int */
 
 #define LED_PINS_INIT()																		\
 		LED_CONTROL_INITIALIZER(															\

@@ -71,11 +71,12 @@ class Remote:
             print('Connecting to device...')
             self.device.connect()  # Will time out after 60 seconds, specify timeout_sec parameter to change the timeout.
 
-            if not self.device.is_connected():
+            if not self.device.is_connected:
                 print('Failed to connect to device...')
                 continue
 
             self.info["id"] = self.device.id
+            self.updateInfoCallback(self.info)
 
             # Once connected do everything else in a try/finally to make sure the device
             # is disconnected when done.
@@ -89,13 +90,16 @@ class Remote:
                 # and start interacting with it.
                 self.uart = UART(self.device)
 
-                while self.device.is_connected():
+                while self.device.is_connected:
                     received = self.uart.read(timeout_sec=10)
                     if received is not None:
                         # Received data, print it out.
                         print('Received: {0}'.format(received))
 
-                        msg = json.loads(received)
+                        try:
+                            msg = json.loads(received)
+                        except:
+                            continue
                         if "preset" in msg:
                             self.info["preset"] = msg["preset"]
                         if "bank" in  msg:

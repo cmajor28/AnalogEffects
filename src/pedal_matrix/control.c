@@ -4,7 +4,7 @@
 #include "pins.h"
 
 // Global configuration variables
-bool gPresenceDetect[AE_MAX_EFFECTS][2];
+bool gPresenceDetect[AE_MAX_EFFECTS+1][2];
 pthread_mutex_t gConfigMutex;
 struct ae_config *gConfig; // mmap() into non-volatile memory
 struct control_callbacks gControlCallbacks;
@@ -15,7 +15,7 @@ extern struct ae_preset gPresets[AE_BANK_COUNT][AE_PRESET_COUNT];
 
 // Global GPIO banks
 struct gpio gGPIOBanks[GPIO_COUNT] = { { 0 } };
-struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT] = { GPIO_EXT_LEDS_INIT(), GPIO_EXT_PRESENCE_INIT(), GPIO_EXT_BUTTONS_INIT() };
+struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT] = { GPIO_EXT_PRESENCE_INIT(), GPIO_EXT_BUTTONS_INIT(), GPIO_EXT_LEDS_INIT() };
 
 // Global device interfaces
 struct mt8809 gSwitchMatrix = MT8809_PINS_INIT();
@@ -520,7 +520,7 @@ int control_init() {
 		if (ret != 0) {
 			return ret;
 		}
-		ret = gpio_ext_init(&gGPIOExtBanks[i], PCF8575, &gI2C[i]);
+		ret = gpio_ext_init(&gGPIOExtBanks[i], PCF8575, &gI2C[i], PCF8575_INT_DEBOUNCE_TIME(i));
 		if (ret != 0) {
 			return ret;
 		}
@@ -697,9 +697,19 @@ int control_uninit() {
 
 int register_callbacks(struct control_callbacks *callbacks) {
 
+	int ret;
+
 	PRINT("control: Registering callbacks.\n");
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
 	memcpy(&gControlCallbacks, callbacks, sizeof(gControlCallbacks));
-	return 0;
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
 }
 
 int set_preset(int preset) {
