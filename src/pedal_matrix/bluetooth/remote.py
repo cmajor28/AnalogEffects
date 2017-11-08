@@ -30,7 +30,7 @@ class Remote:
         if self.uart != None:
             self.info = info
             print("Updating remote...")
-            self.uart.write(json.dumps({"bank":info["bank"]}, seperators=(',',':')))
+            self.uart.write(bytes(json.dumps({"bank": self.info["bank"]}, separators=(',', ':')), 'utf-8'))
 
     # Main function implements the program logic so it can run in a background
     # thread.  Most platforms require the main thread to handle GUI events and other
@@ -101,26 +101,30 @@ class Remote:
                 # and start interacting with it.
                 self.uart = UART(self.device)
 
-                print("Updating remote...")
-                self.uart.write(json.dumps({"bank": self.info["bank"]}, seperators=(',', ':')))
+                if self.device.is_connected:
+                    print("Updating remote...")
+                    self.uart.write(bytes(json.dumps({"bank":self.info["bank"]}, separators=(',', ':')), 'utf-8'))
 
-                print('Waiting for UART input...')
+                    print('Waiting for UART input...')
 
-                while self.device.is_connected:
-                    received = self.uart.read(timeout_sec=5)
-                    if received is not None:
-                        # Received data, print it out.
-                        print('Received: {0}'.format(received))
+                    while self.device.is_connected:
+                        received = self.uart.read(timeout_sec=5)
+                        if received is not None:
+                            # Received data, print it out.
+                            print('Received: {0}'.format(received))
 
-                        try:
-                            msg = json.loads(received)
-                        except:
-                            continue
-                        if "preset" in msg:
-                            self.info["preset"] = msg["preset"]
-                        if "bank" in  msg:
-                            self.info["bank"] = msg["bank"]
-                        self.updateInfoCallback(self.info)
+                            try:
+                                msg = json.loads(received)
+                            except:
+                                continue
+                            if "preset" in msg:
+                                self.info["preset"] = int(msg["preset"])
+                            if "bank" in  msg:
+                                self.info["bank"] = int(msg["bank"])
+                            self.updateInfoCallback(self.info)
+
+            except Exception as inst:
+                print(inst)
 
             finally:
                 # Make sure device is disconnected on exit.

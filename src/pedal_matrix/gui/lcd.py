@@ -58,8 +58,8 @@ class LCDWindow(QMainWindow, Ui_MainWindow):
 
     def updateInfo(self, info):
         self.info = info
-        self.lcdNumberBank.display(info["bank"])
-        self.lcdNumberPreset.display(info["preset"])
+        self.lcdNumberBank.display(str(info["bank"]))
+        self.lcdNumberPreset.display(str(info["preset"]))
         self.lineEditPresetName.setText(info["presetName"])
         self.lineEditWebAddress.setText(info["webAddress"])
         self.lineEditRemoteID.setText(info["remoteID"])

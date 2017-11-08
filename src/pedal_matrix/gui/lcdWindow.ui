@@ -19,7 +19,7 @@
      <widget class="QGroupBox" name="groupBoxInfo">
       <property name="font">
        <font>
-        <pointsize>9</pointsize>
+        <pointsize>12</pointsize>
        </font>
       </property>
       <property name="title">
@@ -30,7 +30,7 @@
         <widget class="QLabel" name="labelBank">
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
@@ -42,7 +42,7 @@
         <widget class="QCheckBox" name="checkBoxPedalMode">
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
@@ -57,7 +57,7 @@
         <widget class="QCheckBox" name="checkBoxBypass">
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
@@ -72,7 +72,7 @@
         <widget class="QCheckBox" name="checkBoxMute">
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
@@ -87,7 +87,7 @@
         <widget class="QLabel" name="labelPresetName">
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
@@ -115,7 +115,7 @@
         <widget class="QCheckBox" name="checkBoxEnabled">
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
@@ -127,7 +127,7 @@
         <widget class="QLabel" name="labelPreset">
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
@@ -145,7 +145,7 @@
          </property>
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="readOnly">
@@ -163,7 +163,7 @@
          </property>
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="readOnly">
@@ -175,7 +175,7 @@
         <widget class="QLabel" name="labelWebAddress">
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
@@ -203,7 +203,7 @@
         <widget class="QLabel" name="labelRemoteID">
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
@@ -221,7 +221,7 @@
          </property>
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="readOnly">
@@ -236,7 +236,7 @@
          </property>
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">

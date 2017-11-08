@@ -84,8 +84,8 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 5),	/* button_b6 */	\
 				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 6),	/* button_b7 */	\
 				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 7),	/* button_b8 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 8),	/* button_bu */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 9)	/* button_bd */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 9),	/* button_bu */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 8)	/* button_bd */	\
 			})																					\
 		)
 
