@@ -17,12 +17,22 @@
    <layout class="QGridLayout" name="gridLayoutMain">
     <item row="0" column="0">
      <widget class="QGroupBox" name="groupBoxInfo">
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="title">
        <string>Info</string>
       </property>
       <layout class="QGridLayout" name="gridLayoutInfo">
        <item row="1" column="0">
         <widget class="QLabel" name="labelBank">
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Bank:</string>
          </property>
@@ -30,6 +40,11 @@
        </item>
        <item row="1" column="3">
         <widget class="QCheckBox" name="checkBoxPedalMode">
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Pedal Mode</string>
          </property>
@@ -40,6 +55,11 @@
        </item>
        <item row="2" column="3">
         <widget class="QCheckBox" name="checkBoxBypass">
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Bypass</string>
          </property>
@@ -50,6 +70,11 @@
        </item>
        <item row="3" column="3">
         <widget class="QCheckBox" name="checkBoxMute">
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Mute</string>
          </property>
@@ -60,6 +85,11 @@
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="labelPresetName">
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Preset Name:</string>
          </property>
@@ -83,6 +113,11 @@
        </item>
        <item row="4" column="3">
         <widget class="QCheckBox" name="checkBoxEnabled">
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Enabled</string>
          </property>
@@ -90,6 +125,11 @@
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="labelPreset">
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Preset:</string>
          </property>
@@ -102,6 +142,11 @@
            <width>180</width>
            <height>30</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
          </property>
          <property name="readOnly">
           <bool>true</bool>
@@ -116,6 +161,11 @@
            <height>30</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -123,6 +173,11 @@
        </item>
        <item row="4" column="0">
         <widget class="QLabel" name="labelWebAddress">
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Web Address: </string>
          </property>
@@ -146,6 +201,11 @@
        </item>
        <item row="5" column="0">
         <widget class="QLabel" name="labelRemoteID">
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Remote ID: </string>
          </property>
@@ -159,6 +219,11 @@
            <height>30</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -168,6 +233,11 @@
         <widget class="QCheckBox" name="checkBoxPaired">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
          </property>
          <property name="text">
           <string>Paired</string>
