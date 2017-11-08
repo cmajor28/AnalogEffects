@@ -34,6 +34,7 @@ enum {
 };
 
 // Constants
+const unsigned long gSleepTime = 10;
 const unsigned long gDisplayTime = 2000;
 const unsigned long gBlinkTime = 500;
 const float gBattLowVoltage = 3.3;
@@ -472,4 +473,7 @@ void loop()
     ble.print(jsonMessageOut);
     Serial.println("Sending message: " + jsonMessageOut);
   }
+
+  // Wait for awhile to give the CPU some down time
+  delay(gSleepTime);
 }
