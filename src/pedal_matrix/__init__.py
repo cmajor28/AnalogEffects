@@ -139,10 +139,10 @@ def preset_order():
         data = {
             'controlEnabled1': controlEnabled[0],
             'controlEnabled2': controlEnabled[1],
-            'bank_name': bank_name - 1,
+            'bank_name': bank_name,
             'bank_num': bank_num - 1,
             'preset_name': preset_name,
-            'preset_num': preset_num,
+            'preset_num': preset_num - 1,
             #"pedal_pos1_name": pedal_pos1_name,
             #"pedal_pos2_name": pedal_pos2_name,
             #"pedal_pos3_name": pedal_pos3_name,
@@ -176,7 +176,7 @@ def preset_order():
         """with open('data.json', 'r') as f:
             data = json.load(f)"""
 
-        return "Success"
+        return app.send_static_file('test2.html')
 
 
 # add controlEnabled bool array for init function
