@@ -34,7 +34,7 @@ enum {
 };
 
 // Constants
-const unsigned long gSleepTime = 10;
+const unsigned long gDebounceTime = 50;
 const unsigned long gDisplayTime = 2000;
 const unsigned long gBlinkTime = 500;
 const float gBattLowVoltage = 3.3;
@@ -54,6 +54,32 @@ Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_
 void error(const __FlashStringHelper*err) {
   Serial.println(err);
   while (1);
+}
+
+// value = debounce()
+
+int debounce(int value, int lastValue, unsigned long *lastDebounceTime, long debounceTime) {
+
+  int debounceValue = lastValue;
+  
+  // If the switch changed, due to noise or pressing:
+  if (value != lastValue && *lastDebounceTime == -1) {
+    // reset the debouncing timer
+    *lastDebounceTime = millis();
+  }
+
+  if ((millis() - *lastDebounceTime) > debounceTime) {
+    // whatever the reading is at, it's been there for longer than the debounce
+    // delay, so take it as the actual current state:
+
+    // if the button state has changed:
+    if (value != lastValue) {
+      *lastDebounceTime = -1;
+      debounceValue = value;
+    }
+  }
+
+  return debounceValue;
 }
 
 // Get rotary switch position
@@ -370,6 +396,7 @@ void setup()
 void loop() 
 {
   static int lastButtonState[BUTTON_COUNT] = { HIGH, HIGH };
+  static long lastButtonDebounceTime[BUTTON_COUNT] = { -1, -1 };
   static int lastRotaryPosition = -1;
   
   static int lastBank = -1;
@@ -423,8 +450,9 @@ void loop()
   
   // Get button states
   rotaryPosition = getRotaryPosition(analogRead(gRotaryPin));
-  buttonState[BUTTON_UP] = digitalRead(gButtonPins[BUTTON_UP]);
-  buttonState[BUTTON_DOWN] = digitalRead(gButtonPins[BUTTON_DOWN]);
+  for (int i = 0; i < BUTTON_COUNT; i++) {
+    buttonState[i] = debounce(digitalRead(gButtonPins[i]), lastButtonState[i], &lastButtonDebounceTime[i], gDebounceTime);
+  }
   
   // If rotary switch has changed position
   if (rotaryPosition != lastRotaryPosition) {
@@ -473,7 +501,4 @@ void loop()
     ble.print(jsonMessageOut);
     Serial.println("Sending message: " + jsonMessageOut);
   }
-
-  // Wait for awhile to give the CPU some down time
-  delay(gSleepTime);
 }
