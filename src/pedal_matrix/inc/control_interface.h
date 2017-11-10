@@ -11,7 +11,7 @@ struct control_callbacks {
 	int	(*muteEnabled)(bool);
 };
 
-int register_callbacks(struct control_callbacks *callbacks);
+int register_callbacks(int (*presetChanged)(int), int (*bankChanged)(int), int (*modeChanged)(bool), int (*bypassEnabled)(bool), int (*muteEnabled)(bool));
 
 int set_preset(int preset);
 int set_bank(int bank);

@@ -24,13 +24,6 @@ class AE_PRESET(Structure):
                 ("enabled", c_bool * 7),
                 ("controlEnabled", c_bool * 2)]
 
-class AE_CALLBACKS(Structure):
-    _fields_ = [("presetChanged", CFUNCTYPE(c_int, c_int)),
-                ("bankChanged", CFUNCTYPE(c_int, c_int)),
-                ("modeChanged", CFUNCTYPE(c_int, c_bool)),
-                ("bypassEnabled", CFUNCTYPE(c_int, c_bool)),
-                ("muteEnabled", CFUNCTYPE(c_int, c_bool))]
-
 # These are created later
 remote = None
 lcd = None
@@ -52,6 +45,18 @@ lcdInfo = {"bank": -1,
            "muteMode": False,
            "webEnabled": False,
            "remotePaired": False}
+
+# Used for ctypes
+set_preset_py_func = None
+set_bank_py_func = None
+set_mode_py_func = None
+set_bypass_py_func = None
+set_mute_py_func = None
+set_preset_py_func_type = None
+set_bank_py_func_type = None
+set_mode_py_func_type = None
+set_bypass_py_func_type = None
+set_mute_py_func_type = None
 
 """@app.route('/')
 def index():
@@ -82,7 +87,7 @@ def preset_order():
     if request.method == 'GET':
         return app.send_static_file('test1.html')
     
-	else:
+    else:
         pedal = [0, 0, 0, 0, 0, 0, 0]
         enable = [0, 0, 0, 0, 0, 0, 0]
         controlEnabled = [0, 0]
@@ -99,7 +104,7 @@ def preset_order():
         #pedal_pos7_name = request.json['pedal_pos7_name']
 
         pedal[0] = int(request.form['pedal_pos1'])
-		pedal[1] = int(request.form['pedal_pos2'])
+        pedal[1] = int(request.form['pedal_pos2'])
         pedal[2] = int(request.form['pedal_pos3'])
         pedal[3] = int(request.form['pedal_pos4'])
         pedal[4] = int(request.form['pedal_pos5'])
@@ -135,9 +140,9 @@ def preset_order():
             'controlEnabled1': controlEnabled[0],
             'controlEnabled2': controlEnabled[1],
             'bank_name': bank_name,
-            'bank_num': bank_num,
+            'bank_num': bank_num - 1,
             'preset_name': preset_name,
-            'preset_num': preset_num,
+            'preset_num': preset_num - 1,
             #"pedal_pos1_name": pedal_pos1_name,
             #"pedal_pos2_name": pedal_pos2_name,
             #"pedal_pos3_name": pedal_pos3_name,
@@ -171,7 +176,7 @@ def preset_order():
         """with open('data.json', 'r') as f:
             data = json.load(f)"""
 
-        return "Success"
+        return app.send_static_file('test2.html')
 
 
 # add controlEnabled bool array for init function
@@ -231,10 +236,10 @@ def set_bank_py(bank):
     remoteInfo["bank"] = c_int(bank).value
     lcdInfo["bank"] = c_int(bank).value
     if remote is not None:
-        remote.updateInfo(remoteInfo)
+        remote.updateInfo(remoteInfo.copy())
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo)
-    return c_int(0)
+        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+    return 0
 
 
 def set_preset_py(preset):
@@ -254,38 +259,39 @@ def set_preset_py(preset):
             presetName = data['preset_name']
 	
     lcdInfo["presetName"] = presetName
-	
+
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo)
-    return c_int(0)
+        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+    return 0
 
 
 def set_mode_py(mode):
     global lcd, remote, lcdInfo, remoteInfo
     lcdInfo["mode"] = c_bool(mode).value
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo)
-    return c_int(0)
+        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+    return 0
 
 
 def set_bypass_py(bypass):
     global lcd, remote, lcdInfo, remoteInfo
     lcdInfo["bypass"] = c_bool(bypass).value
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo)
-    return c_int(0)
+        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+    return 0
 
 
 def set_mute_py(mute):
     global lcd, remote, lcdInfo, remoteInfo
     lcdInfo["mute"] = c_bool(mute).value
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo)
+        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
     return c_int(0)
 
 
 def get_ip_address(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    ip = ''
     try:
         ip = socket.inet_ntoa(fcntl.ioctl(
             s.fileno(),
@@ -294,7 +300,7 @@ def get_ip_address(ifname):
         )[20:24])
         ip = ip + ":5052"
     except:
-        ip = ''
+        pass
     finally:
         return ip
 
@@ -302,12 +308,12 @@ def get_ip_address(ifname):
 def update_ip_address():
     global lcdInfo
     while True:
-        ip = get_ip_address("usb0")
+        ip = get_ip_address("wlan0")
         if ip != lcdInfo["webAddress"]:
             print("Web Address Changed: '" + ip + "'")
             lcdInfo["webAddress"] = ip
             if lcd is not None:
-                guiInvoker.invoke(lcd.updateInfo, lcdInfo)
+                guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
         time.sleep(5)
 
 
@@ -349,18 +355,29 @@ def init_structs():
 
 
 def init_control():
-    callbacks = AE_PRESET()
+    global set_preset_py_func, set_bank_py_func, set_mode_py_func, set_bypass_py_func, set_mute_py_func
+    global set_preset_py_func_type, set_bank_py_func_type, set_mode_py_func_type, set_bypass_py_func_type, set_mute_py_func_type
 
-    c_int_arg_func = CFUNCTYPE(c_int, c_int)
-    c_bool_arg_func = CFUNCTYPE(c_int, c_bool)
+    set_preset_py_func_type = CFUNCTYPE(c_int, c_int)
+    set_preset_py_func = set_preset_py_func_type(set_preset_py)
 
-    callbacks.presetChanged = c_int_arg_func(set_preset_py)
-    callbacks.bankChanged = c_int_arg_func(set_bank_py)
-    callbacks.modeChanged = c_bool_arg_func(set_mode_py)
-    callbacks.bypassEnabled = c_bool_arg_func(set_bypass_py)
-    callbacks.muteEnabled = c_bool_arg_func(set_mute_py)
+    set_bank_py_func_type = CFUNCTYPE(c_int, c_int)
+    set_bank_py_func = set_bank_py_func_type(set_bank_py)
 
-    c_lib.register_callbacks(byref(callbacks))
+    set_mode_py_func_type = CFUNCTYPE(c_int, c_bool)
+    set_mode_py_func = set_mode_py_func_type(set_mode_py)
+
+    set_bypass_py_func_type = CFUNCTYPE(c_int, c_bool)
+    set_bypass_py_func = set_bypass_py_func_type(set_bypass_py)
+
+    set_mute_py_func_type = CFUNCTYPE(c_int, c_bool)
+    set_mute_py_func = set_mute_py_func_type(set_mute_py)
+
+    c_lib.register_callbacks(set_preset_py_func,
+                             set_bank_py_func,
+                             set_mode_py_func,
+                             set_bypass_py_func,
+                             set_mute_py_func)
 
 
 def lcdUpdate(info):
@@ -380,7 +397,7 @@ def lcdUpdate(info):
             os.system("ifconfig wlan0 down")
     if info["remotePaired"] != lcdInfo["remotePaired"]:
         remoteInfo["id"] = None
-        remote.updateInfo(remoteInfo)
+        remote.updateInfo(remoteInfo.copy())
     lcdInfo = info.copy()
 
 
@@ -395,7 +412,7 @@ def remoteUpdate(info):
     if info["id"] != remoteInfo["id"]:
         lcdInfo["remoteID"] = info["id"]
         lcdInfo["remotePaired"] = (info["id"] != None)
-    guiInvoker.invoke(lcd.updateInfo, lcdInfo)
+    guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
     remoteInfo = info.copy()
 
 

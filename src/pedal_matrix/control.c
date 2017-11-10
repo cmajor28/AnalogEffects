@@ -192,6 +192,11 @@ static int load_preset(int bank, int preset) {
 
 	// Load preset into config
 	memcpy(&gConfig->currPreset, &gPresets[bank][preset], sizeof(gConfig->currPreset));
+
+	// Validate preset
+	gConfig->currPreset.bank = bank;
+	gConfig->currPreset.preset = preset;
+
 	pthread_mutex_unlock(&gPresetsMutex);
 
 	// Apply the preset to hardware
@@ -387,20 +392,20 @@ static int handle_button_held_event(enum ae_button button) {
 
 	switch (button) {
 	case AE_BUTTON_B1:
+		// Toggle mode
+		ret = set_pedal_mode_enabled(!gConfig->pedalMode);
+		if (gControlCallbacks.modeChanged) {
+			gControlCallbacks.modeChanged(gConfig->pedalMode);
+		}
+		break;
 	case AE_BUTTON_B2:
 	case AE_BUTTON_B3:
 	case AE_BUTTON_B4:
 	case AE_BUTTON_B5:
 	case AE_BUTTON_B6:
 	case AE_BUTTON_B7:
-		ret = 0;
-		break;
 	case AE_BUTTON_B8:
-		// Toggle mode
-		ret = set_pedal_mode_enabled(!gConfig->pedalMode);
-		if (gControlCallbacks.modeChanged) {
-			gControlCallbacks.modeChanged(gConfig->pedalMode);
-		}
+		ret = 0;
 		break;
 	case AE_BUTTON_BU:
 		// Toggle bypass
@@ -412,8 +417,8 @@ static int handle_button_held_event(enum ae_button button) {
 	case AE_BUTTON_BD:
 		// Toggle mute
 		ret = set_mute_enabled(!gConfig->muteEnabled);
-		if (gControlCallbacks.bypassEnabled) {
-			gControlCallbacks.bypassEnabled(gConfig->bypassEnabled);
+		if (gControlCallbacks.muteEnabled) {
+			gControlCallbacks.muteEnabled(gConfig->muteEnabled);
 		}
 		break;
 	default:
@@ -537,7 +542,10 @@ int control_init() {
 	PRINT("control: Initializing control mutex.\n");
 
 	// Block entry points until we are fully initialized
-	pthread_mutex_init(&gConfigMutex, NULL);
+	pthread_mutexattr_t recursiveMutexAttr;
+	pthread_mutexattr_init(&recursiveMutexAttr);
+    pthread_mutexattr_settype(&recursiveMutexAttr, PTHREAD_MUTEX_RECURSIVE_NP);
+	pthread_mutex_init(&gConfigMutex, &recursiveMutexAttr);
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
 		PRINT_LOG("pthread_mutex_lock() failed!");
@@ -639,6 +647,8 @@ int control_init() {
 	// Open entry points
 	pthread_mutex_unlock(&gConfigMutex);
 
+	PRINT("control: Initialization done.\n");
+
 	return 0;
 }
 
@@ -692,10 +702,12 @@ int control_uninit() {
 	pthread_mutex_unlock(&gConfigMutex);
 	pthread_mutex_destroy(&gConfigMutex);
 
+	PRINT("control: Uninitialization done.\n");
+
 	return 0;
 }
 
-int register_callbacks(struct control_callbacks *callbacks) {
+int register_callbacks(int (*presetChanged)(int), int (*bankChanged)(int), int (*modeChanged)(bool), int (*bypassEnabled)(bool), int (*muteEnabled)(bool)) {
 
 	int ret;
 
@@ -707,7 +719,12 @@ int register_callbacks(struct control_callbacks *callbacks) {
 		return -1;
 	}
 
-	memcpy(&gControlCallbacks, callbacks, sizeof(gControlCallbacks));
+	gControlCallbacks.presetChanged = presetChanged;
+	gControlCallbacks.bankChanged = bankChanged;
+	gControlCallbacks.modeChanged = modeChanged;
+	gControlCallbacks.bypassEnabled = bypassEnabled;
+	gControlCallbacks.muteEnabled = muteEnabled;
+
 	pthread_mutex_unlock(&gConfigMutex);
 	return ret;
 }
@@ -716,7 +733,6 @@ int set_preset(int preset) {
 
 	int ret;
 
-	preset--; // Presets need to be 0 indexed
 	PRINT("control: set_preset() called.\n");
 
 	ret = pthread_mutex_lock(&gConfigMutex);
@@ -725,7 +741,7 @@ int set_preset(int preset) {
 		return -1;
 	}
 
-	ret = set_new_preset(preset);
+	ret = set_new_preset(preset - 1); // 0 indexed
 	pthread_mutex_unlock(&gConfigMutex);
 	return ret;
 }
@@ -734,7 +750,6 @@ int set_bank(int bank) {
 
 	int ret;
 
-	bank--; // Banks need to be 0 indexed
 	PRINT("control: set_bank() called.\n");
 
 	ret = pthread_mutex_lock(&gConfigMutex);
@@ -743,7 +758,7 @@ int set_bank(int bank) {
 		return -1;
 	}
 
-	ret = set_new_bank(bank);
+	ret = set_new_bank(bank - 1); // 0 indexed
 	pthread_mutex_unlock(&gConfigMutex);
 	return ret;
 }
@@ -809,7 +824,7 @@ int get_preset(int *preset) {
 		return -1;
 	}
 
-	*preset = gConfig->currPreset.preset + 1;
+    *preset = gConfig->currPreset.preset + 1;
 	pthread_mutex_unlock(&gConfigMutex);
 	return ret;
 }
@@ -824,7 +839,7 @@ int get_bank(int *bank) {
 		return -1;
 	}
 
-	*bank = gConfig->currBank + 1;
+    *bank = gConfig->currPreset.bank + 1;
 	pthread_mutex_unlock(&gConfigMutex);
 	return ret;
 }
