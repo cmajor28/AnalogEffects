@@ -463,6 +463,10 @@ void loop()
 
   // If bank up has been pressed
   if (buttonState[BUTTON_UP] == LOW && lastButtonState[BUTTON_UP] == HIGH) {
+    if (currBank == -1) {
+      // Uninitialized case
+      currBank = 16;
+    }
     currBank = (currBank - 1 + 1) % 16 + 1;
     Serial.println("BUTTON_UP has been pressed.");
   }
@@ -470,6 +474,10 @@ void loop()
   
   // If bank down has been pressed
   if (buttonState[BUTTON_DOWN] == LOW && lastButtonState[BUTTON_DOWN] == HIGH) {
+    if (currBank == -1) {
+      // Uninitialized case
+      currBank = 1;
+    }
     currBank = (currBank - 1 + 16 - 1) % 16 + 1;
     Serial.println("BUTTON_DOWN has been pressed.");
   }
