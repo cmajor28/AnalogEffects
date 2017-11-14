@@ -7,7 +7,7 @@ int led_control_init(struct led_control *leds, bool ledOn[AE_LED_COUNT]) {
 	PRINT("led_control: Initializing interface.\n");
 
 	for (int i = 0; i < AE_LED_COUNT; i++) {
-		ret |= gpio_ext_pin_set_value(&leds->pins[i], ledOn[i]);
+		ret |= gpio_ext_pin_set_value(&leds->pins[i], !ledOn[i]);
 	}
 
 	return ret;
@@ -17,7 +17,7 @@ int led_control_set(struct led_control *leds, enum ae_led led, bool ledOn) {
 
 	int ret;
 	PRINT("led_control: Setting LED %d to %d.\n", led, ledOn);
-	ret = gpio_ext_pin_set_value(&leds->pins[led], ledOn);
+	ret = gpio_ext_pin_set_value(&leds->pins[led], !ledOn); // Active low
 	return ret;
 }
 
@@ -27,7 +27,7 @@ int led_control_set_all(struct led_control *leds, bool ledOn[AE_LED_COUNT]) {
 
 	for (int i = 0; i < AE_LED_COUNT; i++) {
 		PRINT("led_control: Setting LED %d to %d.\n", i, ledOn[i]);
-		ret |= gpio_ext_pin_set_value(&leds->pins[i], ledOn[i]);
+		ret |= gpio_ext_pin_set_value(&leds->pins[i], !ledOn[i]); // Active low
 	}
 
 	return ret;
@@ -37,6 +37,7 @@ int led_control_get(struct led_control *leds, enum ae_led led, bool *ledOn) {
 
 	int ret;
 	ret = gpio_ext_pin_get_value(&leds->pins[led], ledOn);
+	*ledOn = !(*ledOn); // Active low
 	return ret;
 }
 
@@ -46,6 +47,7 @@ int led_control_get_all(struct led_control *leds, bool ledOn[AE_LED_COUNT]) {
 
 	for (int i = 0; i < AE_LED_COUNT; i++) {
 		ret |= gpio_ext_pin_get_value(&leds->pins[i], &ledOn[i]);
+		ledOn[i] = !ledOn[i]; // Active low
 	}
 
 	return ret;

@@ -1,0 +1,249 @@
+Sun Jul 09 16:45:38 UserDiv from Layout.INI for AutoECO: 60
+Sun Jul 09 16:45:38 Loaded file C:\CADENCE\SPB_16.2\TOOLS\LAYOUT_PLUS\DATA\_DEFAULT.TCH
+Sun Jul 09 16:45:38 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\BCON100T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\BCON156T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\BGA.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\CLCC.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DCON050T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DCON085T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DIMM050F.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DIMM050T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DIN.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DIP100B.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DIP100T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DSUBT.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DSUBT_HD.LLB
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\ECON100T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\FBUS.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\ISA.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\JUMPER.LLB
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\LAYOUT.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\LCON100T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\PC104.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\PCI.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\PCON100T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\PCON156T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\PGA.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\PLCC.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\QUAD.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\QUADB.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\RELAY.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\RF.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SBUS.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SIMM050F.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SIMM050T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SIMM100F.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SIMM100T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SIP.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SM.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SOG.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SOJ.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\STIFF.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TELE.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_AXIAL.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_CAP_P.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_CYLND.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_DIODE.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_DISC.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_RAD.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TO.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TRAINING.LLB
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\VRES.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\WCON100T.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\XT.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\ZIGZAG.llb
+Sun Jul 09 16:45:38 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SM.llb
+Sun Jul 09 16:45:38 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\WCON100T.llb
+Sun Jul 09 16:45:46 Saved as file D:\ANALOG FX\ANALOGFX-1.MAX
+Sun Jul 09 16:46:32 Saved as file ~undo.max
+Sun Jul 09 16:46:44 Saved as file ~undo.max
+Sun Jul 09 16:47:25 Saved as file ~undo.max
+Sun Jul 09 16:47:32 Saved as file ~undo.max
+Sun Jul 09 16:47:41 Saved as file ~undo.max
+Sun Jul 09 16:48:23 Saved as file ~undo.max
+Sun Jul 09 16:48:58 Saved as file ~undo.max
+Sun Jul 09 16:49:02 Saved as file ~undo.max
+Sun Jul 09 16:49:14 Saved as file ~undo.max
+Sun Jul 09 16:49:15 Saved as file ~undo.max
+Sun Jul 09 16:49:48 Saved as file ~undo.max
+Sun Jul 09 16:49:52 Saved as file ~undo.max
+Sun Jul 09 16:49:57 Saved as file ~undo.max
+Sun Jul 09 16:50:01 Saved as file ~undo.max
+Sun Jul 09 16:50:05 Saved as file ~undo.max
+Sun Jul 09 16:50:15 Saved as file ~undo.max
+Sun Jul 09 16:50:18 Saved as file ~undo.max
+Sun Jul 09 16:50:22 Saved as file ~undo.max
+Sun Jul 09 16:50:35 Saved as file ~undo.max
+Sun Jul 09 16:50:40 Saved as file ~undo.max
+Sun Jul 09 16:50:53 Saved as file ~undo.max
+Sun Jul 09 16:51:03 Saved as file ~undo.max
+Sun Jul 09 16:51:05 Saved as file ~undo.max
+Sun Jul 09 16:51:07 Saved as file ~undo.max
+Sun Jul 09 16:51:15 Saved as file ~undo.max
+Sun Jul 09 16:51:18 Saved as file ~undo.max
+Sun Jul 09 16:52:04 Saved as file ~undo.max
+Sun Jul 09 16:52:34 Saved as file ~undo.max
+Sun Jul 09 16:52:51 Saved as file ~undo.max
+Sun Jul 09 16:52:57 Saved as file ~undo.max
+Sun Jul 09 16:53:01 Saved as file ~undo.max
+Sun Jul 09 16:53:13 Saved as file ~undo.max
+Sun Jul 09 16:53:34 Saved as file ~undo.max
+Sun Jul 09 16:53:42 Saved as file ~undo.max
+Sun Jul 09 16:53:48 Saved as file ~undo.max
+Sun Jul 09 16:53:54 Saved as file ~undo.max
+Sun Jul 09 16:54:03 Saved as file ~undo.max
+Sun Jul 09 16:54:19 Saved as file ~undo.max
+Sun Jul 09 16:54:26 Saved as file ~undo.max
+Sun Jul 09 16:54:37 Saved as file ~undo.max
+Sun Jul 09 16:55:28 Saved as file ~undo.max
+Sun Jul 09 16:56:21 Saved as file BACKUP1.MAX
+Sun Jul 09 16:56:54 Saved as file BACKUP1.MAX
+Sun Jul 09 16:56:54 Saved as file PLACE1.MAX
+Sun Jul 09 16:56:54 Saved as file PLACE2.MAX
+Sun Jul 09 16:56:55 Saved as file PLACE3.MAX
+Sun Jul 09 16:56:55 Saved as file PLACE4.MAX
+Sun Jul 09 16:56:55 Saved as file PLACE5.MAX
+Sun Jul 09 16:56:55 Batch place completed in 00:00:01
+Sun Jul 09 16:59:24 Saved as file D:\ANALOG FX\ANALOGFX-1.MAX
+Sun Jul 09 16:59:32 No new connections routed.
+Sun Jul 09 16:59:32 Total is now 0 out of 56 (0%).
+Sun Jul 09 16:59:32 Saved as file SWEEP1.MAX
+Sun Jul 09 16:59:53 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:53 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:53 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:53 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:56 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:56 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:56 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:56 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:56 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:57 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:57 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:57 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:57 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:57 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:57 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:57 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:57 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:57 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:58 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:58 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:58 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:58 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:58 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:58 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:58 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:58 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:59 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:59 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:59 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:59 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:59 Saved as file BACKUP1.MAX
+Sun Jul 09 16:59:59 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:25 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:25 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:26 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:26 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:27 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:27 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:27 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:27 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:31 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:31 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:31 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:31 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:31 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:31 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:31 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:31 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:31 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:32 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:32 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:32 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:32 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:32 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:32 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:32 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:32 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:33 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:33 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:33 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:33 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:33 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:33 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:33 Saved as file BACKUP1.MAX
+Sun Jul 09 17:00:33 Routed 14 connections in 60 seconds.
+Sun Jul 09 17:00:33 Total is now 0 out of 56 (0%).
+Sun Jul 09 17:00:33 Saved as file SWEEP2.MAX
+Sun Jul 09 17:02:24 Routed 1 connections in 110 seconds.
+Sun Jul 09 17:02:24 Total is now 0 out of 56 (0%).
+Sun Jul 09 17:02:24 Saved as file SWEEP3.MAX
+Sun Jul 09 17:05:32 Saved as file D:\ANALOG FX\ANALOGFX-1.MAX
+Sun Jul 09 17:07:09 Saved as file ~undo.max
+Sun Jul 09 17:07:15 Saved as file ~undo.max
+Sun Jul 09 17:08:02 Saved as file ~undo.max
+Sun Jul 09 17:08:18 Saved as file ~undo.max
+Sun Jul 09 17:08:30 Saved as file ~undo.max
+Sun Jul 09 17:11:46 Routed 41 connections in 34 seconds.
+Sun Jul 09 17:11:46 Total is now 40 out of 56 (71%).
+Sun Jul 09 17:11:46 Saved as file SWEEP4.MAX
+Sun Jul 09 17:12:14 Routed 1 connections in 28 seconds.
+Sun Jul 09 17:12:14 Total is now 40 out of 56 (71%).
+Sun Jul 09 17:12:15 Saved as file SWEEP5.MAX
+Sun Jul 09 17:16:00 Saved as file BACKUP1.MAX
+Sun Jul 09 17:16:00 Saved as file BACKUP1.MAX
+Sun Jul 09 17:16:01 Saved as file BACKUP1.MAX
+Sun Jul 09 17:16:01 Routed 1 connections in 0 seconds.
+Sun Jul 09 17:16:01 Total is now 1 out of 56 (1%).
+Sun Jul 09 17:16:01 Saved as file SWEEP1.MAX
+Sun Jul 09 17:16:01 Saved as file BACKUP1.MAX
+Sun Jul 09 17:16:03 Saved as file BACKUP1.MAX
+Sun Jul 09 17:16:03 Saved as file BACKUP1.MAX
+Sun Jul 09 17:16:03 Routed 79 connections in 2 seconds.
+Sun Jul 09 17:16:03 Total is now 50 out of 56 (89%).
+Sun Jul 09 17:16:03 Saved as file SWEEP2.MAX
+Sun Jul 09 17:16:04 Routed 5 connections in 1 seconds.
+Sun Jul 09 17:16:04 Total is now 56 out of 56 (100%).
+Sun Jul 09 17:16:04 Saved as file SWEEP3.MAX
+Sun Jul 09 17:16:04 No new connections routed.
+Sun Jul 09 17:16:05 Total is now 56 out of 56 (100%).
+Sun Jul 09 17:16:05 Saved as file SWEEP4.MAX
+Sun Jul 09 17:16:05 No new connections routed.
+Sun Jul 09 17:16:05 Total is now 56 out of 56 (100%).
+Sun Jul 09 17:16:05 Saved as file SWEEP5.MAX
+Sun Jul 09 17:16:54 Saved as file BACKUP1.MAX
+Sun Jul 09 17:22:33 Saved as file ~undo.max
+Sun Jul 09 17:22:57 Saved as file ~undo.max
+Sun Jul 09 17:26:08 Saved as file ~undo.max
+Sun Jul 09 17:26:54 Saved as file BACKUP1.MAX
+Sun Jul 09 17:33:05 Saved as file D:\ANALOG FX\ANALOGFX-1.MAX
+Sun Jul 09 17:36:54 Saved as file BACKUP1.MAX
+Sun Jul 09 17:39:12 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:39:12 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:39:14 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Sun Jul 09 17:39:21 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:39:22 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:39:23 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:39:25 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:39:26 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:39:26 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:39:37 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:40:10 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:40:10 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:40:11 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Sun Jul 09 17:40:13 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:40:24 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sun Jul 09 17:40:39 Saved as file ~undo.max
+Sun Jul 09 17:41:20 Saved as file ~undo.max
+Sun Jul 09 17:41:31 Saved as file ~undo.max
+Sun Jul 09 17:42:22 Saved as file ~undo.max
+Sun Jul 09 17:42:25 Saved as file ~undo.max
+Sun Jul 09 17:47:25 Saved as file BACKUP1.MAX
+Sun Jul 09 17:48:55 Saved as file ~undo.max
+Sun Jul 09 17:51:10 Saved as file ~undo.max
+Sun Jul 09 17:54:16 Saved as file ~undo.max
+Sun Jul 09 17:58:25 Saved as file BACKUP1.MAX
+Sun Jul 09 18:03:44 Saved as file D:\ANALOG FX\ANALOGFX-1.MAX
+Sun Jul 09 18:05:36 Loaded file D:\Analog FX\ANALOGFX-1.MAX

@@ -1,0 +1,72 @@
+
+Copyright (c) 2006-2008, Elgris Technologies, Inc.
+Copyright (c) 1998-2005, Electronic Tools Company
+
+EDIF 2 0 0 to OrCAD Capture Schematic Conversion Program SPB 16.20_1.075 built Aug  5 2008
+
+Started on Wed Sep 06 13:55:40 2017
+
+Reading config file D:\Analog FX\allegro.cfg
+Error:  syntax errors in config file
+  line 1: Unknown section [ComponentDefinitionProps]
+  line 2: No section for option ALT_SYMBOLS
+  line 11: Unknown section [ComponentInstanceProps]
+  line 12: No section for option GROUP
+  line 18: Unknown section [netprops]
+  line 19: No section for option BUS_NAME
+  line 66: Unknown section [functionprops]
+  line 67: No section for option GROUP
+  line 82: Unknown section [pinprops]
+  line 83: No section for option NO_DRC
+
+
+Processing EDIF 2 0 0  file D:\Analog FX\MASTER SCHEMATIC.EDF
+
+This is an OrCAD EDIF file.
+.............................................................
+..............................................................
+
+EDIF 200 parsing finished
+
+
+Library D:\ANALOG FX\NEW\CONNECTOR.OLB is created
+Library D:\ANALOG FX\NEW\ANALOG.OLB is created
+Library D:\ANALOG FX\NEW\REGULATOR.OLB is created
+Library D:\ANALOG FX\NEW\DISCRETE.OLB is created
+Library D:\ANALOG FX\NEW\CONNECTOR#0.olb is created
+Library D:\ANALOG FX\NEW\LIBRARY2.OLB is created
+Library D:\ANALOG FX\NEW\MASTER SCHEMATIC.OLB is created
+              Design Unit is equal to 0.01000000 inches
+              OrCAD pinSpacing is equal to : 0.10000001 inches
+              OrCAD grid resolution is equal to: 10 Design Units
+Library D:\ANALOG FX\NEW\CONNECTOR.OLB is being saved
+Library D:\ANALOG FX\NEW\ANALOG.OLB is being saved
+Library D:\ANALOG FX\NEW\REGULATOR.OLB is being saved
+Library D:\ANALOG FX\NEW\DISCRETE.OLB is being saved
+Library D:\ANALOG FX\NEW\CONNECTOR#0.OLB is being saved
+Library D:\ANALOG FX\NEW\LIBRARY2.OLB is being saved
+Library D:\ANALOG FX\NEW\MASTER SCHEMATIC.OLB is being saved
+       -------       
+Converting Schematic SCHEMATIC1
+Collecting Schematic information...
+Converting Page LCD
+Starting CONNECT Transaction...
+Finishing CONNECT Transaction...
+Converting Page WIRELESS
+Starting CONNECT Transaction...
+Finishing CONNECT Transaction...
+Converting Page MATRIX
+Starting CONNECT Transaction...
+Finishing CONNECT Transaction...
+Converting Page BEAGLEBONE_BLACK
+Starting CONNECT Transaction...
+Finishing CONNECT Transaction...
+Converting Unreferenced Symbols from Design libraries
+Writing D:\ANALOG FX\NEW\MASTER SCHEMATIC.INI file
+Preparing to save the design...
+Design D:\ANALOG FX\NEW\MASTER SCHEMATIC.DSN is being saved
+
+Finished on Wed Sep 06 13:55:43 2017
+
+
+1 error detected, 0 warnings detected

@@ -15,11 +15,11 @@
         "gpio1_29", /* PCF8575 INT Presence */
 	
         /* TODO: Change this to GPIO1_0 (P8.25) */ 
-        "P8.24",    /* GPIO1_1 */
-        "gpio1_1",	/* PCF8575 INT Buttons */
+        "P9.41",    /* GPIO0_20 */
+        "gpio0_20",	/* PCF8575 INT Buttons */
 
-        "P8.23",    /* GPIO1_4 */
-        "gpio1_4",  /* MT8809 RESET */
+        "P8.10",   /* "P8.23",   */ /* GPIO1_4 */
+        "gpio2_4", /* "gpio1_4", */ /* MT8809 RESET */
 
         "P8.18",    /* GPIO2_1 */
         "gpio2_1",  /* MT8809 CS */
@@ -33,17 +33,17 @@
         "P8.19",    /* GPIO0_22 */
         "gpio0_22", /* MT8809 AX0 */
 
-        "P8.17",    /* GPIO0_17 */
+        "P8.17",    /* GPIO0_27 */
         "gpio0_27", /* MT8809 AX1 */
 
         "P8.15",    /* GPIO1_15 */
         "gpio1_15", /* MT8809 AX2 */
 
-        "P8.11",    /* GPIO1_13 */
-        "gpio1_13", /* MT8809 AY0 */
+        "P8.11",    /* GPIO0_23 */
+        "gpio0_23", /* MT8809 AY0 */
 
-        "P8.13",    /* GPIO0_23 */
-        "gpio0_23", /* MT8809 AY1 */
+        "P8.13",    /* GPIO1_13 */
+        "gpio1_13", /* MT8809 AY1 */
          
         "P8.12",    /* GPIO1_12 */
         "gpio1_12", /* MT8809 AY2 */
@@ -67,7 +67,8 @@
 
             bb_mt8809_pins: pinmux_bb_mt8809_pins {
                 pinctrl-single,pins = <
-                    0x034 0x17 /* BONE_P8_23 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                    /* 0x034 0x17 */ /* BONE_P8_23 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
+                    0x098 0x17 /* BONE_P8_10 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
                     0x08C 0x17 /* BONE_P8_18 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
                     0x028 0x17 /* BONE_P8_14 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
                     0x038 0x17 /* BONE_P8_16 (SLEWCTRL_FAST | OUTPUT_PULLUP | MODE7) */
@@ -88,7 +89,7 @@
 
             bb_pcf8575_button_pins: pinmux_bb_pcf8575_button_pins {
                 pinctrl-single,pins = <
-                    0x004 0x37 /* BONE_P8_24 (SLEWCTRL_FAST | INPUT_PULLUP | MODE7) */
+                    0x1b4 0x37 /* BONE_P9_41 (SLEWCTRL_FAST | INPUT_PULLUP | MODE7) */
                 >;
             };
 

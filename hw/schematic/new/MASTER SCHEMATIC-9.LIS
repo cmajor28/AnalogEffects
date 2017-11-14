@@ -1,0 +1,233 @@
+Post Processor Report
+OrCAD FILE: E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.MAX
+Tue Sep 26 18:41:00 2017
+
+*********************************************************
+
+Output file: E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.TOP
+
+Aperture totals for E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.TOP:
+---------------------------------------------------------
+D10:  0.0550 ROUND  --       0 Draws,       2 Flashes
+D11:  0.0550 SQUARE --       0 Draws,       2 Flashes
+D12:  0.0866 ROUND  --       0 Draws,     102 Flashes
+D13:  0.0580 ROUND  --       0 Draws,     132 Flashes
+D14:  0.0580 SQUARE --       0 Draws,      14 Flashes
+D15:  0.1496 ROUND  --       0 Draws,       3 Flashes
+D16:  0.1299 ROUND  --       0 Draws,       4 Flashes
+D17:  0.1100 ROUND  --       0 Draws,       4 Flashes
+D18:  0.0500 ROUND  --    3321 Draws,       0 Flashes
+D19:  0.0550 ROUND  --       0 Draws,       2 Flashes
+D20:  0.0200 ROUND  --     468 Draws,       0 Flashes
+D21:  0.0550 ROUND  --       0 Draws,     149 Flashes
+---------------------------------------------------------
+ 12 D-Codes      -----    3789 Draws,     414 Flashes
+
+*********************************************************
+
+Output file: E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.BOT
+
+Aperture totals for E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.BOT:
+---------------------------------------------------------
+D10:  0.0550 ROUND  --       0 Draws,       2 Flashes
+D11:  0.0550 SQUARE --       0 Draws,       2 Flashes
+D12:  0.0866 ROUND  --       0 Draws,     102 Flashes
+D13:  0.0580 ROUND  --       0 Draws,     132 Flashes
+D14:  0.0580 SQUARE --       0 Draws,      14 Flashes
+D15:  0.1496 ROUND  --       0 Draws,       3 Flashes
+D16:  0.1299 ROUND  --       0 Draws,       4 Flashes
+D18:  0.0500 ROUND  --    4146 Draws,       0 Flashes
+D20:  0.0200 ROUND  --     750 Draws,       0 Flashes
+D21:  0.0550 ROUND  --       0 Draws,     151 Flashes
+D22:  0.0500 SQUARE --       0 Draws,      20 Flashes
+D23:  0.0400 x 0.0340 RECTANGLE -----       4 Flashes
+D24:  0.0500 x 0.0340 RECTANGLE -----       2 Flashes
+D25:  0.1000 x 0.0250 OBLONG    -----      23 Flashes
+D26:  0.1000 x 0.0250 RECTANGLE -----       1 Flashes
+D27:  0.0250 x 0.1000 OBLONG    -----      46 Flashes
+D28:  0.0250 x 0.1000 RECTANGLE -----       2 Flashes
+D29:  0.0880 x 0.1420 RECTANGLE -----       1 Flashes
+D30:  0.0880 x 0.0480 RECTANGLE -----       3 Flashes
+D31:  0.1000 ROUND  --       0 Draws,       4 Flashes
+D32:  0.0250 ROUND  --       1 Draws,       0 Flashes
+---------------------------------------------------------
+ 21 D-Codes      -----    4897 Draws,     516 Flashes
+
+*********************************************************
+
+Output file: E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.GND
+
+Aperture totals for E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.GND:
+---------------------------------------------------------
+D18:  0.0500 ROUND  --       4 Draws,       0 Flashes
+D33:  0.0750 ROUND  --       0 Draws,       2 Flashes
+D34:  0.0750 SQUARE --       0 Draws,       2 Flashes
+D35:  0.0780 ROUND  --       0 Draws,     132 Flashes
+D36:  0.0780 SQUARE --       0 Draws,      14 Flashes
+D37:  0.1299 ROUND  --       0 Draws,       4 Flashes
+D38:  0.1400 ROUND  --       0 Draws,       4 Flashes
+D39:  0.0800 ROUND  --       0 Draws,     151 Flashes
+---------------------------------------------------------
+  8 D-Codes      -----       4 Draws,     309 Flashes
+
+*********************************************************
+
+Output file: E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.PWR
+
+Aperture totals for E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.PWR:
+---------------------------------------------------------
+D18:  0.0500 ROUND  --       4 Draws,       0 Flashes
+D33:  0.0750 ROUND  --       0 Draws,       2 Flashes
+D34:  0.0750 SQUARE --       0 Draws,       2 Flashes
+D35:  0.0780 ROUND  --       0 Draws,     132 Flashes
+D36:  0.0780 SQUARE --       0 Draws,      14 Flashes
+D37:  0.1299 ROUND  --       0 Draws,       4 Flashes
+D38:  0.1400 ROUND  --       0 Draws,       4 Flashes
+D39:  0.0800 ROUND  --       0 Draws,     151 Flashes
+---------------------------------------------------------
+  8 D-Codes      -----       4 Draws,     309 Flashes
+
+*********************************************************
+
+Output file: E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.SMT
+
+Aperture totals for E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.SMT:
+---------------------------------------------------------
+D10:  0.0550 ROUND  --       0 Draws,       2 Flashes
+D11:  0.0550 SQUARE --       0 Draws,       2 Flashes
+D13:  0.0580 ROUND  --       0 Draws,     132 Flashes
+D14:  0.0580 SQUARE --       0 Draws,      14 Flashes
+D16:  0.1299 ROUND  --       0 Draws,       4 Flashes
+D40:  0.0925 ROUND  --       0 Draws,     102 Flashes
+D41:  0.1378 ROUND  --       0 Draws,       3 Flashes
+D42:  0.1050 ROUND  --       0 Draws,       4 Flashes
+D43:  0.0600 ROUND  --       0 Draws,     151 Flashes
+---------------------------------------------------------
+  9 D-Codes      -----       0 Draws,     414 Flashes
+
+*********************************************************
+
+Output file: E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.SMB
+
+Aperture totals for E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.SMB:
+---------------------------------------------------------
+D10:  0.0550 ROUND  --       0 Draws,       2 Flashes
+D11:  0.0550 SQUARE --       0 Draws,       2 Flashes
+D13:  0.0580 ROUND  --       0 Draws,     132 Flashes
+D14:  0.0580 SQUARE --       0 Draws,      14 Flashes
+D16:  0.1299 ROUND  --       0 Draws,       4 Flashes
+D22:  0.0500 SQUARE --       0 Draws,      20 Flashes
+D23:  0.0400 x 0.0340 RECTANGLE -----       4 Flashes
+D24:  0.0500 x 0.0340 RECTANGLE -----       2 Flashes
+D25:  0.1000 x 0.0250 OBLONG    -----      23 Flashes
+D26:  0.1000 x 0.0250 RECTANGLE -----       1 Flashes
+D27:  0.0250 x 0.1000 OBLONG    -----      46 Flashes
+D28:  0.0250 x 0.1000 RECTANGLE -----       2 Flashes
+D29:  0.0880 x 0.1420 RECTANGLE -----       1 Flashes
+D30:  0.0880 x 0.0480 RECTANGLE -----       3 Flashes
+D40:  0.0925 ROUND  --       0 Draws,     102 Flashes
+D41:  0.1378 ROUND  --       0 Draws,       3 Flashes
+D42:  0.1050 ROUND  --       0 Draws,       4 Flashes
+D43:  0.0600 ROUND  --       0 Draws,     151 Flashes
+---------------------------------------------------------
+ 18 D-Codes      -----       0 Draws,     516 Flashes
+
+*********************************************************
+
+Output file: E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.SST
+
+Aperture totals for E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.SST:
+---------------------------------------------------------
+D44:  0.0080 ROUND  --     365 Draws,       0 Flashes
+D45:  0.0098 ROUND  --     250 Draws,       0 Flashes
+D46:  0.0100 ROUND  --      65 Draws,       0 Flashes
+---------------------------------------------------------
+  3 D-Codes      -----     680 Draws,       0 Flashes
+
+*********************************************************
+
+Output file: E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.AST
+
+Aperture totals for E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.AST:
+---------------------------------------------------------
+D10:  0.0550 ROUND  --       0 Draws,       2 Flashes
+D11:  0.0550 SQUARE --       0 Draws,       2 Flashes
+D13:  0.0580 ROUND  --       0 Draws,     132 Flashes
+D14:  0.0580 SQUARE --       0 Draws,      14 Flashes
+D18:  0.0500 ROUND  --       4 Draws,       0 Flashes
+D44:  0.0080 ROUND  --     383 Draws,       0 Flashes
+D45:  0.0098 ROUND  --     914 Draws,       0 Flashes
+D46:  0.0100 ROUND  --     107 Draws,       0 Flashes
+---------------------------------------------------------
+  8 D-Codes      -----    1408 Draws,     150 Flashes
+
+*********************************************************
+
+Output file: E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.DRD
+
+Aperture totals for E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.DRD:
+---------------------------------------------------------
+D18:  0.0500 ROUND  --       4 Draws,       0 Flashes
+D46:  0.0100 ROUND  --    2324 Draws,       0 Flashes
+---------------------------------------------------------
+  2 D-Codes      -----    2328 Draws,       0 Flashes
+
+*********************************************************
+
+Output file: E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.FAB
+
+Aperture totals for E:\ANALOG FX\NEW\MASTER SCHEMATIC-9.FAB:
+---------------------------------------------------------
+D18:  0.0500 ROUND  --       4 Draws,       0 Flashes
+D47:  0.0320 ROUND  --       0 Draws,     151 Flashes
+---------------------------------------------------------
+  2 D-Codes      -----       4 Draws,     151 Flashes
+
+
+*********************************************************
+
+Aperture totals for entire project:
+---------------------------------------------------------
+D10:  0.0550 ROUND  --       0 Draws,      10 Flashes
+D11:  0.0550 SQUARE --       0 Draws,      10 Flashes
+D12:  0.0866 ROUND  --       0 Draws,     204 Flashes
+D13:  0.0580 ROUND  --       0 Draws,     660 Flashes
+D14:  0.0580 SQUARE --       0 Draws,      70 Flashes
+D15:  0.1496 ROUND  --       0 Draws,       6 Flashes
+D16:  0.1299 ROUND  --       0 Draws,      16 Flashes
+D17:  0.1100 ROUND  --       0 Draws,       4 Flashes
+D18:  0.0500 ROUND  --    7487 Draws,       0 Flashes
+D19:  0.0550 ROUND  --       0 Draws,       2 Flashes
+D20:  0.0200 ROUND  --    1218 Draws,       0 Flashes
+D21:  0.0550 ROUND  --       0 Draws,     300 Flashes
+D22:  0.0500 SQUARE --       0 Draws,      40 Flashes
+D23:  0.0400 x 0.0340 RECTANGLE -----       8 Flashes
+D24:  0.0500 x 0.0340 RECTANGLE -----       4 Flashes
+D25:  0.1000 x 0.0250 OBLONG    -----      46 Flashes
+D26:  0.1000 x 0.0250 RECTANGLE -----       2 Flashes
+D27:  0.0250 x 0.1000 OBLONG    -----      92 Flashes
+D28:  0.0250 x 0.1000 RECTANGLE -----       4 Flashes
+D29:  0.0880 x 0.1420 RECTANGLE -----       2 Flashes
+D30:  0.0880 x 0.0480 RECTANGLE -----       6 Flashes
+D31:  0.1000 ROUND  --       0 Draws,       4 Flashes
+D32:  0.0250 ROUND  --       1 Draws,       0 Flashes
+D33:  0.0750 ROUND  --       0 Draws,       4 Flashes
+D34:  0.0750 SQUARE --       0 Draws,       4 Flashes
+D35:  0.0780 ROUND  --       0 Draws,     264 Flashes
+D36:  0.0780 SQUARE --       0 Draws,      28 Flashes
+D37:  0.1299 ROUND  --       0 Draws,       8 Flashes
+D38:  0.1400 ROUND  --       0 Draws,       8 Flashes
+D39:  0.0800 ROUND  --       0 Draws,     302 Flashes
+D40:  0.0925 ROUND  --       0 Draws,     204 Flashes
+D41:  0.1378 ROUND  --       0 Draws,       6 Flashes
+D42:  0.1050 ROUND  --       0 Draws,       8 Flashes
+D43:  0.0600 ROUND  --       0 Draws,     302 Flashes
+D44:  0.0080 ROUND  --     748 Draws,       0 Flashes
+D45:  0.0098 ROUND  --    1164 Draws,       0 Flashes
+D46:  0.0100 ROUND  --    2496 Draws,       0 Flashes
+D47:  0.0320 ROUND  --       0 Draws,     151 Flashes
+---------------------------------------------------------
+ 38 D-Codes      -----   13114 Draws,    2779 Flashes
+
+
+No warnings or errors.

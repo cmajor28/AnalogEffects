@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 #if not defined (_VARIANT_ARDUINO_DUE_X_) && not defined (_VARIANT_ARDUINO_ZERO_)
-  #include <SoftwareSerial.h>
+#include <SoftwareSerial.h>
 #endif
 
 #include "Adafruit_BLE.h"
@@ -34,12 +34,18 @@ enum {
 };
 
 // Constants
+const unsigned long gDebounceTime = 50;
 const unsigned long gDisplayTime = 2000;
+const unsigned long gBlinkTime = 500;
+const float gBattLowVoltage = 3.3;
+const float gBattOkayVoltage = 3.35;
 
 // Pins used
 const int gRotaryPin = A0;
+const int gBatteryPin = A9;
+const int gLedPin = A3;
 const int gButtonPins[BUTTON_COUNT] = { A1, A2 };
-const int gDisplayPins[SEGMENT_COUNT] =  { 2, 3, 5, 6, 9, 10, 11 };
+const int gDisplayPins[SEGMENT_COUNT] =  { 2, 3, 5, 6, 10, 11, 12 };
 
 /* ...hardware SPI, using SCK/MOSI/MISO hardware SPI pins and then user selected CS/IRQ/RST */
 Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
@@ -48,6 +54,32 @@ Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_
 void error(const __FlashStringHelper*err) {
   Serial.println(err);
   while (1);
+}
+
+// value = debounce()
+
+int debounce(int value, int lastValue, unsigned long *lastDebounceTime, long debounceTime) {
+
+  int debounceValue = lastValue;
+  
+  // If the switch changed, due to noise or pressing:
+  if (value != lastValue && *lastDebounceTime == -1) {
+    // reset the debouncing timer
+    *lastDebounceTime = millis();
+  }
+
+  if ((millis() - *lastDebounceTime) > debounceTime) {
+    // whatever the reading is at, it's been there for longer than the debounce
+    // delay, so take it as the actual current state:
+
+    // if the button state has changed:
+    if (value != lastValue) {
+      *lastDebounceTime = -1;
+      debounceValue = value;
+    }
+  }
+
+  return debounceValue;
 }
 
 // Get rotary switch position
@@ -60,6 +92,17 @@ int getRotaryPosition(int value) {
   bin = 7 * (value + 1024/7/2) / 1024;
   bin = bin < 0 ? 0 : bin;
   return bin;
+}
+
+// Get battery voltage 
+float getBatteryVoltage() {
+
+  int adcValue = analogRead(gBatteryPin);
+  float measuredVBat = adcValue;
+  measuredVBat *= 2; // we divided by 2, so multiply back
+  measuredVBat *= 3.3; // Multiply by 3.3V, our reference voltage
+  measuredVBat /= 1024; // convert to voltage
+  return measuredVBat;
 }
 
 // Update 7 segment display
@@ -340,16 +383,20 @@ void setup()
   Serial.println(F("******************************"));
 
   // Setup pins
+  pinMode(gLedPin, OUTPUT);
+  digitalWrite(gLedPin, LOW);
   pinMode(gButtonPins[BUTTON_UP], INPUT);
   pinMode(gButtonPins[BUTTON_DOWN], INPUT);
   for (int i = 0; i < SEGMENT_COUNT; i++) {
     pinMode(gDisplayPins[i], OUTPUT);
+    digitalWrite(gDisplayPins[i], HIGH);
   }
 }
 
 void loop() 
 {
   static int lastButtonState[BUTTON_COUNT] = { HIGH, HIGH };
+  static long lastButtonDebounceTime[BUTTON_COUNT] = { -1, -1 };
   static int lastRotaryPosition = -1;
   
   static int lastBank = -1;
@@ -371,6 +418,31 @@ void loop()
     }
   }
   
+  static unsigned long blinkStart = 0;
+  static bool blinkEnabled = false;
+  float batteryVoltage;
+  
+  batteryVoltage = getBatteryVoltage();
+  
+  // Blink led if power is low
+  if (batteryVoltage <= gBattLowVoltage) {
+    if (blinkEnabled) {
+      if (blinkStart + gBlinkTime <= millis()) {
+      	blinkStart = millis();
+      	digitalWrite(gLedPin, !digitalRead(gLedPin));
+      }
+    } else {
+      blinkEnabled = true;
+      blinkStart = millis();
+      digitalWrite(gLedPin, HIGH);
+      Serial.println("Battery low!");
+    }
+  } else if (blinkEnabled && batteryVoltage >= gBattOkayVoltage) {
+    Serial.println("Battery okay!");
+    blinkEnabled = false;
+    digitalWrite(gLedPin, LOW);
+  }
+  
   int rotaryPosition;
   int buttonState[BUTTON_COUNT];
   int currBank = lastBank;
@@ -378,8 +450,9 @@ void loop()
   
   // Get button states
   rotaryPosition = getRotaryPosition(analogRead(gRotaryPin));
-  buttonState[BUTTON_UP] = digitalRead(gButtonPins[BUTTON_UP]);
-  buttonState[BUTTON_DOWN] = digitalRead(gButtonPins[BUTTON_DOWN]);
+  for (int i = 0; i < BUTTON_COUNT; i++) {
+    buttonState[i] = debounce(digitalRead(gButtonPins[i]), lastButtonState[i], &lastButtonDebounceTime[i], gDebounceTime);
+  }
   
   // If rotary switch has changed position
   if (rotaryPosition != lastRotaryPosition) {
@@ -390,6 +463,10 @@ void loop()
 
   // If bank up has been pressed
   if (buttonState[BUTTON_UP] == LOW && lastButtonState[BUTTON_UP] == HIGH) {
+    if (currBank == -1) {
+      // Uninitialized case
+      currBank = 16;
+    }
     currBank = (currBank - 1 + 1) % 16 + 1;
     Serial.println("BUTTON_UP has been pressed.");
   }
@@ -397,6 +474,10 @@ void loop()
   
   // If bank down has been pressed
   if (buttonState[BUTTON_DOWN] == LOW && lastButtonState[BUTTON_DOWN] == HIGH) {
+    if (currBank == -1) {
+      // Uninitialized case
+      currBank = 1;
+    }
     currBank = (currBank - 1 + 16 - 1) % 16 + 1;
     Serial.println("BUTTON_DOWN has been pressed.");
   }

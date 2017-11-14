@@ -10,16 +10,30 @@ static int gpio_irq_func(struct gpio_irq *irq) {
 
 	int ret;
 	char tmp;
+	bool val;
+	bool lastVal;
 	struct pollfd fds;
+	bool debounceEnable = irq->debounceTime > 0;
+
+	// Read initial value
+	if (debounceEnable) {
+		ret = gpio_pin_get_value(&irq->gpioPin, &val);
+		if (ret != 0) {
+			return ret;
+		}
+	}
 
 	// Wait for irq
 	while (TRUE) {
+		lastVal = val;
+
 		// Set fds fields
 		fds.fd = irq->fd;
 		fds.events = POLLPRI | POLLERR;
 		fds.revents = 0;
 
 		// Poll for input
+		lseek(fds.fd, 0, SEEK_SET);
 		read(fds.fd, &tmp, sizeof(tmp)); // Dummy read
 		ret = poll(&fds, 1, -1);
 		if (ret < 0) {
@@ -29,8 +43,40 @@ static int gpio_irq_func(struct gpio_irq *irq) {
 			// This shouldn't happen
 			continue;
 		} else {
-			if (fds.revents & POLLERR) {
-				PRINT_LOG("poll() failed!");
+//			if (fds.revents & POLLERR) {
+//				PRINT_LOG("poll() failed!");
+//				continue;
+//			}
+		}
+
+		// Debounce signal
+		if (debounceEnable) {
+			sleep2(MILLISECONDS, irq->debounceTime);
+
+			// Read new value
+			ret = gpio_pin_get_value(&irq->gpioPin, &val);
+			if (ret != 0) {
+				return ret;
+			}
+
+			// Check for valid change
+			switch (irq->sensitivity) {
+			case GPIO_SEN_RISING:
+				if (val) {
+					break;
+				}
+				continue;
+			case GPIO_SEN_FALLING:
+				if (!val) {
+					break;
+				}
+				continue;
+			case GPIO_SEN_BOTH:
+				if (val != lastVal) {
+					break;
+				}
+				continue;
+			default:
 				continue;
 			}
 		}
@@ -192,7 +238,7 @@ int gpio_uninit(struct gpio *gpio) {
 
 int gpio_set_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t set) {
 
-	PRINT("gpio-%d: Setting reg 0x%04X bit %u to %u.\n", gpio->bank, reg, bit, set);
+	PRINTV("gpio-%d: Setting reg 0x%04X bit %u to %u.\n", gpio->bank, reg, bit, set);
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmapAddress + reg;
@@ -207,7 +253,7 @@ int gpio_set_bit(struct gpio *gpio, uint32_t reg, uint8_t bit, uint8_t set) {
 
 int gpio_set_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t value) {
 
-	PRINT("gpio-%d: Setting reg 0x%04X bits 0x%08X to 0x%08X.\n", gpio->bank, reg, bits, value);
+	PRINTV("gpio-%d: Setting reg 0x%04X bits 0x%08X to 0x%08X.\n", gpio->bank, reg, bits, value);
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmapAddress + reg;
@@ -223,12 +269,26 @@ int gpio_set_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t value
 
 int gpio_set_value(struct gpio *gpio, uint32_t reg, uint32_t value) {
 
-	PRINT("gpio-%d: Setting reg 0x%04X to 0x%08X.\n", gpio->bank, reg, value);
+	PRINTV("gpio-%d: Setting reg 0x%04X to 0x%08X.\n", gpio->bank, reg, value);
 
 	// Calculate register location
 	volatile uint32_t *loc = gpio->mmapAddress + reg;
 
 	*loc = value;
+
+	return 0;
+}
+
+int gpio_set_one_hot(struct gpio *gpio, uint32_t reg, uint8_t bit) {
+
+	PRINTV("gpio-%d: Setting reg 0x%04X to 0x%08X.\n", gpio->bank, reg, 1 << bit);
+
+	// Calculate register location
+	volatile uint32_t *loc = gpio->mmapAddress + reg;
+	uint32_t tmp = (1 << bit);
+
+	// Set bit to value (one-hot)
+	*loc = tmp;
 
 	return 0;
 }
@@ -265,7 +325,7 @@ int gpio_get_value(struct gpio *gpio, uint32_t reg, uint32_t *value) {
 	return 0;
 }
 
-int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity) {
+int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity, int debounceTime) {
 
 	int gpioNumber = gpioPin->gpio->bank * 32 + gpioPin->pin;
 	int ret;
@@ -339,6 +399,14 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback
 		return -1;
 	}
 
+	irq->gpioPin = *gpioPin;
+	irq->callback = callback;
+	irq->context = context;
+	irq->direction = direction;
+	irq->sensitivity = sensitivity;
+	irq->debounceTime = debounceTime;
+	irq->enabled = FALSE;
+
 	// Create thread to handle interrupt
 	ret = pthread_create(&irq->intThread, NULL, (void *(*)(void *))&gpio_irq_func, irq);
 	if (ret != 0) {
@@ -346,13 +414,6 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback
 		close(irq->fd);
 		return ret;
 	}
-
-	irq->gpioPin = *gpioPin;
-	irq->callback = callback;
-	irq->context = context;
-	irq->direction = direction;
-	irq->sensitivity = sensitivity;
-	irq->enabled = FALSE;
 
 	return 0;
 }
@@ -410,7 +471,7 @@ int gpio_irq_is_enabled(struct gpio_irq *irq, bool *enabled) {
 int gpio_pin_set_value(struct gpio_pin *gpioPin, bool value) {
 
 	int ret;
-	ret = gpio_set_bit(gpioPin->gpio, GPIO_DATAOUT, gpioPin->pin, value ? 0x1 : 0x0);
+	ret = gpio_set_one_hot(gpioPin->gpio, value ? GPIO_SETDATAOUT : GPIO_CLEARDATAOUT, gpioPin->pin);
 	return ret;
 }
 

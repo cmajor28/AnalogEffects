@@ -1,0 +1,81 @@
+********************************
+*                              *
+* VIA REPORT                   *
+*                              *
+* D:\ANALOG FX\ANALOGFX-1.MAX  *
+* Sun Jul 09 18:00:51 2017     *
+*                              *
+********************************
+
+NETNAME  XCOORD       YCOORD       PADSTACK               BOARDSIDE    
+-----------------------------------------------------------------------
+0                                                                                                                       
+          1500.00 m    1475.00 m   VIA1                           THRU                                                  
+          475.00 m     1475.00 m   VIA1                           THRU                                                  
+J9.12                                                                                                                   
+         No vias      --           --                     --      --                                                    
+J9.13                                                                                                                   
+          1325.00 m    1825.00 m   VIA1                           THRU                                                  
+          -875.00 m    1850.00 m   VIA1                           THRU                                                  
+J9.14                                                                                                                   
+          2350.00 m    1350.00 m   VIA1                           THRU                                                  
+          600.00 m     1225.00 m   VIA1                           THRU                                                  
+          100.00 m     1125.00 m   VIA1                           THRU                                                  
+J9.15                                                                                                                   
+          -775.00 m    525.00 m    VIA1                           THRU                                                  
+          1625.00 m    650.00 m    VIA1                           THRU                                                  
+          1675.00 m    1100.00 m   VIA1                           THRU                                                  
+          3200.00 m    1100.00 m   VIA1                           THRU                                                  
+J9.16                                                                                                                   
+          -250.00 m    775.00 m    VIA1                           THRU                                                  
+          1500.00 m    875.00 m    VIA1                           THRU                                                  
+          4175.00 m    875.00 m    VIA1                           THRU                                                  
+J9.17                                                                                                                   
+          -425.00 m    325.00 m    VIA1                           THRU                                                  
+          1750.00 m    450.00 m    VIA1                           THRU                                                  
+          1700.00 m    800.00 m    VIA1                           THRU                                                  
+          5175.00 m    775.00 m    VIA1                           THRU                                                  
+J9.18                                                                                                                   
+          1000.00 m    675.00 m    VIA1                           THRU                                                  
+          6200.00 m    775.00 m    VIA1                           THRU                                                  
+          -350.00 m    700.00 m    VIA1                           THRU                                                  
+J9.19                                                                                                                   
+          6600.00 m    1100.00 m   VIA1                           THRU                                                  
+          400.00 m     1050.00 m   VIA1                           THRU                                                  
+          -250.00 m    625.00 m    VIA1                           THRU                                                  
+          400.00 m     625.00 m    VIA1                           THRU                                                  
+N00941                                                                                                                  
+         No vias      --           --                     --      --                                                    
+N00958                                                                                                                  
+          325.00 m     1800.00 m   VIA1                           THRU                                                  
+          -675.00 m    1800.00 m   VIA1                           THRU                                                  
+N00977                                                                                                                  
+          -325.00 m    1225.00 m   VIA1                           THRU                                                  
+          1850.00 m    1000.00 m   VIA1                           THRU                                                  
+N00998                                                                                                                  
+          -725.00 m    1550.00 m   VIA1                           THRU                                                  
+          -250.00 m    1650.00 m   VIA1                           THRU                                                  
+          -200.00 m    1525.00 m   VIA1                           THRU                                                  
+          1425.00 m    1225.00 m   VIA1                           THRU                                                  
+          2675.00 m    1300.00 m   VIA1                           THRU                                                  
+N01021                                                                                                                  
+          -325.00 m    1400.00 m   VIA1                           THRU                                                  
+          3325.00 m    1425.00 m   VIA1                           THRU                                                  
+N01046                                                                                                                  
+          3700.00 m    925.00 m    VIA1                           THRU                                                  
+          1050.00 m    925.00 m    VIA1                           THRU                                                  
+          675.00 m     1750.00 m   VIA1                           THRU                                                  
+          -775.00 m    1725.00 m   VIA1                           THRU                                                  
+          3700.00 m    1175.00 m   VIA1                           THRU                                                  
+          4825.00 m    1125.00 m   VIA1                           THRU                                                  
+N01073                                                                                                                  
+          -350.00 m    1325.00 m   VIA1                           THRU                                                  
+          4350.00 m    1525.00 m   VIA1                           THRU                                                  
+N01102                                                                                                                  
+          6650.00 m    1400.00 m   VIA1                           THRU                                                  
+          1425.00 m    1125.00 m   VIA1                           THRU                                                  
+          -825.00 m    1675.00 m   VIA1                           THRU                                                  
+          1300.00 m    1650.00 m   VIA1                           THRU                                                  
+VCC                                                                                                                     
+          500.00 m     1575.00 m   VIA1                           THRU                                                  
+          -300.00 m    1575.00 m   VIA1                           THRU                                                  

@@ -18,7 +18,7 @@ enum ae_button {
 	AE_BUTTON_COUNT
 };
 
-#define HOLD_TIME_SECONDS 3
+#define HOLD_TIME_SECONDS 2
 
 enum button_state {
 	BUTTON_RELEASED,
