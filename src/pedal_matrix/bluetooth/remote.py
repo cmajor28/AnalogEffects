@@ -72,7 +72,7 @@ class Remote:
             print('Searching for UART device...')
             while (True):
                 try:
-                    self.adapter.start_scan()
+                    self.adapter.start_scan(timeout_sec=30)
                 except:
                     print("Adapter scan failed...")
                     time.sleep(10)
@@ -107,7 +107,7 @@ class Remote:
                 # Wait for service discovery to complete for the UART service.  Will
                 # time out after 60 seconds (specify timeout_sec parameter to override).
                 print('Discovering services...')
-                UART.discover(self.device,timeout_sec=5)
+                UART.discover(self.device, timeout_sec=5)
 
                 # Once service discovery is complete create an instance of the service
                 # and start interacting with it.

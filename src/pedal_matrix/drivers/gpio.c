@@ -83,7 +83,16 @@ static int gpio_irq_func(struct gpio_irq *irq) {
 
 		// Call isr
 		if (irq->enabled && irq->callback) {
-			irq->callback(irq->context);
+			pthread_t isrThread;
+
+			//irq->callback(irq->context);
+
+			// Using a thread allows for better interrupt handling
+			ret = pthread_create(&isrThread, NULL, (void * (*)(void *))irq->callback, irq->context);
+			if (ret != 0) {
+				PRINT_LOG("pthread_create() failed!");
+				return ret;
+			}
 		}
 	}
 

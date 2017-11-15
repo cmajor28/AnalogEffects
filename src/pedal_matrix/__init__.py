@@ -112,7 +112,7 @@ def preset_order():
         pedal[6] = int(request.form['pedal_pos7'])
 
         for num in range(0,7):
-            if request.form.get('enabled_pos' + "%d" % (num)) is None:
+            if request.form.get('enabled_pos' + "%d" % (num+1)) is None:
                 enable[num] = bool(0)
             else:
                 enable[num] = bool(1)
@@ -128,8 +128,8 @@ def preset_order():
             controlEnabled[1] = bool(1)
 
         new_preset = AE_PRESET()
-        new_preset.preset = preset_num
-        new_preset.bank = bank_num
+        new_preset.preset = preset_num - 1
+        new_preset.bank = bank_num - 1
         new_preset.pedalOrder = (c_int * 7)(*pedal)
         new_preset.enabled = (c_bool * 7)(*enable)
         new_preset.controlEnabled = (c_bool * 2)(*controlEnabled)
@@ -275,7 +275,7 @@ def set_mode_py(mode):
 
 def set_bypass_py(bypass):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["bypass"] = c_bool(bypass).value
+    lcdInfo["bypassMode"] = c_bool(bypass).value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
     return 0
@@ -283,7 +283,7 @@ def set_bypass_py(bypass):
 
 def set_mute_py(mute):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["mute"] = c_bool(mute).value
+    lcdInfo["muteMode"] = c_bool(mute).value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
     return c_int(0)
@@ -291,18 +291,18 @@ def set_mute_py(mute):
 
 def get_ip_address(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    ip = ''
+    addr = ''
     try:
         ip = socket.inet_ntoa(fcntl.ioctl(
             s.fileno(),
             0x8915,  # SIOCGIFADDR
             struct.pack('256s', bytes(ifname[:15], 'utf-8'))
         )[20:24])
-        ip = ip + ":5052"
+        addr = ip + ":5052"
     except:
         pass
     finally:
-        return ip
+        return addr
 
 
 def update_ip_address():

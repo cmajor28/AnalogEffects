@@ -27,18 +27,14 @@
 #define pow2(val) ((uint64_t)1 << (val))
 
 #define PRINT_LOG(fmt, ...) { \
-	flockfile(stderr); \
 	fprintf(stdout, "%s:%d (%s): ", __file__, __LINE__, __func__); \
 	fprintf(stdout, fmt,##__VA_ARGS__); \
 	fprintf(stdout, "\n"); \
-	funlockfile(stdout); \
 }
 
 #ifdef DEBUG
 #define PRINT(fmt, ...) { \
-	flockfile(stdout); \
 	fprintf(stdout, fmt,##__VA_ARGS__); \
-	funlockfile(stdout); \
 }
 #ifdef VERBOSE
 #define PRINTV(fmt, ...) PRINT(fmt, __VA_ARGS__)

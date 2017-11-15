@@ -1,7 +1,7 @@
 #!/bin/bash
 
-sudo hciconfig hci0 down
-sudo hciconfig hci0 up
+#sudo hciconfig hci0 down
+#sudo hciconfig hci0 up
 export DISPLAY=:0
 xhost local:root
 cd ../
