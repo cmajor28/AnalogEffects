@@ -6,6 +6,7 @@ import signal
 from ctypes import *
 from bluetooth.remote import *
 from gui.lcd import *
+from string import Template
 import threading
 import socket
 import fcntl
@@ -16,6 +17,20 @@ app = Flask(__name__)
 Bootstrap(app)
 
 c_lib = cdll.LoadLibrary("./aeffects.so")  # call construct at startup, def __init (in essence, calling C constructor)
+
+STATIC_SUCCESS_TEMPLATE = Template("""<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Pedal Matrix</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="blurBg-true" style="background-color:#EBEBEB">
+<link rel="stylesheet" href="test1_files/formoid1/formoid-biz-red.css" type="text/css" />
+<script type="text/javascript" src="test1_files/formoid1/jquery.min.js"></script>
+<a href="${homepage}">Go Back</a>
+</body>
+</html>""")
 
 class AE_PRESET(Structure):
     _fields_ = [("bank", c_int),
@@ -170,14 +185,15 @@ def preset_order():
         # Write to JSON
         filename = "%d_%d" % (bank_num, preset_num)
 
-        with open('presets_' + filename + '.json', 'w') as f:
+        with open('data/presets_' + filename + '.json', 'w') as f:
             json.dump(data, f)
 
         # Read JSON
         """with open('data.json', 'r') as f:
             data = json.load(f)"""
-
-        return app.send_static_file('test2.html')
+        ip = get_ip_address("wlan0")
+		
+        return STATIC_SUCCESS_TEMPLATE.substitute(homepage=ip)
 
 
 # add controlEnabled bool array for init function
@@ -191,10 +207,10 @@ def init_c_lib():
             new_preset[bank_num * 8 + preset_num].bank = preset_num
 
             filename = "%d_%d" % (bank_num + 1, preset_num + 1)
-            if not os.path.isfile('presets_' + filename + '.json'):
+            if not os.path.isfile('data/presets_' + filename + '.json'):
                 break
 
-            with open('presets_' + filename + '.json', 'r') as f:
+            with open('data/presets_' + filename + '.json', 'r') as f:
                 data = json.load(f)
 
             for i in range(1, 8):
