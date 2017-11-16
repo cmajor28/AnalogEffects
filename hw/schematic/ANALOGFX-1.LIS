@@ -1,0 +1,56 @@
+AutoECO Report
+FILE-A: C:\CADENCE\SPB_16.2\TOOLS\LAYOUT_PLUS\DATA\_DEFAULT.TCH
+FILE-B: D:\ANALOG FX\ANALOGFX.MNL
+If "*EOF*" immediately follows, no changes were made
+Adding footprint TS .25"
+Adding footprint SM/R_0805
+Adding footprint WALCON.100/VH/TM2OES/W.325/20
+Adding package PHONE_JACK-3_0
+Adding package R
+Adding package CON20
+Adding component J7
+Adding component R9
+Adding component J8
+Adding component R5
+Adding component J1
+Adding component R1
+Adding component R12
+Adding component R15
+Adding component R6
+Adding component J2
+Adding component J9
+Adding component R2
+Adding component J3
+Adding component R10
+Adding component R7
+Adding component R13
+Adding component J4
+Adding component R16
+Adding component R3
+Adding component R8
+Adding component J5
+Adding component R11
+Adding component R14
+Adding component R4
+Adding component J6
+Adding net 0
+Adding net N00941
+Adding net N00958
+Adding net N00977
+Adding net N00998
+Adding net N01021
+Adding net N01046
+Adding net N01073
+Adding net N01102
+Adding net VCC
+Adding net J9.12
+Adding net J9.13
+Adding net J9.14
+Adding net J9.15
+Adding net J9.16
+Adding net J9.17
+Adding net J9.18
+Adding net J9.19
+Deleting net DEFAULT
+*EOF*
+No errors found

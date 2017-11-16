@@ -1,0 +1,49 @@
+
+Copyright (c) 2006-2016, Elgris Technologies, Inc.
+
+OrCAD Capture to EDIF 2 0 0 Schematic Conversion Program SPB 17.20_1.102 built Feb  3 2016
+
+Started on Tue Sep 05 20:03:15 2017
+
+Reading config file C:\Cadence\SPB_17.2\tools\capture\allegro.cfg
+Error:  syntax errors in config file
+  line 1: Unknown section [ComponentDefinitionProps]
+  line 2: No section for option ALT_SYMBOLS
+  line 11: Unknown section [ComponentInstanceProps]
+  line 12: No section for option GROUP
+  line 18: Unknown section [netprops]
+  line 19: No section for option BUS_NAME
+  line 66: Unknown section [functionprops]
+  line 67: No section for option GROUP
+  line 82: Unknown section [pinprops]
+  line 83: No section for option NO_DRC
+
+
+orcadread :Converting file E:\ANALOG FX\MASTER SCHEMATIC.DSN 
+Converting SchematicView   SCHEMATIC1 
+	Converting elements on  page BEAGLEBONE_BLACK
+		Converting Parts
+		converting Globals of Page BEAGLEBONE_BLACK of SchematicView SCHEMATIC1
+		Converting Connectors of Page BEAGLEBONE_BLACK of SchematicView SCHEMATIC1
+	Converting elements on  page LCD
+		Converting Parts
+		converting Globals of Page LCD of SchematicView SCHEMATIC1
+		Converting Connectors of Page LCD of SchematicView SCHEMATIC1
+	Converting elements on  page WIRELESS
+		Converting Parts
+		converting Globals of Page WIRELESS of SchematicView SCHEMATIC1
+		Converting Connectors of Page WIRELESS of SchematicView SCHEMATIC1
+	Converting elements on  page MATRIX
+		Converting Parts
+		converting Globals of Page MATRIX of SchematicView SCHEMATIC1
+		Converting Connectors of Page MATRIX of SchematicView SCHEMATIC1
+		Converting Buses and Nets of Schematic View SCHEMATIC1 
+
+Writing EDIF: E:\ANALOG FX\MASTER SCHEMATIC.EDF
+.............................................................
+
+
+Finished on Tue Sep 05 20:03:16 2017
+
+
+1 error detected, 0 warnings detected
