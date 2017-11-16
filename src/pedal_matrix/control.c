@@ -280,7 +280,7 @@ static int set_control_enabled(int control, bool enable) {
 		return ret;
 	}
 
-	leds_set(control, gConfig->currPreset.controlEnabled[control]);
+	leds_set(control + AE_BUTTON_BU, gConfig->currPreset.controlEnabled[control]);
 	return 0;
 }
 

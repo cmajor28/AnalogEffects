@@ -44,8 +44,8 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 5),	/* led_b6 */	\
 				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 6),	/* led_b7 */	\
 				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 7),	/* led_b8 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 8),	/* led_bu */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 9)	/* led_bd */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 9),	/* led_bu */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 8)	/* led_bd */	\
 			})																				\
 		)
 
@@ -54,22 +54,22 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 #define PRESENCE_PINS_INIT()																		\
 		PRESENCE_CONTROL_INITIALIZER(																\
 			ARRAY_INITIALIZER({																		\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 0),		/* jack_i0 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 1),		/* jack_i1 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 14),	/* jack_i0 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 15),	/* jack_o0 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 0),		/* jack_i1 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 1),		/* jack_o1 */	\
 				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 2),		/* jack_i2 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 3),		/* jack_i3 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 4),		/* jack_i4 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 5),		/* jack_i5 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 6),		/* jack_i6 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 7),		/* jack_i7 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 8),		/* jack_o0 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 9),		/* jack_o1 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 10),	/* jack_o2 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 11),	/* jack_o3 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 12),	/* jack_o4 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 13),	/* jack_o5 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 14),	/* jack_o6 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 15)		/* jack_o7 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 3),		/* jack_o2 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 4),		/* jack_i3 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 5),		/* jack_o3 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 6),		/* jack_i4 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 7),		/* jack_o4 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 8),		/* jack_i5 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 9),		/* jack_o5 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 10),	/* jack_i6 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 11),	/* jack_o6 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 12),	/* jack_i7 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 13)		/* jack_o7 */	\
 			})																						\
 		)
 
