@@ -185,7 +185,7 @@ def preset_order():
         # Write to JSON
         filename = "%d_%d" % (bank_num, preset_num)
 
-        with open('presets_' + filename + '.json', 'w') as f:
+        with open('data/presets_' + filename + '.json', 'w') as f:
             json.dump(data, f)
 
         # Read JSON
@@ -207,10 +207,10 @@ def init_c_lib():
             new_preset[bank_num * 8 + preset_num].bank = preset_num
 
             filename = "%d_%d" % (bank_num + 1, preset_num + 1)
-            if not os.path.isfile('presets_' + filename + '.json'):
+            if not os.path.isfile('data/presets_' + filename + '.json'):
                 break
 
-            with open('presets_' + filename + '.json', 'r') as f:
+            with open('data/presets_' + filename + '.json', 'r') as f:
                 data = json.load(f)
 
             for i in range(1, 8):
