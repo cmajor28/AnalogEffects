@@ -93,6 +93,10 @@ static int gpio_irq_func(struct gpio_irq *irq) {
 				PRINT_LOG("pthread_create() failed!");
 				return ret;
 			}
+			ret = pthread_detach(isrThread);
+			if (ret != 0) {
+				PRINT_LOG("pthread_detach() failed!");
+			}
 		}
 	}
 
@@ -422,6 +426,10 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback
 		PRINT_LOG("pthread_create() failed!");
 		close(irq->fd);
 		return ret;
+	}
+	ret = pthread_detach(irq->intThread);
+	if (ret != 0) {
+		PRINT_LOG("pthread_detach() failed!");
 	}
 
 	return 0;

@@ -133,6 +133,10 @@ int timer_enable(struct timer *timer, bool enable) {
 			PRINT_LOG("pthread_create() failed!");
 			return -1;
 		}
+		ret = pthread_detach(timer->timerThread);
+		if (ret != 0) {
+			PRINT_LOG("pthread_detach() failed!");
+		}
 	} else {
 		ret = pthread_mutex_lock(&timer->callbackMutex);
 		if (ret != 0) {

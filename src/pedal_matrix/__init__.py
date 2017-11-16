@@ -32,6 +32,7 @@ lcd = None
 guiInvoker = None
 
 remoteInfo = {"id": "",
+              "paired": False,
               "bank": -1,
               "preset": -1}
 
@@ -330,7 +331,7 @@ def init_structs():
     mute = c_bool(False)
     c_lib.get_mute(byref(mute))
     lcdInfo["bank"] = remoteInfo["bank"] = bank.value
-    lcdInfo["preset"] = preset.value
+    lcdInfo["preset"] = remoteInfo["preset"] = preset.value
 
     # read from file for preset name
     filename = "%d_%d" % (bank.value, preset.value)
@@ -348,6 +349,8 @@ def init_structs():
     lcdInfo["muteMode"] = mute.value
     lcdInfo["webEnabled"] = True
     lcdInfo["remotePaired"] = False
+    remoteInfo["paired"] = None
+    remoteInfo["id"] = ''
 
     print("Web Address: '" + lcdInfo["webAddress"] + "'")
 
@@ -411,7 +414,8 @@ def remoteUpdate(info):
         set_preset_c(info["preset"])
     if info["id"] != remoteInfo["id"]:
         lcdInfo["remoteID"] = info["id"]
-        lcdInfo["remotePaired"] = (info["id"] != None)
+    if info["paired"] != remoteInfo["paired"]:
+        lcdInfo["remotePaired"] = info["paired"]
     guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
     remoteInfo = info.copy()
 

@@ -24,12 +24,9 @@ class Remote:
         threading.Thread(target=Remote.ble.run_mainloop_with, args=(self.__ble_loop,)).start()
 
     def updateInfo(self, info):
-        if "id" not in info or info["id"] == None:
-            if self.device != None:
-                self.device.disconnect()
-                self.info["id"] = None
+        # TODO add way to un-pair
+        self.info = info
         if self.uart != None:
-            self.info = info
             print("Updating remote...")
             self.uart.write(bytes(json.dumps({"bank": self.info["bank"]}, separators=(',', ':')), 'utf-8'))
 
@@ -53,8 +50,11 @@ class Remote:
     # of automatically though and you just need to provide a main function that uses
     # the BLE provider.
     def __ble_loop(self):
+        error = False # Keep up with error case
+
         # Clear any cached data because both bluez and CoreBluetooth have issues with
         # caching data and it going stale.
+        print('Clearing bluetooth cache...')
         Remote.ble.clear_cached_data()
 
         # Get the first available BLE network adapter and make sure it's powered on.
@@ -68,6 +68,11 @@ class Remote:
         UART.disconnect_devices()
 
         while (True):
+            if error:
+                error = False
+                print('Clearing bluetooth cache...')
+                Remote.ble.clear_cached_data()
+
             # Scan for UART devices.
             print('Searching for UART device...')
             while (True):
@@ -88,18 +93,23 @@ class Remote:
                     time.sleep(10)
                     continue
                 else:
+                    print("Found device {0} '{1}'".format(self.device.id, self.device.name))
                     break
 
             print('Connecting to device...')
 
             try:
-                self.device.connect(timeout_sec=5)  # Will time out after 60 seconds, specify timeout_sec parameter to change the timeout.
+                self.device.connect(timeout_sec=10)  # Will time out after 60 seconds, specify timeout_sec parameter to change the timeout.
             except Exception as inst:
                 print(inst)
+                error = True
 
             if not self.device.is_connected:
                 print('Failed to connect to device...')
                 continue
+
+            self.info["id"] = self.device.id
+            self.updateInfoCallback(self.info)
 
             # Once connected do everything else in a try/finally to make sure the device
             # is disconnected when done.
@@ -111,9 +121,11 @@ class Remote:
 
                 # Once service discovery is complete create an instance of the service
                 # and start interacting with it.
+                print('Creating UART device...')
                 self.uart = UART(self.device)
 
-                self.info["id"] = self.device.id
+
+                self.info["paired"] = True
                 self.updateInfoCallback(self.info)
 
                 if self.device.is_connected:
@@ -135,7 +147,7 @@ class Remote:
                                     try:
                                         msg = json.loads(buffer)
                                     except Exception as inst:
-                                        print(msg)
+                                        print(inst)
                                     if "preset" in msg:
                                         self.info["preset"] = int(msg["preset"])
                                     if "bank" in  msg:
@@ -146,16 +158,17 @@ class Remote:
 
             except Exception as inst:
                 print(inst)
+                error = True
 
             finally:
                 # Make sure device is disconnected on exit.
                 print('Disconnecting from device...')
                 try:
                     self.device.disconnect(timeout_sec=5)
-                except:
-                    pass
-                finally:
-                    UART.disconnect_devices() # Start from a fresh state (this may not be needed)
+                except Exception as inst:
+                    print(inst)
+                    error = True
                 self.device = None
                 self.info["id"] = None
+                self.info["paired"] = False
                 self.updateInfoCallback(self.info)
