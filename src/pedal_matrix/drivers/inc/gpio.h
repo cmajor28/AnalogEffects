@@ -99,6 +99,7 @@ struct gpio_irq {
 	void					*context;
 	enum gpio_direction		direction;
 	enum gpio_sensitivity	sensitivity;
+	int						debounceTime;
 	atomic bool				enabled;
 	int						fd;
 	pthread_t				intThread;
@@ -126,7 +127,7 @@ int gpio_get_bits(struct gpio *gpio, uint32_t reg, uint32_t bits, uint32_t *valu
 
 int gpio_get_value(struct gpio *gpio, uint32_t reg, uint32_t *value);
 
-int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity);
+int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback)(void *), void *context, enum gpio_direction direction, enum gpio_sensitivity sensitivity, int debounceTime);
 
 int gpio_irq_uninit(struct gpio_irq *irq);
 

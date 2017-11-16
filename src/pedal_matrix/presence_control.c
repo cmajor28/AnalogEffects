@@ -5,7 +5,7 @@ static int presence_control_update(struct presence_irq_context *context) {
 	bool value;
 
 	gpio_ext_pin_get_value(&context->irq->gpioExtPin, &value);
-	context->callback(context->context, context->jack, value);
+	context->callback(context->context, context->jack, !value);
 
 	return 0;
 }
@@ -43,7 +43,7 @@ int presence_control_init(struct presence_control *presence, int (*callback)(voi
 	// Get initial presence detect values
 	for (int i = 0; i < AE_JACK_COUNT; i++) {
 		gpio_ext_pin_get_value(&presence->irqs[i].gpioExtPin, &value);
-		initialPresence[i] = value;
+		initialPresence[i] = !value;
 	}
 
 	PRINT("presence_control: Enabling presence detect IRQs.\n");

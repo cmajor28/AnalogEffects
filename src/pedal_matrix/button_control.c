@@ -13,7 +13,7 @@ static int button_state_changed(struct button_irq_context *context) {
 			// This should not happen
 		} else {
 			context->state = BUTTON_PRESSED;
-			ret = timer_enable(&context->holdTimer, TRUE);
+			ret = timer_enable(&context->holdTimer, TRUE); // Start hold timer
 			if (ret != 0) {
 				// Don't handle this because we can recover
 			}
@@ -22,7 +22,7 @@ static int button_state_changed(struct button_irq_context *context) {
 	case BUTTON_PRESSED:
 		if (value) {
 			context->state = BUTTON_RELEASED;
-			ret = timer_enable(&context->holdTimer, TRUE);
+			ret = timer_enable(&context->holdTimer, FALSE); // Stop hold timer
 			if (ret != 0) {
 				// Don't handle this because we can recover
 			}

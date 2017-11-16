@@ -4,7 +4,7 @@
 #include "pins.h"
 
 // Global configuration variables
-bool gPresenceDetect[AE_MAX_EFFECTS][2];
+bool gPresenceDetect[AE_MAX_EFFECTS+1][2];
 pthread_mutex_t gConfigMutex;
 struct ae_config *gConfig; // mmap() into non-volatile memory
 struct control_callbacks gControlCallbacks;
@@ -15,7 +15,7 @@ extern struct ae_preset gPresets[AE_BANK_COUNT][AE_PRESET_COUNT];
 
 // Global GPIO banks
 struct gpio gGPIOBanks[GPIO_COUNT] = { { 0 } };
-struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT] = { GPIO_EXT_LEDS_INIT(), GPIO_EXT_PRESENCE_INIT(), GPIO_EXT_BUTTONS_INIT() };
+struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT] = { GPIO_EXT_PRESENCE_INIT(), GPIO_EXT_BUTTONS_INIT(), GPIO_EXT_LEDS_INIT() };
 
 // Global device interfaces
 struct mt8809 gSwitchMatrix = MT8809_PINS_INIT();
@@ -192,6 +192,11 @@ static int load_preset(int bank, int preset) {
 
 	// Load preset into config
 	memcpy(&gConfig->currPreset, &gPresets[bank][preset], sizeof(gConfig->currPreset));
+
+	// Validate preset
+	gConfig->currPreset.bank = bank;
+	gConfig->currPreset.preset = preset;
+
 	pthread_mutex_unlock(&gPresetsMutex);
 
 	// Apply the preset to hardware
@@ -275,7 +280,7 @@ static int set_control_enabled(int control, bool enable) {
 		return ret;
 	}
 
-	leds_set(control, gConfig->currPreset.controlEnabled[control]);
+	leds_set(control + AE_BUTTON_BU, gConfig->currPreset.controlEnabled[control]);
 	return 0;
 }
 
@@ -387,20 +392,20 @@ static int handle_button_held_event(enum ae_button button) {
 
 	switch (button) {
 	case AE_BUTTON_B1:
+		// Toggle mode
+		ret = set_pedal_mode_enabled(!gConfig->pedalMode);
+		if (gControlCallbacks.modeChanged) {
+			gControlCallbacks.modeChanged(gConfig->pedalMode);
+		}
+		break;
 	case AE_BUTTON_B2:
 	case AE_BUTTON_B3:
 	case AE_BUTTON_B4:
 	case AE_BUTTON_B5:
 	case AE_BUTTON_B6:
 	case AE_BUTTON_B7:
-		ret = 0;
-		break;
 	case AE_BUTTON_B8:
-		// Toggle mode
-		ret = set_pedal_mode_enabled(!gConfig->pedalMode);
-		if (gControlCallbacks.modeChanged) {
-			gControlCallbacks.modeChanged(gConfig->pedalMode);
-		}
+		ret = 0;
 		break;
 	case AE_BUTTON_BU:
 		// Toggle bypass
@@ -412,8 +417,8 @@ static int handle_button_held_event(enum ae_button button) {
 	case AE_BUTTON_BD:
 		// Toggle mute
 		ret = set_mute_enabled(!gConfig->muteEnabled);
-		if (gControlCallbacks.bypassEnabled) {
-			gControlCallbacks.bypassEnabled(gConfig->bypassEnabled);
+		if (gControlCallbacks.muteEnabled) {
+			gControlCallbacks.muteEnabled(gConfig->muteEnabled);
 		}
 		break;
 	default:
@@ -520,7 +525,7 @@ int control_init() {
 		if (ret != 0) {
 			return ret;
 		}
-		ret = gpio_ext_init(&gGPIOExtBanks[i], PCF8575, &gI2C[i]);
+		ret = gpio_ext_init(&gGPIOExtBanks[i], PCF8575, &gI2C[i], PCF8575_INT_DEBOUNCE_TIME(i));
 		if (ret != 0) {
 			return ret;
 		}
@@ -537,7 +542,10 @@ int control_init() {
 	PRINT("control: Initializing control mutex.\n");
 
 	// Block entry points until we are fully initialized
-	pthread_mutex_init(&gConfigMutex, NULL);
+	pthread_mutexattr_t recursiveMutexAttr;
+	pthread_mutexattr_init(&recursiveMutexAttr);
+    pthread_mutexattr_settype(&recursiveMutexAttr, PTHREAD_MUTEX_RECURSIVE_NP);
+	pthread_mutex_init(&gConfigMutex, &recursiveMutexAttr);
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
 		PRINT_LOG("pthread_mutex_lock() failed!");
@@ -639,6 +647,8 @@ int control_init() {
 	// Open entry points
 	pthread_mutex_unlock(&gConfigMutex);
 
+	PRINT("control: Initialization done.\n");
+
 	return 0;
 }
 
@@ -692,21 +702,37 @@ int control_uninit() {
 	pthread_mutex_unlock(&gConfigMutex);
 	pthread_mutex_destroy(&gConfigMutex);
 
+	PRINT("control: Uninitialization done.\n");
+
 	return 0;
 }
 
-int register_callbacks(struct control_callbacks *callbacks) {
+int register_callbacks(int (*presetChanged)(int), int (*bankChanged)(int), int (*modeChanged)(bool), int (*bypassEnabled)(bool), int (*muteEnabled)(bool)) {
+
+	int ret;
 
 	PRINT("control: Registering callbacks.\n");
-	memcpy(&gControlCallbacks, callbacks, sizeof(gControlCallbacks));
-	return 0;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+	gControlCallbacks.presetChanged = presetChanged;
+	gControlCallbacks.bankChanged = bankChanged;
+	gControlCallbacks.modeChanged = modeChanged;
+	gControlCallbacks.bypassEnabled = bypassEnabled;
+	gControlCallbacks.muteEnabled = muteEnabled;
+
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
 }
 
 int set_preset(int preset) {
 
 	int ret;
 
-	preset--; // Presets need to be 0 indexed
 	PRINT("control: set_preset() called.\n");
 
 	ret = pthread_mutex_lock(&gConfigMutex);
@@ -715,7 +741,7 @@ int set_preset(int preset) {
 		return -1;
 	}
 
-	ret = set_new_preset(preset);
+	ret = set_new_preset(preset - 1); // 0 indexed
 	pthread_mutex_unlock(&gConfigMutex);
 	return ret;
 }
@@ -724,7 +750,6 @@ int set_bank(int bank) {
 
 	int ret;
 
-	bank--; // Banks need to be 0 indexed
 	PRINT("control: set_bank() called.\n");
 
 	ret = pthread_mutex_lock(&gConfigMutex);
@@ -733,7 +758,7 @@ int set_bank(int bank) {
 		return -1;
 	}
 
-	ret = set_new_bank(bank);
+	ret = set_new_bank(bank - 1); // 0 indexed
 	pthread_mutex_unlock(&gConfigMutex);
 	return ret;
 }
@@ -785,6 +810,81 @@ int set_mute(bool enabled) {
 	}
 
 	ret = set_mute_enabled(enabled);
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
+}
+
+int get_preset(int *preset) {
+
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+    *preset = gConfig->currPreset.preset + 1;
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
+}
+
+int get_bank(int *bank) {
+
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+    *bank = gConfig->currPreset.bank + 1;
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
+}
+
+int get_mode(bool *pedalMode) {
+
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+	*pedalMode = gConfig->pedalMode;
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
+}
+
+int get_bypass(bool *enabled) {
+
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+    *enabled = gConfig->bypassEnabled;
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
+}
+
+int get_mute(bool *enabled) {
+
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINT_LOG("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+	*enabled = gConfig->muteEnabled;
 	pthread_mutex_unlock(&gConfigMutex);
 	return ret;
 }
