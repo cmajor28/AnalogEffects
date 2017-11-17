@@ -86,7 +86,7 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 		pedal = pedalOrder[i];
 		if (pedal > 0) { // If pedal exists
 			if (enabled[pedal-1]) { // If enabled
-				if (!presenceDetect[pedal][OUT] && !presenceDetect[pedal][IN]) { // If presence detected (presence is active low)
+				if (presenceDetect[pedal][OUT] && presenceDetect[pedal][IN]) { // If presence detected (presence is active low)
 					address = lastInput + (pedal << 3); // Get crosspoint address for last pedal input and new pedal output
 					switchSet |= ((uint64_t)1 << address);
 					lastInput = pedal;
