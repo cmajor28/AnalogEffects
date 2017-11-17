@@ -15,7 +15,7 @@ import json
 
 app = Flask(__name__)
 Bootstrap(app)
-
+app.static_folder = 'static'
 c_lib = cdll.LoadLibrary("./aeffects.so")  # call construct at startup, def __init (in essence, calling C constructor)
 
 STATIC_SUCCESS_TEMPLATE = Template("""<!DOCTYPE html>
