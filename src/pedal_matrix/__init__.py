@@ -15,7 +15,7 @@ import json
 
 app = Flask(__name__)
 Bootstrap(app)
-
+app.static_folder = 'static'
 c_lib = cdll.LoadLibrary("./aeffects.so")  # call construct at startup, def __init (in essence, calling C constructor)
 
 STATIC_SUCCESS_TEMPLATE = Template("""<!DOCTYPE html>
@@ -203,8 +203,8 @@ def init_c_lib():
         for preset_num in range(0, 8):
             read_pedal = [0, 0, 0, 0, 0, 0, 0]
             read_enable = [0, 0, 0, 0, 0, 0, 0]
-            new_preset[bank_num * 8 + preset_num].preset = bank_num
-            new_preset[bank_num * 8 + preset_num].bank = preset_num
+            new_preset[bank_num + preset_num*8].preset = bank_num
+            new_preset[bank_num + preset_num*8].bank = preset_num
 
             filename = "%d_%d" % (bank_num + 1, preset_num + 1)
             if not os.path.isfile('data/presets_' + filename + '.json'):
@@ -216,8 +216,8 @@ def init_c_lib():
             for i in range(1, 8):
                 read_enable[i - 1] = data['enabled_pos' + str(i)]
                 read_pedal[i - 1] = data['pedal_pos' + str(i)]
-            new_preset[bank_num * 8 + preset_num].pedalOrder = (c_int * 7)(*read_pedal)
-            new_preset[bank_num * 8 + preset_num].enabled = (c_bool * 7)(*read_enable)
+            new_preset[bank_num + preset_num*8].pedalOrder = (c_int * 7)(*read_pedal)
+            new_preset[bank_num + preset_num*8].enabled = (c_bool * 7)(*read_enable)
 
     c_lib.aeffects_init(new_preset)  # convert 2d tuple of presets to 2d array passed through init
     return
