@@ -11,6 +11,7 @@ struct ae_config {
 	bool				bypassEnabled;
 	bool				muteEnabled;
 	bool				pedalMode;
+	bool				changeMade;
 	int					currBank;
 	struct ae_preset	currPreset;
 };

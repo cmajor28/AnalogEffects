@@ -12,6 +12,7 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <sys/mman.h>
+#include <errno.h>
 
 #define __file__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
@@ -26,10 +27,10 @@
 #define log2(val) (8*sizeof(val) - __builtin_clzll(val) - 1)
 #define pow2(val) ((uint64_t)1 << (val))
 
-#define PRINT_LOG(fmt, ...) { \
+#define PRINTE(fmt, ...) { \
 	fprintf(stdout, "%s:%d (%s): ", __file__, __LINE__, __func__); \
 	fprintf(stdout, fmt,##__VA_ARGS__); \
-	fprintf(stdout, "\n"); \
+	fprintf(stdout, "(errno=%d)\n", errno); \
 }
 
 #ifdef DEBUG

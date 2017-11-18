@@ -27,6 +27,13 @@ struct gpio_pin gControlSwitch[2] = CONTROL_PINS_INIT();
 // I2C interfaces
 struct i2c gI2C[GPIO_EXT_COUNT];
 
+static int leds_blink_one(enum ae_led led) {
+
+	int ret;
+	ret = led_control_blink(&gLedControl, led, TRUE, LED_BLINK_PERIOD_MILLISECONDS);
+	return ret;
+}
+
 static int leds_set_one_hot(enum ae_led led) {
 
 	int ret;
@@ -186,7 +193,7 @@ static int load_preset(int bank, int preset) {
 	// Lock preset mutex
 	ret = pthread_mutex_lock(&gPresetsMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -224,6 +231,7 @@ static int set_new_preset(int preset) {
 		leds_set_one_hot(preset);
 	}
 
+	gConfig->changeMade = FALSE;
 	return 0;
 }
 
@@ -231,6 +239,10 @@ static int set_new_bank(int bank) {
 
 	PRINT("control: Setting bank to %d.\n", bank+1);
 	gConfig->currBank = bank;
+	gConfig->changeMade = TRUE;
+	if (!gConfig->pedalMode) {
+		leds_blink_one(gConfig->currPreset.preset);
+	}
 	return 0;
 }
 
@@ -244,6 +256,9 @@ static int set_pedal_mode_enabled(bool enable) {
 		leds_set_all(gConfig->controlEnabled, gConfig->currPreset.enabled);
 	} else {
 		leds_set_one_hot(gConfig->currPreset.preset);
+		if (gConfig->changeMade) {
+			leds_blink_one(gConfig->currPreset.preset);
+		}
 	}
 	return 0;
 }
@@ -262,6 +277,7 @@ static int set_pedal_enabled(int pedal, bool enable) {
 		return ret;
 	}
 
+	gConfig->changeMade = TRUE;
 	leds_set(pedal, gConfig->currPreset.enabled[pedal]);
 	return 0;
 }
@@ -280,6 +296,7 @@ static int set_control_enabled(int control, bool enable) {
 		return ret;
 	}
 
+	gConfig->changeMade = TRUE;
 	leds_set(control + AE_BUTTON_BU, gConfig->currPreset.controlEnabled[control]);
 	return 0;
 }
@@ -439,7 +456,7 @@ static int presence_control_update(void *context, enum ae_presence jack, bool pr
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -465,7 +482,7 @@ static int button_control_update(void *context, enum ae_button button, enum butt
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -548,7 +565,7 @@ int control_init() {
 	pthread_mutex_init(&gConfigMutex, &recursiveMutexAttr);
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -575,7 +592,7 @@ int control_init() {
 	// Open mem fd
 	fd = open(CONFIG_FILE, O_RDWR | O_CREAT);
 	if (fd == -1) {
-		PRINT_LOG("open() failed!");
+		PRINTE("open() failed!");
 		pthread_mutex_unlock(&gConfigMutex);
 		return -1;
 	}
@@ -583,7 +600,7 @@ int control_init() {
 	// Seek to max location
 	ret = lseek(fd, sizeof(*gConfig), SEEK_SET);
 	if (ret != sizeof(*gConfig)) {
-		PRINT_LOG("lseek() failed!");
+		PRINTE("lseek() failed!");
 		pthread_mutex_unlock(&gConfigMutex);
 		return -1;
 	}
@@ -592,7 +609,7 @@ int control_init() {
 	// Note: This ensures we have enough space to write the config
 	ret = write(fd, "", 1);
 	if (ret < 1) {
-		PRINT_LOG("write() failed!");
+		PRINTE("write() failed!");
 		pthread_mutex_unlock(&gConfigMutex);
 		return -1;
 	}
@@ -605,7 +622,7 @@ int control_init() {
 
 	// Check mmap result
 	if (gConfig == MAP_FAILED) {
-		PRINT_LOG("mmap() failed!");
+		PRINTE("mmap() failed!");
 		pthread_mutex_unlock(&gConfigMutex);
 		return -1;
 	}
@@ -644,6 +661,11 @@ int control_init() {
 		return ret;
 	}
 
+	// Blink LED if change is made
+	if (gConfig->changeMade && !gConfig->pedalMode) {
+		leds_blink_one(gConfig->currPreset.preset);
+	}
+
 	// Open entry points
 	pthread_mutex_unlock(&gConfigMutex);
 
@@ -659,7 +681,7 @@ int control_uninit() {
 	// Block entry points
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -715,7 +737,7 @@ int register_callbacks(int (*presetChanged)(int), int (*bankChanged)(int), int (
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -737,7 +759,7 @@ int set_preset(int preset) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -754,7 +776,7 @@ int set_bank(int bank) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -771,7 +793,7 @@ int set_mode(bool pedalMode) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -788,7 +810,7 @@ int set_bypass(bool enabled) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -805,7 +827,7 @@ int set_mute(bool enabled) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -820,7 +842,7 @@ int get_preset(int *preset) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -835,7 +857,7 @@ int get_bank(int *bank) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -850,7 +872,7 @@ int get_mode(bool *pedalMode) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -865,7 +887,7 @@ int get_bypass(bool *enabled) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -880,7 +902,7 @@ int get_mute(bool *enabled) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 

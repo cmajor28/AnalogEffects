@@ -9,7 +9,7 @@ static int gpio_ext_write(struct gpio_ext *gpioExt, uint16_t values) {
 	// Function is not reinterant
 	ret = pthread_mutex_lock(&funcMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return ret;
 	}
 
@@ -37,7 +37,7 @@ static int gpio_ext_read(struct gpio_ext *gpioExt) {
 	// Function is not reinterant
 	ret = pthread_mutex_lock(&funcMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return ret;
 	}
 

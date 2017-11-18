@@ -18,14 +18,14 @@ int i2c_init(struct i2c *i2c, enum i2c_bus bus, uint8_t address) {
 	snprintf(filename, sizeof(filename), "/dev/i2c-%d", bus);
 	fd = open(filename, O_RDWR);
 	if (fd == -1) {
-		PRINT_LOG("open() failed!");
+		PRINTE("open() failed!");
 		return -1;
 	}
 
 	// Set device address
 	ret = ioctl(fd, I2C_SLAVE, (int)address);
 	if (ret == -1) {
-		PRINT_LOG("ioctl() failed!");
+		PRINTE("ioctl() failed!");
 		return -1;
 	}
 
@@ -50,7 +50,7 @@ int i2c_read(struct i2c *i2c, void *buffer, unsigned int size) {
 	PRINTV("i2c-%d: Reading %u bytes from device 0x%02X.\n", i2c->bus, size, i2c->address);
 	ret = read(i2c->fd, buffer, size);
 	if (ret != size) {
-		PRINT_LOG("read() failed!");
+		PRINTE("read() failed!");
 		return -1;
 	}
 
@@ -63,7 +63,7 @@ int i2c_write(struct i2c *i2c, void *buffer, unsigned int size) {
 	PRINTV("i2c-%d: Writing %u bytes to device 0x%02X.\n", i2c->bus, size, i2c->address);
 	ret = write(i2c->fd, buffer, size);
 	if (ret != size) {
-		PRINT_LOG("write() failed!");
+		PRINTE("write() failed!");
 		return -1;
 	}
 
