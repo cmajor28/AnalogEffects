@@ -28,6 +28,8 @@ enum {
 
 int control_init();
 
+int control_notify_update(int bank, int preset);
+
 int control_uninit();
 
 #endif // CONTROL_H_

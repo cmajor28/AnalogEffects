@@ -43,6 +43,9 @@ int aeffects_update(struct ae_preset *preset) {
 
 	pthread_mutex_unlock(&gPresetsMutex);
 
+	// Notify control of update
+	ret = control_notify_update(preset->bank, preset->preset);
+
 	return 0;
 }
 

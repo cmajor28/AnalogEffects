@@ -109,9 +109,9 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 		switchSet |= ((uint64_t)1 << lastInput);
 	}
 
-	// Disable input if muting
+	// Disable input  and output if muting
 	if (mute) {
-		switchSet &= (~0x0101010101010101);
+		switchSet &= (~0x0101010101010100);
 	}
 
 	// Calculate switch sets with input disconnected
@@ -120,21 +120,35 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 
 	// Calculate switch sets with output disconnected
 	uint64_t switchSetNoOutput = switchSet & (~0xFF);
-	uint64_t lastSwitchSetNoOutput = switchSet & (~0xFF);
+	uint64_t lastSwitchSetNoOutput = lastSwitchSet & (~0xFF);
 
-	if (lastMute && !mute && (switchSetNoInput == lastSwitchSetNoInput)) { // We are unmuting only
+	// Calculate switch sets with output disconnected
+	uint64_t switchSetNoInputOutput = switchSetNoInput & switchSetNoOutput;
+	uint64_t lastSwitchSetNoInputOutput = lastSwitchSetNoInput & lastSwitchSetNoOutput;
+
+	if (lastMute && !mute && (switchSetNoInputOutput == lastSwitchSetNoInputOutput)) { // We are unmuting only
 		// Route input on mt8809
 		PRINT("control: Disabling mute configuration.\n");
-		int address = __builtin_ctzll(switchSet ^ switchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
-		ret = mt8809_set_switch(&gSwitchMatrix, address, 0x1);
+		uint8_t address1 = __builtin_ctzll(switchSet ^ switchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
+		uint8_t address2 = __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+		ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x1);
 		if (ret != 0) {
 			return ret;
 		}
-	} else if (!lastMute && mute && (switchSetNoInput == lastSwitchSetNoInput)) { // We are muting only
+		ret = mt8809_set_switch(&gSwitchMatrix, address2, 0x1);
+		if (ret != 0) {
+			return ret;
+		}
+	} else if (!lastMute && mute && (switchSetNoInputOutput == lastSwitchSetNoInputOutput)) { // We are muting only
 		// Unroute input on mt8809
 		PRINT("control: Enabling mute configuration.\n");
-		uint8_t address = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
-		ret = mt8809_set_switch(&gSwitchMatrix, address, 0x0);
+		uint8_t address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
+		uint8_t address2 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+		ret = mt8809_set_switch(&gSwitchMatrix, address2, 0x0);
+		if (ret != 0) {
+			return ret;
+		}
+		ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x0);
 		if (ret != 0) {
 			return ret;
 		}
@@ -672,6 +686,24 @@ int control_init() {
 	PRINT("control: Initialization done.\n");
 
 	return 0;
+}
+
+int control_notify_update(int bank, int preset) {
+
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINTE("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+	// Blink LED if change is made to current preset
+	if (gConfig->currPreset.bank == bank && gConfig->currPreset.preset == preset && !gConfig->pedalMode) {
+		leds_blink_one(gConfig->currPreset.preset);
+	}
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
 }
 
 int control_uninit() {

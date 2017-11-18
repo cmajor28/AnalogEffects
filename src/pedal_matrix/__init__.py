@@ -104,10 +104,6 @@ def preset_order():
         return app.send_static_file('test1.html')
     
     else:
-
-        import pdb
-        pdb.set_trace()
-
         pedal = [0, 0, 0, 0, 0, 0, 0]
         enable = [0, 0, 0, 0, 0, 0, 0]
         controlEnabled = [0, 0]
