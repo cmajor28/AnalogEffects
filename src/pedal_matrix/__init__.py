@@ -104,6 +104,10 @@ def preset_order():
         return app.send_static_file('test1.html')
     
     else:
+
+        import pdb
+        pdb.set_trace()
+
         pedal = [0, 0, 0, 0, 0, 0, 0]
         enable = [0, 0, 0, 0, 0, 0, 0]
         controlEnabled = [0, 0]
@@ -130,9 +134,9 @@ def preset_order():
 
         for i in range(1,8):
             if 'enabled_pos' + str(i) in data:
-                enable[data['pedal_pos' + str(i)] - 1] = bool(0)
+                enable[int(data['pedal_pos' + str(i)]) - 1] = bool(0)
             else:
-                enable[data['pedal_pos' + str(i)] - 1] = bool(1)
+                enable[int(data['pedal_pos' + str(i)]) - 1] = bool(1)
         
         if 'controlEnabled1' in data:
             controlEnabled[0] = bool(0)
