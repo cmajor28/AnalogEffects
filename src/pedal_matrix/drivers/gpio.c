@@ -37,7 +37,7 @@ static int gpio_irq_func(struct gpio_irq *irq) {
 		read(fds.fd, &tmp, sizeof(tmp)); // Dummy read
 		ret = poll(&fds, 1, -1);
 		if (ret < 0) {
-			PRINT_LOG("poll() failed!");
+			PRINTE("poll() failed!");
 			return ret;
 		} else if (ret == 0) {
 			// This shouldn't happen
@@ -83,7 +83,20 @@ static int gpio_irq_func(struct gpio_irq *irq) {
 
 		// Call isr
 		if (irq->enabled && irq->callback) {
-			irq->callback(irq->context);
+			pthread_t isrThread;
+
+			//irq->callback(irq->context);
+
+			// Using a thread allows for better interrupt handling
+			ret = pthread_create(&isrThread, NULL, (void * (*)(void *))irq->callback, irq->context);
+			if (ret != 0) {
+				PRINTE("pthread_create() failed!");
+				return ret;
+			}
+			ret = pthread_detach(isrThread);
+			if (ret != 0) {
+				PRINTE("pthread_detach() failed!");
+			}
 		}
 	}
 
@@ -98,7 +111,7 @@ int gpio_wakeup(bool wake) {
 	// Open mem fd
 	fd = open("/dev/mem", O_RDWR);
 	if (fd == -1) {
-		PRINT_LOG("open() failed!");
+		PRINTE("open() failed!");
 		return -1;
 	}
 
@@ -204,7 +217,7 @@ int gpio_init(struct gpio *gpio, enum gpio_bank bank) {
 	// Open mem fd
 	fd = open("/dev/mem", O_RDWR);
 	if (fd == -1) {
-		PRINT_LOG("open() failed!");
+		PRINTE("open() failed!");
 		return -1;
 	}
 
@@ -395,7 +408,7 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback
 	snprintf(fileBuffer, sizeof(fileBuffer), "/sys/class/gpio/gpio%d/value", gpioNumber);
 	irq->fd = open(fileBuffer, O_RDONLY | O_NONBLOCK);
 	if (irq->fd == -1) {
-		PRINT_LOG("open() failed!");
+		PRINTE("open() failed!");
 		return -1;
 	}
 
@@ -410,7 +423,7 @@ int gpio_irq_init(struct gpio_irq *irq, struct gpio_pin *gpioPin, int (*callback
 	// Create thread to handle interrupt
 	ret = pthread_create(&irq->intThread, NULL, (void *(*)(void *))&gpio_irq_func, irq);
 	if (ret != 0) {
-		PRINT_LOG("pthread_create() failed!");
+		PRINTE("pthread_create() failed!");
 		close(irq->fd);
 		return ret;
 	}
@@ -429,14 +442,14 @@ int gpio_irq_uninit(struct gpio_irq *irq) {
 	// Cancel interrupt thread
 	ret = pthread_cancel(irq->intThread);
 	if (ret != 0) {
-		PRINT_LOG("pthread_cancel() failed!");
+		PRINTE("pthread_cancel() failed!");
 		return ret;
 	}
 
 	// Wait for thread to exit
 	ret = pthread_join(irq->intThread, NULL);
 	if (ret != 0) {
-		PRINT_LOG("pthread_join() failed!");
+		PRINTE("pthread_join() failed!");
 		return ret;
 	}
 

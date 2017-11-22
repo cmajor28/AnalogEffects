@@ -27,6 +27,13 @@ struct gpio_pin gControlSwitch[2] = CONTROL_PINS_INIT();
 // I2C interfaces
 struct i2c gI2C[GPIO_EXT_COUNT];
 
+static int leds_blink_one(enum ae_led led) {
+
+	int ret;
+	ret = led_control_blink(&gLedControl, led, TRUE, LED_BLINK_PERIOD_MILLISECONDS);
+	return ret;
+}
+
 static int leds_set_one_hot(enum ae_led led) {
 
 	int ret;
@@ -86,7 +93,7 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 		pedal = pedalOrder[i];
 		if (pedal > 0) { // If pedal exists
 			if (enabled[pedal-1]) { // If enabled
-				if (!presenceDetect[pedal][OUT] && !presenceDetect[pedal][IN]) { // If presence detected (presence is active low)
+				if (presenceDetect[pedal][OUT] && presenceDetect[pedal][IN]) { // If presence detected (presence is active low)
 					address = lastInput + (pedal << 3); // Get crosspoint address for last pedal input and new pedal output
 					switchSet |= ((uint64_t)1 << address);
 					lastInput = pedal;
@@ -102,9 +109,9 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 		switchSet |= ((uint64_t)1 << lastInput);
 	}
 
-	// Disable input if muting
+	// Disable input  and output if muting
 	if (mute) {
-		switchSet &= (~0x0101010101010101);
+		switchSet &= (~0x0101010101010100);
 	}
 
 	// Calculate switch sets with input disconnected
@@ -113,21 +120,35 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 
 	// Calculate switch sets with output disconnected
 	uint64_t switchSetNoOutput = switchSet & (~0xFF);
-	uint64_t lastSwitchSetNoOutput = switchSet & (~0xFF);
+	uint64_t lastSwitchSetNoOutput = lastSwitchSet & (~0xFF);
 
-	if (lastMute && !mute && (switchSetNoInput == lastSwitchSetNoInput)) { // We are unmuting only
+	// Calculate switch sets with output disconnected
+	uint64_t switchSetNoInputOutput = switchSetNoInput & switchSetNoOutput;
+	uint64_t lastSwitchSetNoInputOutput = lastSwitchSetNoInput & lastSwitchSetNoOutput;
+
+	if (lastMute && !mute && (switchSetNoInputOutput == lastSwitchSetNoInputOutput)) { // We are unmuting only
 		// Route input on mt8809
 		PRINT("control: Disabling mute configuration.\n");
-		int address = __builtin_ctzll(switchSet ^ switchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
-		ret = mt8809_set_switch(&gSwitchMatrix, address, 0x1);
+		uint8_t address1 = __builtin_ctzll(switchSet ^ switchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
+		uint8_t address2 = __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+		ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x1);
 		if (ret != 0) {
 			return ret;
 		}
-	} else if (!lastMute && mute && (switchSetNoInput == lastSwitchSetNoInput)) { // We are muting only
+		ret = mt8809_set_switch(&gSwitchMatrix, address2, 0x1);
+		if (ret != 0) {
+			return ret;
+		}
+	} else if (!lastMute && mute && (switchSetNoInputOutput == lastSwitchSetNoInputOutput)) { // We are muting only
 		// Unroute input on mt8809
 		PRINT("control: Enabling mute configuration.\n");
-		uint8_t address = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
-		ret = mt8809_set_switch(&gSwitchMatrix, address, 0x0);
+		uint8_t address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
+		uint8_t address2 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+		ret = mt8809_set_switch(&gSwitchMatrix, address2, 0x0);
+		if (ret != 0) {
+			return ret;
+		}
+		ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x0);
 		if (ret != 0) {
 			return ret;
 		}
@@ -186,7 +207,7 @@ static int load_preset(int bank, int preset) {
 	// Lock preset mutex
 	ret = pthread_mutex_lock(&gPresetsMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -224,6 +245,7 @@ static int set_new_preset(int preset) {
 		leds_set_one_hot(preset);
 	}
 
+	gConfig->changeMade = FALSE;
 	return 0;
 }
 
@@ -231,6 +253,10 @@ static int set_new_bank(int bank) {
 
 	PRINT("control: Setting bank to %d.\n", bank+1);
 	gConfig->currBank = bank;
+	gConfig->changeMade = TRUE;
+	if (!gConfig->pedalMode) {
+		leds_blink_one(gConfig->currPreset.preset);
+	}
 	return 0;
 }
 
@@ -244,6 +270,9 @@ static int set_pedal_mode_enabled(bool enable) {
 		leds_set_all(gConfig->controlEnabled, gConfig->currPreset.enabled);
 	} else {
 		leds_set_one_hot(gConfig->currPreset.preset);
+		if (gConfig->changeMade) {
+			leds_blink_one(gConfig->currPreset.preset);
+		}
 	}
 	return 0;
 }
@@ -262,6 +291,7 @@ static int set_pedal_enabled(int pedal, bool enable) {
 		return ret;
 	}
 
+	gConfig->changeMade = TRUE;
 	leds_set(pedal, gConfig->currPreset.enabled[pedal]);
 	return 0;
 }
@@ -280,7 +310,8 @@ static int set_control_enabled(int control, bool enable) {
 		return ret;
 	}
 
-	leds_set(control, gConfig->currPreset.controlEnabled[control]);
+	gConfig->changeMade = TRUE;
+	leds_set(control + AE_BUTTON_BU, gConfig->currPreset.controlEnabled[control]);
 	return 0;
 }
 
@@ -439,7 +470,7 @@ static int presence_control_update(void *context, enum ae_presence jack, bool pr
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -465,7 +496,7 @@ static int button_control_update(void *context, enum ae_button button, enum butt
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -548,7 +579,7 @@ int control_init() {
 	pthread_mutex_init(&gConfigMutex, &recursiveMutexAttr);
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -575,7 +606,7 @@ int control_init() {
 	// Open mem fd
 	fd = open(CONFIG_FILE, O_RDWR | O_CREAT);
 	if (fd == -1) {
-		PRINT_LOG("open() failed!");
+		PRINTE("open() failed!");
 		pthread_mutex_unlock(&gConfigMutex);
 		return -1;
 	}
@@ -583,7 +614,7 @@ int control_init() {
 	// Seek to max location
 	ret = lseek(fd, sizeof(*gConfig), SEEK_SET);
 	if (ret != sizeof(*gConfig)) {
-		PRINT_LOG("lseek() failed!");
+		PRINTE("lseek() failed!");
 		pthread_mutex_unlock(&gConfigMutex);
 		return -1;
 	}
@@ -592,7 +623,7 @@ int control_init() {
 	// Note: This ensures we have enough space to write the config
 	ret = write(fd, "", 1);
 	if (ret < 1) {
-		PRINT_LOG("write() failed!");
+		PRINTE("write() failed!");
 		pthread_mutex_unlock(&gConfigMutex);
 		return -1;
 	}
@@ -605,7 +636,7 @@ int control_init() {
 
 	// Check mmap result
 	if (gConfig == MAP_FAILED) {
-		PRINT_LOG("mmap() failed!");
+		PRINTE("mmap() failed!");
 		pthread_mutex_unlock(&gConfigMutex);
 		return -1;
 	}
@@ -644,12 +675,35 @@ int control_init() {
 		return ret;
 	}
 
+	// Blink LED if change is made
+	if (gConfig->changeMade && !gConfig->pedalMode) {
+		leds_blink_one(gConfig->currPreset.preset);
+	}
+
 	// Open entry points
 	pthread_mutex_unlock(&gConfigMutex);
 
 	PRINT("control: Initialization done.\n");
 
 	return 0;
+}
+
+int control_notify_update(int bank, int preset) {
+
+	int ret;
+
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINTE("pthread_mutex_lock() failed!");
+		return -1;
+	}
+
+	// Blink LED if change is made to current preset
+	if (gConfig->currPreset.bank == bank && gConfig->currPreset.preset == preset && !gConfig->pedalMode) {
+		leds_blink_one(gConfig->currPreset.preset);
+	}
+	pthread_mutex_unlock(&gConfigMutex);
+	return ret;
 }
 
 int control_uninit() {
@@ -659,7 +713,7 @@ int control_uninit() {
 	// Block entry points
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -715,7 +769,7 @@ int register_callbacks(int (*presetChanged)(int), int (*bankChanged)(int), int (
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -737,7 +791,7 @@ int set_preset(int preset) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -754,7 +808,7 @@ int set_bank(int bank) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -771,7 +825,7 @@ int set_mode(bool pedalMode) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -788,7 +842,7 @@ int set_bypass(bool enabled) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -805,7 +859,7 @@ int set_mute(bool enabled) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -820,7 +874,7 @@ int get_preset(int *preset) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -835,7 +889,7 @@ int get_bank(int *bank) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -850,7 +904,7 @@ int get_mode(bool *pedalMode) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -865,7 +919,7 @@ int get_bypass(bool *enabled) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -880,7 +934,7 @@ int get_mute(bool *enabled) {
 
 	ret = pthread_mutex_lock(&gConfigMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 

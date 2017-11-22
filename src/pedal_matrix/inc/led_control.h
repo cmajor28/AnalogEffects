@@ -18,13 +18,24 @@ enum ae_led {
 	AE_LED_COUNT
 };
 
+#define LED_BLINK_PERIOD_MILLISECONDS 1000
+
+struct led_control_blink_params {
+	struct gpio_ext_pin	*pin;
+	unsigned long		period;
+	pthread_t			blinkThread;
+};
+
 struct led_control {
-	struct gpio_ext_pin	pins[AE_LED_COUNT];
+	struct gpio_ext_pin				pins[AE_LED_COUNT];
+	struct led_control_blink_params	blinkParams[AE_LED_COUNT];
 };
 
 #define LED_CONTROL_INITIALIZER(pinList) { .pins = pinList }
 
 int led_control_init(struct led_control *leds, bool ledOn[AE_LED_COUNT]);
+
+int led_control_blink(struct led_control *leds, enum ae_led led, bool enable, unsigned long period);
 
 int led_control_set(struct led_control *leds, enum ae_led ledPin, bool ledOn);
 

@@ -34,7 +34,7 @@ int aeffects_update(struct ae_preset *preset) {
 
 	ret = pthread_mutex_lock(&gPresetsMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 
@@ -42,6 +42,9 @@ int aeffects_update(struct ae_preset *preset) {
 	memcpy(&gPresets[preset->bank][preset->preset], preset, sizeof(*preset)); // Index starts at 1
 
 	pthread_mutex_unlock(&gPresetsMutex);
+
+	// Notify control of update
+	ret = control_notify_update(preset->bank, preset->preset);
 
 	return 0;
 }
@@ -54,7 +57,7 @@ int aeffects_uninit() {
 
 	ret = pthread_mutex_lock(&gPresetsMutex);
 	if (ret != 0) {
-		PRINT_LOG("pthread_mutex_lock() failed!");
+		PRINTE("pthread_mutex_lock() failed!");
 		return -1;
 	}
 

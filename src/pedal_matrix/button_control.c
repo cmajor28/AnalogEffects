@@ -66,8 +66,8 @@ int button_control_init(struct button_control *buttons, int (*callback)(void *, 
 		// Create hold timer
 		timer_init(	&buttons->irqContextList[i].holdTimer,
 					TRUE,
-					SECONDS,
-					HOLD_TIME_SECONDS,
+					MILLISECONDS,
+					BUTTON_HOLD_TIME_MILLISECONDS,
 					(int (*)(void *))&button_state_changed,
 					&buttons->irqContextList[i]);
 

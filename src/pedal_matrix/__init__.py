@@ -6,6 +6,7 @@ import signal
 from ctypes import *
 from bluetooth.remote import *
 from gui.lcd import *
+from string import Template
 import threading
 import socket
 import fcntl
@@ -14,8 +15,22 @@ import json
 
 app = Flask(__name__)
 Bootstrap(app)
-
+app.static_folder = 'static'
 c_lib = cdll.LoadLibrary("./aeffects.so")  # call construct at startup, def __init (in essence, calling C constructor)
+
+STATIC_SUCCESS_TEMPLATE = Template("""<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Pedal Matrix</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="blurBg-true" style="background-color:#EBEBEB">
+<link rel="stylesheet" href="test1_files/formoid1/formoid-biz-red.css" type="text/css" />
+<script type="text/javascript" src="test1_files/formoid1/jquery.min.js"></script>
+<a href="${homepage}">Go Back</a>
+</body>
+</html>""")
 
 class AE_PRESET(Structure):
     _fields_ = [("bank", c_int),
@@ -32,6 +47,7 @@ lcd = None
 guiInvoker = None
 
 remoteInfo = {"id": "",
+              "paired": False,
               "bank": -1,
               "preset": -1}
 
@@ -91,10 +107,11 @@ def preset_order():
         pedal = [0, 0, 0, 0, 0, 0, 0]
         enable = [0, 0, 0, 0, 0, 0, 0]
         controlEnabled = [0, 0]
-        bank_name = request.form['bank_name']
-        bank_num = int(request.form['bank_num'])
-        preset_name = request.form['preset_name']
-        preset_num = int(request.form['preset_num'])
+        data = request.form
+        bank_name = data['bank_name']
+        bank_num = int(data['bank_num'])
+        preset_name = data['preset_name']
+        preset_num = int(data['preset_num'])
         #pedal_pos1_name = request.json['pedal_pos1_name']
         #pedal_pos2_name = request.json['pedal_pos2_name']
         #pedal_pos3_name = request.json['pedal_pos3_name']
@@ -103,33 +120,33 @@ def preset_order():
         #pedal_pos6_name = request.json['pedal_pos6_name']
         #pedal_pos7_name = request.json['pedal_pos7_name']
 
-        pedal[0] = int(request.form['pedal_pos1'])
-        pedal[1] = int(request.form['pedal_pos2'])
-        pedal[2] = int(request.form['pedal_pos3'])
-        pedal[3] = int(request.form['pedal_pos4'])
-        pedal[4] = int(request.form['pedal_pos5'])
-        pedal[5] = int(request.form['pedal_pos6'])
-        pedal[6] = int(request.form['pedal_pos7'])
+        pedal[0] = int(data['pedal_pos1'])
+        pedal[1] = int(data['pedal_pos2'])
+        pedal[2] = int(data['pedal_pos3'])
+        pedal[3] = int(data['pedal_pos4'])
+        pedal[4] = int(data['pedal_pos5'])
+        pedal[5] = int(data['pedal_pos6'])
+        pedal[6] = int(data['pedal_pos7'])
 
-        for num in range(0,7):
-            if request.form.get('enabled_pos' + "%d" % (num)) is None:
-                enable[num] = bool(0)
+        for i in range(1,8):
+            if 'enabled_pos' + str(i) in data:
+                enable[int(data['pedal_pos' + str(i)]) - 1] = bool(0)
             else:
-                enable[num] = bool(1)
+                enable[int(data['pedal_pos' + str(i)]) - 1] = bool(1)
         
-        if request.form.get('controlEnabled1') is None:
+        if 'controlEnabled1' in data:
             controlEnabled[0] = bool(0)
         else:
             controlEnabled[0] = bool(1)
 
-        if request.form.get('controlEnabled2') is None:
+        if 'controlEnabled2' in data:
             controlEnabled[1] = bool(0)
         else:
             controlEnabled[1] = bool(1)
 
         new_preset = AE_PRESET()
-        new_preset.preset = preset_num
-        new_preset.bank = bank_num
+        new_preset.preset = preset_num - 1
+        new_preset.bank = bank_num - 1
         new_preset.pedalOrder = (c_int * 7)(*pedal)
         new_preset.enabled = (c_bool * 7)(*enable)
         new_preset.controlEnabled = (c_bool * 2)(*controlEnabled)
@@ -169,14 +186,15 @@ def preset_order():
         # Write to JSON
         filename = "%d_%d" % (bank_num, preset_num)
 
-        with open('presets_' + filename + '.json', 'w') as f:
+        with open('data/presets_' + filename + '.json', 'w') as f:
             json.dump(data, f)
 
         # Read JSON
         """with open('data.json', 'r') as f:
             data = json.load(f)"""
+        ip = get_ip_address("wlan0")
 
-        return app.send_static_file('test2.html')
+        return STATIC_SUCCESS_TEMPLATE.substitute(homepage=ip)
 
 
 # add controlEnabled bool array for init function
@@ -186,22 +204,29 @@ def init_c_lib():
         for preset_num in range(0, 8):
             read_pedal = [0, 0, 0, 0, 0, 0, 0]
             read_enable = [0, 0, 0, 0, 0, 0, 0]
-            new_preset[bank_num * 8 + preset_num].preset = bank_num
-            new_preset[bank_num * 8 + preset_num].bank = preset_num
+            control_enable = [0, 0]
+            new_preset[bank_num*8 + preset_num].preset = preset_num
+            new_preset[bank_num*8 + preset_num].bank = bank_num
 
             filename = "%d_%d" % (bank_num + 1, preset_num + 1)
-            if not os.path.isfile('presets_' + filename + '.json'):
+            if not os.path.isfile('data/presets_' + filename + '.json'):
                 break
 
-            with open('presets_' + filename + '.json', 'r') as f:
+            with open('data/presets_' + filename + '.json', 'r') as f:
                 data = json.load(f)
 
-            for i in range(1, 8):
-                read_enable[i - 1] = data['enabled_pos' + str(i)]
-                read_pedal[i - 1] = data['pedal_pos' + str(i)]
-            new_preset[bank_num * 8 + preset_num].pedalOrder = (c_int * 7)(*read_pedal)
-            new_preset[bank_num * 8 + preset_num].enabled = (c_bool * 7)(*read_enable)
+            data['enabled_pos0'] = False # Case where there is no pedal
 
+            for i in range(1, 8):
+                read_pedal[i - 1] = data['pedal_pos' + str(i)]
+                read_enable[data['pedal_pos' + str(i)] - 1] = data['enabled_pos' + str(i)]
+
+            control_enable[0] = data['controlEnabled1']
+            control_enable[1] = data['controlEnabled2']
+
+            new_preset[bank_num*8 + preset_num].pedalOrder = (c_int * 7)(*read_pedal)
+            new_preset[bank_num*8 + preset_num].enabled = (c_bool * 7)(*read_enable)
+            new_preset[bank_num*8 + preset_num].controlEnabled = (c_bool*2)(*control_enable)
     c_lib.aeffects_init(new_preset)  # convert 2d tuple of presets to 2d array passed through init
     return
 
@@ -253,11 +278,11 @@ def set_preset_py(preset):
     # read from file for preset name
     filename = "%d_%d" % (bank.value, c_int(preset).value)
     presetName = ''
-    if os.path.isfile('presets_' + filename + '.json'):
-        with open('presets_' + filename + '.json', 'r') as f:
+    if os.path.isfile('data/presets_' + filename + '.json'):
+        with open('data/presets_' + filename + '.json', 'r') as f:
             data = json.load(f)
             presetName = data['preset_name']
-	
+
     lcdInfo["presetName"] = presetName
 
     if lcd is not None:
@@ -267,7 +292,7 @@ def set_preset_py(preset):
 
 def set_mode_py(mode):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["mode"] = c_bool(mode).value
+    lcdInfo["pedalMode"] = c_bool(mode).value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
     return 0
@@ -275,7 +300,7 @@ def set_mode_py(mode):
 
 def set_bypass_py(bypass):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["bypass"] = c_bool(bypass).value
+    lcdInfo["bypassMode"] = c_bool(bypass).value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
     return 0
@@ -283,7 +308,7 @@ def set_bypass_py(bypass):
 
 def set_mute_py(mute):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["mute"] = c_bool(mute).value
+    lcdInfo["muteMode"] = c_bool(mute).value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
     return c_int(0)
@@ -291,18 +316,18 @@ def set_mute_py(mute):
 
 def get_ip_address(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    ip = ''
+    addr = ''
     try:
         ip = socket.inet_ntoa(fcntl.ioctl(
             s.fileno(),
             0x8915,  # SIOCGIFADDR
             struct.pack('256s', bytes(ifname[:15], 'utf-8'))
         )[20:24])
-        ip = ip + ":5052"
+        addr = ip + ":5052"
     except:
         pass
     finally:
-        return ip
+        return addr
 
 
 def update_ip_address():
@@ -330,7 +355,7 @@ def init_structs():
     mute = c_bool(False)
     c_lib.get_mute(byref(mute))
     lcdInfo["bank"] = remoteInfo["bank"] = bank.value
-    lcdInfo["preset"] = preset.value
+    lcdInfo["preset"] = remoteInfo["preset"] = preset.value
 
     # read from file for preset name
     filename = "%d_%d" % (bank.value, preset.value)
@@ -339,7 +364,7 @@ def init_structs():
         with open('presets_' + filename + '.json', 'r') as f:
             data = json.load(f)
             presetName = data['preset_name']
-	
+
     lcdInfo["presetName"] = presetName
     lcdInfo["webAddress"] = get_ip_address("wlan0")
     lcdInfo["remoteID"] = None
@@ -348,6 +373,8 @@ def init_structs():
     lcdInfo["muteMode"] = mute.value
     lcdInfo["webEnabled"] = True
     lcdInfo["remotePaired"] = False
+    remoteInfo["paired"] = None
+    remoteInfo["id"] = ''
 
     print("Web Address: '" + lcdInfo["webAddress"] + "'")
 
@@ -411,7 +438,8 @@ def remoteUpdate(info):
         set_preset_c(info["preset"])
     if info["id"] != remoteInfo["id"]:
         lcdInfo["remoteID"] = info["id"]
-        lcdInfo["remotePaired"] = (info["id"] != None)
+    if info["paired"] != remoteInfo["paired"]:
+        lcdInfo["remotePaired"] = info["paired"]
     guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
     remoteInfo = info.copy()
 
@@ -425,6 +453,7 @@ def run_gui():
     guiInvoker = Invoker()
     sys.exit(app.exec_())
 
+
 def run_app():
     #app.run(host='0.0.0.0', port=5052, debug=True)
     app.run(host='0.0.0.0', port=5052)
@@ -435,5 +464,5 @@ if __name__ == "__main__":
     init_control()
     init_structs()
     remote = Remote(remoteInfo.copy(), remoteUpdate)
-    threading.Thread(target=run_gui).start()
-    run_app()
+    threading.Thread(target=run_app).start()
+    run_gui()
