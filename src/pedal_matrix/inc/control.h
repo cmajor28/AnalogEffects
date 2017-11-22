@@ -11,6 +11,7 @@ struct ae_config {
 	bool				bypassEnabled;
 	bool				muteEnabled;
 	bool				pedalMode;
+	bool				changeMade;
 	int					currBank;
 	struct ae_preset	currPreset;
 };
@@ -26,6 +27,8 @@ enum {
 };
 
 int control_init();
+
+int control_notify_update(int bank, int preset);
 
 int control_uninit();
 

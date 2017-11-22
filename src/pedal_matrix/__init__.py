@@ -6,6 +6,7 @@ import signal
 from ctypes import *
 from bluetooth.remote import *
 from gui.lcd import *
+from string import Template
 import threading
 import socket
 import fcntl
@@ -14,8 +15,22 @@ import json
 
 app = Flask(__name__)
 Bootstrap(app)
-
+app.static_folder = 'static'
 c_lib = cdll.LoadLibrary("./aeffects.so")  # call construct at startup, def __init (in essence, calling C constructor)
+
+STATIC_SUCCESS_TEMPLATE = Template("""<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Pedal Matrix</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="blurBg-true" style="background-color:#EBEBEB">
+<link rel="stylesheet" href="test1_files/formoid1/formoid-biz-red.css" type="text/css" />
+<script type="text/javascript" src="test1_files/formoid1/jquery.min.js"></script>
+<a href="${homepage}">Go Back</a>
+</body>
+</html>""")
 
 class AE_PRESET(Structure):
     _fields_ = [("bank", c_int),
@@ -90,12 +105,13 @@ def preset_order():
     
     else:
         pedal = [0, 0, 0, 0, 0, 0, 0]
-        enable = [0, 0, 0, 0, 0, 0, 0]
-        controlEnabled = [0, 0]
-        bank_name = request.form['bank_name']
-        bank_num = int(request.form['bank_num'])
-        preset_name = request.form['preset_name']
-        preset_num = int(request.form['preset_num'])
+        enable = [False, False, False, False, False, False, False]
+        controlEnabled = [False, False]
+        data = request.form
+        bank_name = data['bank_name']
+        bank_num = int(data['bank_num'])
+        preset_name = data['preset_name']
+        preset_num = int(data['preset_num'])
         #pedal_pos1_name = request.json['pedal_pos1_name']
         #pedal_pos2_name = request.json['pedal_pos2_name']
         #pedal_pos3_name = request.json['pedal_pos3_name']
@@ -104,29 +120,21 @@ def preset_order():
         #pedal_pos6_name = request.json['pedal_pos6_name']
         #pedal_pos7_name = request.json['pedal_pos7_name']
 
-        pedal[0] = int(request.form['pedal_pos1'])
-        pedal[1] = int(request.form['pedal_pos2'])
-        pedal[2] = int(request.form['pedal_pos3'])
-        pedal[3] = int(request.form['pedal_pos4'])
-        pedal[4] = int(request.form['pedal_pos5'])
-        pedal[5] = int(request.form['pedal_pos6'])
-        pedal[6] = int(request.form['pedal_pos7'])
+        pedal[0] = int(data['pedal_pos1'])
+        pedal[1] = int(data['pedal_pos2'])
+        pedal[2] = int(data['pedal_pos3'])
+        pedal[3] = int(data['pedal_pos4'])
+        pedal[4] = int(data['pedal_pos5'])
+        pedal[5] = int(data['pedal_pos6'])
+        pedal[6] = int(data['pedal_pos7'])
 
-        for num in range(0,7):
-            if request.form.get('enabled_pos' + "%d" % (num+1)) is None:
-                enable[num] = bool(0)
-            else:
-                enable[num] = bool(1)
-        
-        if request.form.get('controlEnabled1') is None:
-            controlEnabled[0] = bool(0)
-        else:
-            controlEnabled[0] = bool(1)
+        for i in range(1,8):
+            curr = int(data['pedal_pos' + str(i)])
+            if curr > 0:
+                enable[curr-1] = 'enabled_pos' + str(i) in data
 
-        if request.form.get('controlEnabled2') is None:
-            controlEnabled[1] = bool(0)
-        else:
-            controlEnabled[1] = bool(1)
+        controlEnabled[0] = 'controlEnable1' in data
+        controlEnabled[1] = 'controlEnabled2' in data
 
         new_preset = AE_PRESET()
         new_preset.preset = preset_num - 1
@@ -170,14 +178,10 @@ def preset_order():
         # Write to JSON
         filename = "%d_%d" % (bank_num, preset_num)
 
-        with open('presets_' + filename + '.json', 'w') as f:
+        with open('data/presets_' + filename + '.json', 'w') as f:
             json.dump(data, f)
 
-        # Read JSON
-        """with open('data.json', 'r') as f:
-            data = json.load(f)"""
-
-        return app.send_static_file('test2.html')
+        return STATIC_SUCCESS_TEMPLATE.substitute(homepage="")
 
 
 # add controlEnabled bool array for init function
@@ -186,23 +190,28 @@ def init_c_lib():
     for bank_num in range(0, 16):
         for preset_num in range(0, 8):
             read_pedal = [0, 0, 0, 0, 0, 0, 0]
-            read_enable = [0, 0, 0, 0, 0, 0, 0]
-            new_preset[bank_num * 8 + preset_num].preset = bank_num
-            new_preset[bank_num * 8 + preset_num].bank = preset_num
+            read_enable = [False, False, False, False, False, False, False]
+            control_enable = [False, False]
+            new_preset[bank_num*8 + preset_num].preset = preset_num
+            new_preset[bank_num*8 + preset_num].bank = bank_num
 
             filename = "%d_%d" % (bank_num + 1, preset_num + 1)
-            if not os.path.isfile('presets_' + filename + '.json'):
+            if not os.path.isfile('data/presets_' + filename + '.json'):
                 break
 
-            with open('presets_' + filename + '.json', 'r') as f:
+            with open('data/presets_' + filename + '.json', 'r') as f:
                 data = json.load(f)
 
             for i in range(1, 8):
-                read_enable[i - 1] = data['enabled_pos' + str(i)]
                 read_pedal[i - 1] = data['pedal_pos' + str(i)]
-            new_preset[bank_num * 8 + preset_num].pedalOrder = (c_int * 7)(*read_pedal)
-            new_preset[bank_num * 8 + preset_num].enabled = (c_bool * 7)(*read_enable)
+                read_enable[i - 1] = data['enabled_pos' + str(i)]
 
+            control_enable[0] = data['controlEnabled1']
+            control_enable[1] = data['controlEnabled2']
+
+            new_preset[bank_num*8 + preset_num].pedalOrder = (c_int * 7)(*read_pedal)
+            new_preset[bank_num*8 + preset_num].enabled = (c_bool * 7)(*read_enable)
+            new_preset[bank_num*8 + preset_num].controlEnabled = (c_bool*2)(*control_enable)
     c_lib.aeffects_init(new_preset)  # convert 2d tuple of presets to 2d array passed through init
     return
 
@@ -254,8 +263,8 @@ def set_preset_py(preset):
     # read from file for preset name
     filename = "%d_%d" % (bank.value, c_int(preset).value)
     presetName = ''
-    if os.path.isfile('presets_' + filename + '.json'):
-        with open('presets_' + filename + '.json', 'r') as f:
+    if os.path.isfile('data/presets_' + filename + '.json'):
+        with open('data/presets_' + filename + '.json', 'r') as f:
             data = json.load(f)
             presetName = data['preset_name']
 
