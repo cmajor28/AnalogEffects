@@ -5,7 +5,7 @@
     (Folder "Library"
       (File ".\library2.olb"
         (Type "Schematic Library"))
-      (File ".\master schematic.olb"
+      (File ".\library\master schematic.olb"
         (Type "Schematic Library")))
     (File ".\master schematic.dsn"
       (Type "Schematic Design"))
@@ -64,19 +64,8 @@
   (GlobalState
     (FileView
       (Path "Design Resources")
-      (Path "Design Resources"
-         "E:\AnalogEffects\hw\schematic\new\master schematic.dsn")
-      (Path "Design Resources"
-         "E:\AnalogEffects\hw\schematic\new\master schematic.dsn" "SCHEMATIC1")
       (Path "Design Resources" "Library")
-      (Path "Design Resources" "Library"
-         "E:\AnalogEffects\hw\schematic\new\library2.olb")
-      (Path "Design Resources" "Library"
-         "E:\AnalogEffects\hw\schematic\new\master schematic.olb")
-      (Path "Outputs")
-      (Select "Design Resources"
-         "E:\AnalogEffects\hw\schematic\new\master schematic.dsn" "SCHEMATIC1"
-         "BEAGLEBONE_BLACK"))
+      (Path "Outputs"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
@@ -86,12 +75,12 @@
     (Doc
       (Type "COrSchematicDoc")
       (Frame
-        (Placement "44 0 1 -1 -1 -1 -1 200 2322 200 910")
-        (Scroll "-552 40")
+        (Placement "44 0 1 -1 -1 -1 -1 218 2340 35 745")
+        (Scroll "-277 310")
         (Zoom "100")
         (Occurrence "/"))
       (Path "E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\MASTER SCHEMATIC.DSN")
       (Schematic "SCHEMATIC1")
-      (Page "BEAGLEBONE_BLACK")))
+      (Page "MATRIX")))
   (MPSSessionName "meadows")
   (ISPCBBASICLICENSE "false"))

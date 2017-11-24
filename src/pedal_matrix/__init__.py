@@ -105,8 +105,8 @@ def preset_order():
     
     else:
         pedal = [0, 0, 0, 0, 0, 0, 0]
-        enable = [0, 0, 0, 0, 0, 0, 0]
-        controlEnabled = [0, 0]
+        enable = [False, False, False, False, False, False, False]
+        controlEnabled = [False, False]
         data = request.form
         bank_name = data['bank_name']
         bank_num = int(data['bank_num'])
@@ -129,20 +129,12 @@ def preset_order():
         pedal[6] = int(data['pedal_pos7'])
 
         for i in range(1,8):
-            if 'enabled_pos' + str(i) in data:
-                enable[int(data['pedal_pos' + str(i)]) - 1] = bool(0)
-            else:
-                enable[int(data['pedal_pos' + str(i)]) - 1] = bool(1)
-        
-        if 'controlEnabled1' in data:
-            controlEnabled[0] = bool(0)
-        else:
-            controlEnabled[0] = bool(1)
+            curr = int(data['pedal_pos' + str(i)])
+            if curr > 0:
+                enable[curr-1] = 'enabled_pos' + str(i) in data
 
-        if 'controlEnabled2' in data:
-            controlEnabled[1] = bool(0)
-        else:
-            controlEnabled[1] = bool(1)
+        controlEnabled[0] = 'controlEnable1' in data
+        controlEnabled[1] = 'controlEnabled2' in data
 
         new_preset = AE_PRESET()
         new_preset.preset = preset_num - 1
@@ -189,12 +181,7 @@ def preset_order():
         with open('data/presets_' + filename + '.json', 'w') as f:
             json.dump(data, f)
 
-        # Read JSON
-        """with open('data.json', 'r') as f:
-            data = json.load(f)"""
-        ip = get_ip_address("wlan0")
-
-        return STATIC_SUCCESS_TEMPLATE.substitute(homepage=ip)
+        return STATIC_SUCCESS_TEMPLATE.substitute(homepage="")
 
 
 # add controlEnabled bool array for init function
@@ -203,8 +190,8 @@ def init_c_lib():
     for bank_num in range(0, 16):
         for preset_num in range(0, 8):
             read_pedal = [0, 0, 0, 0, 0, 0, 0]
-            read_enable = [0, 0, 0, 0, 0, 0, 0]
-            control_enable = [0, 0]
+            read_enable = [False, False, False, False, False, False, False]
+            control_enable = [False, False]
             new_preset[bank_num*8 + preset_num].preset = preset_num
             new_preset[bank_num*8 + preset_num].bank = bank_num
 
@@ -215,11 +202,9 @@ def init_c_lib():
             with open('data/presets_' + filename + '.json', 'r') as f:
                 data = json.load(f)
 
-            data['enabled_pos0'] = False # Case where there is no pedal
-
             for i in range(1, 8):
                 read_pedal[i - 1] = data['pedal_pos' + str(i)]
-                read_enable[data['pedal_pos' + str(i)] - 1] = data['enabled_pos' + str(i)]
+                read_enable[i - 1] = data['enabled_pos' + str(i)]
 
             control_enable[0] = data['controlEnabled1']
             control_enable[1] = data['controlEnabled2']

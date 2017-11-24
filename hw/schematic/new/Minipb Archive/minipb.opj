@@ -41,12 +41,8 @@
   (GlobalState
     (FileView
       (Path "Design Resources")
-      (Path "Design Resources" "E:\AnalogEffects\hw\schematic\new\minipb.dsn")
-      (Path "Design Resources" "E:\AnalogEffects\hw\schematic\new\minipb.dsn"
-         "SCHEMATIC1")
       (Path "Outputs")
-      (Select "Design Resources" "E:\AnalogEffects\hw\schematic\new\minipb.dsn"
-         "SCHEMATIC1" "PAGE1"))
+      (Select "Design Resources" "Library"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
