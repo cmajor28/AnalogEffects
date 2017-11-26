@@ -136,7 +136,7 @@ def preset_order():
         controlEnabled[0] = 'controlEnable1' in data
         controlEnabled[1] = 'controlEnabled2' in data
         
-        
+        # added to prevent repeat entries on pedal order
         index = [0,1,2,3,4,5,6]
         y = list(set([x for x in pedal if pedal.count(x) > 0]))
         z = []
