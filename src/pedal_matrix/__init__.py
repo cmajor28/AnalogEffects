@@ -133,7 +133,7 @@ def preset_order():
             if curr > 0:
                 enable[curr-1] = 'enabled_pos' + str(i) in data
 
-        controlEnabled[0] = 'controlEnable1' in data
+        controlEnabled[0] = 'controlEnabled1' in data
         controlEnabled[1] = 'controlEnabled2' in data
 
         new_preset = AE_PRESET()
@@ -178,7 +178,7 @@ def preset_order():
         # Write to JSON
         filename = "%d_%d" % (bank_num, preset_num)
 
-        with open('data/presets_' + filename + '.json', 'w') as f:
+        with open('data/preset_' + filename + '.json', 'w') as f:
             json.dump(data, f)
 
         return STATIC_SUCCESS_TEMPLATE.substitute(homepage="")
@@ -196,10 +196,10 @@ def init_c_lib():
             new_preset[bank_num*8 + preset_num].bank = bank_num
 
             filename = "%d_%d" % (bank_num + 1, preset_num + 1)
-            if not os.path.isfile('data/presets_' + filename + '.json'):
+            if not os.path.isfile('data/preset_' + filename + '.json'):
                 break
 
-            with open('data/presets_' + filename + '.json', 'r') as f:
+            with open('data/preset_' + filename + '.json', 'r') as f:
                 data = json.load(f)
 
             for i in range(1, 8):
@@ -263,8 +263,8 @@ def set_preset_py(preset):
     # read from file for preset name
     filename = "%d_%d" % (bank.value, c_int(preset).value)
     presetName = ''
-    if os.path.isfile('data/presets_' + filename + '.json'):
-        with open('data/presets_' + filename + '.json', 'r') as f:
+    if os.path.isfile('data/preset_' + filename + '.json'):
+        with open('data/preset_' + filename + '.json', 'r') as f:
             data = json.load(f)
             presetName = data['preset_name']
 
@@ -345,8 +345,8 @@ def init_structs():
     # read from file for preset name
     filename = "%d_%d" % (bank.value, preset.value)
     presetName = ''
-    if os.path.isfile('presets_' + filename + '.json'):
-        with open('presets_' + filename + '.json', 'r') as f:
+    if os.path.isfile('data/preset_' + filename + '.json'):
+        with open('data/preset_' + filename + '.json', 'r') as f:
             data = json.load(f)
             presetName = data['preset_name']
 
@@ -419,6 +419,15 @@ def remoteUpdate(info):
         lcdInfo["bank"] = info["bank"]
         set_bank_c(info["bank"])
     if info["preset"] != remoteInfo["preset"]:
+        # read from file for preset name
+        filename = "%d_%d" % (info["bank"], info["preset"])
+        presetName = ''
+        if os.path.isfile('data/preset_' + filename + '.json'):
+            with open('data/preset_' + filename + '.json', 'r') as f:
+                data = json.load(f)
+                presetName = data['preset_name']
+
+        lcdInfo["presetName"] = presetName
         lcdInfo["preset"] = info["preset"]
         set_preset_c(info["preset"])
     if info["id"] != remoteInfo["id"]:

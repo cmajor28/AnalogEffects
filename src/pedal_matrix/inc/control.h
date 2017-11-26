@@ -7,7 +7,6 @@
 #define CONFIG_FILE "config.bin"
 
 struct ae_config {
-	bool				controlEnabled[2];
 	bool				bypassEnabled;
 	bool				muteEnabled;
 	bool				pedalMode;
