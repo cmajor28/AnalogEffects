@@ -135,6 +135,16 @@ def preset_order():
 
         controlEnabled[0] = 'controlEnable1' in data
         controlEnabled[1] = 'controlEnabled2' in data
+        
+        
+        index = [0,1,2,3,4,5,6]
+        y = list(set([x for x in pedal if pedal.count(x) > 0]))
+        z = []
+        for i in range(0,len(y)):
+            z.append(pedal.index(y[i]))
+        j = list(set(index).difference(z))
+        for p in range(0,len(j)):
+            pedal[j[p]] = 0
 
         new_preset = AE_PRESET()
         new_preset.preset = preset_num - 1
