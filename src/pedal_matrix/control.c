@@ -69,8 +69,8 @@ static int apply_control(bool control[2]) {
 
 	int ret = 0;
 	PRINT("control: Setting control signals to { %d, %d }.\n", control[TIP], control[RING]);
-	ret |= gpio_pin_set_value(&gControlSwitch[TIP], !control[TIP]); // Control is active low
-	ret |= gpio_pin_set_value(&gControlSwitch[RING], !control[RING]); // Control is active low
+	ret |= gpio_pin_set_value(&gControlSwitch[TIP], control[TIP]);
+	ret |= gpio_pin_set_value(&gControlSwitch[RING], control[RING]);
 	return ret;
 }
 
