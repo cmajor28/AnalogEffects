@@ -56,8 +56,8 @@ static int leds_set_all(bool controlEnabled[2], bool enabled[AE_MAX_EFFECTS]) {
 	bool ledOn[AE_LED_COUNT] = { 0 };
 
 	// Get all LED values
-	ledOn[AE_LED_BU] = gConfig->controlEnabled[TIP];
-	ledOn[AE_LED_BD] = gConfig->controlEnabled[RING];
+	ledOn[AE_LED_BU] = gConfig->currPreset.controlEnabled[TIP];
+	ledOn[AE_LED_BD] = gConfig->currPreset.controlEnabled[RING];
 	for (int i = 0; i < AE_MAX_EFFECTS; i++) {
 		ledOn[i] = gConfig->currPreset.enabled[i];
 	}
@@ -69,8 +69,8 @@ static int apply_control(bool control[2]) {
 
 	int ret = 0;
 	PRINT("control: Setting control signals to { %d, %d }.\n", control[TIP], control[RING]);
-	ret |= gpio_pin_set_value(&gControlSwitch[TIP], !control[TIP]); // Control is active low
-	ret |= gpio_pin_set_value(&gControlSwitch[RING], !control[RING]); // Control is active low
+	ret |= gpio_pin_set_value(&gControlSwitch[TIP], control[TIP]);
+	ret |= gpio_pin_set_value(&gControlSwitch[RING], control[RING]);
 	return ret;
 }
 
@@ -111,7 +111,7 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 
 	// Disable input  and output if muting
 	if (mute) {
-		switchSet &= (~0x0101010101010100);
+		switchSet &= (~0x01010101010101FF);
 	}
 
 	// Calculate switch sets with input disconnected
@@ -155,28 +155,32 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 	} else if (lastBypass && !bypass && (switchSetNoOutput == lastSwitchSetNoOutput)) { // We are unbypassing only
 		// Route signal on mt8809
 		PRINT("control: Disabling bypass configuration.\n");
-		uint8_t address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
-		uint8_t address2 = __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
-		ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x0);
-		if (ret != 0) {
-			return ret;
-		}
-		ret = mt8809_set_switch(&gSwitchMatrix, address2, 0x1);
-		if (ret != 0) {
-			return ret;
+		if (!mute) { // Mute has precedence
+			uint8_t address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+			uint8_t address2 = __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+			ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x0);
+			if (ret != 0) {
+				return ret;
+			}
+			ret = mt8809_set_switch(&gSwitchMatrix, address2, 0x1);
+			if (ret != 0) {
+				return ret;
+			}
 		}
 	} else if (!lastBypass && bypass && (switchSetNoOutput == lastSwitchSetNoOutput)) { // We are bypassing only
 		// Unroute signal on mt8809
 		PRINT("control: Enabling bypass configuration\n");
-		uint8_t address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
-		uint8_t address2 = __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
-		ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x0);
-		if (ret != 0) {
-			return ret;
-		}
-		ret = mt8809_set_switch(&gSwitchMatrix, address2, 0x1);
-		if (ret != 0) {
-			return ret;
+		if (!mute) { // Mute has precedence
+			uint8_t address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+			uint8_t address2 = __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+			ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x0);
+			if (ret != 0) {
+				return ret;
+			}
+			ret = mt8809_set_switch(&gSwitchMatrix, address2, 0x1);
+			if (ret != 0) {
+				return ret;
+			}
 		}
 	} else if (switchSet != lastSwitchSet) { // Only program the switch if a change has been made
 		PRINT("control: Reprogramming switch array.\n");
@@ -240,7 +244,7 @@ static int set_new_preset(int preset) {
 	}
 
 	if (gConfig->pedalMode) {
-		leds_set_all(gConfig->controlEnabled, gConfig->currPreset.enabled);
+		leds_set_all(gConfig->currPreset.controlEnabled, gConfig->currPreset.enabled);
 	} else {
 		leds_set_one_hot(preset);
 	}
@@ -267,7 +271,7 @@ static int set_pedal_mode_enabled(bool enable) {
 	PRINT("control: %s pedal mode.\n", enable ? "Enabling" : "Disabling");
 
 	if (gConfig->pedalMode) {
-		leds_set_all(gConfig->controlEnabled, gConfig->currPreset.enabled);
+		leds_set_all(gConfig->currPreset.controlEnabled, gConfig->currPreset.enabled);
 	} else {
 		leds_set_one_hot(gConfig->currPreset.preset);
 		if (gConfig->changeMade) {
@@ -300,12 +304,12 @@ static int set_control_enabled(int control, bool enable) {
 
 	int ret;
 
-	gConfig->controlEnabled[control] = enable;
+	gConfig->currPreset.controlEnabled[control] = enable;
 
 	PRINT("control: %s control %d.\n", enable ? "Enabling" : "Disabling", control);
 
 	// Set new control signals
-	ret = apply_control(gConfig->controlEnabled);
+	ret = apply_control(gConfig->currPreset.controlEnabled);
 	if (ret != 0) {
 		return ret;
 	}
@@ -371,7 +375,7 @@ static int handle_button_pressed_event(enum ae_button button) {
 		case AE_BUTTON_BU:
 		case AE_BUTTON_BD:
 			// Toggle control enabled
-			ret = set_control_enabled(button-AE_BUTTON_BU, !gConfig->controlEnabled[button-AE_BUTTON_BU]);
+			ret = set_control_enabled(button-AE_BUTTON_BU, !gConfig->currPreset.controlEnabled[button-AE_BUTTON_BU]);
 			break;
 		default:
 			ret = -1;
@@ -644,7 +648,7 @@ int control_init() {
 	PRINT("control: Setting initial device configuration.\n");
 
 	// Set control
-	ret = apply_control(gConfig->controlEnabled);
+	ret = apply_control(gConfig->currPreset.controlEnabled);
 
 	// Apply switch configuration
 	ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, gConfig->bypassEnabled, gConfig->muteEnabled);
@@ -657,8 +661,8 @@ int control_init() {
 
 	// Get initial LED values
 	if (gConfig->pedalMode) {
-		ledOn[AE_LED_BU] = gConfig->controlEnabled[TIP];
-		ledOn[AE_LED_BD] = gConfig->controlEnabled[RING];
+		ledOn[AE_LED_BU] = gConfig->currPreset.controlEnabled[TIP];
+		ledOn[AE_LED_BD] = gConfig->currPreset.controlEnabled[RING];
 		for (int i = 0; i < AE_MAX_EFFECTS; i++) {
 			ledOn[i] = gConfig->currPreset.enabled[i];
 		}
