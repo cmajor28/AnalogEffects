@@ -82,6 +82,7 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 
 	int ret;
 	uint64_t switchSet = 0;
+	uint64_t switchSetMod;
 	int lastInput = 0;
 	int pedal;
 	int address;
@@ -103,16 +104,7 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 	}
 
 	// Route last input to output
-	if (bypass) {
-		switchSet |= ((uint64_t)1 << 0);
-	} else {
-		switchSet |= ((uint64_t)1 << lastInput);
-	}
-
-	// Disable input  and output if muting
-	if (mute) {
-		switchSet &= (~0x01010101010101FF);
-	}
+	switchSet |= ((uint64_t)1 << lastInput);
 
 	// Calculate switch sets with input disconnected
 	uint64_t switchSetNoInput = switchSet & (~0x0101010101010101);
@@ -126,11 +118,20 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 	uint64_t switchSetNoInputOutput = switchSetNoInput & switchSetNoOutput;
 	uint64_t lastSwitchSetNoInputOutput = lastSwitchSetNoInput & lastSwitchSetNoOutput;
 
+	// Get actual switch set
+	if (mute) {
+		switchSetMod = switchSetNoInputOutput;
+	} else if (bypass) {
+		switchSetMod = switchSetNoOutput | 0x1;
+	} else {
+		switchSetMod = switchSet;
+	}
+
 	if (lastMute && !mute && (switchSetNoInputOutput == lastSwitchSetNoInputOutput)) { // We are unmuting only
 		// Route input on mt8809
 		PRINT("control: Disabling mute configuration.\n");
 		uint8_t address1 = __builtin_ctzll(switchSet ^ switchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
-		uint8_t address2 = __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+		uint8_t address2 = bypass ? 0x0 : __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
 		ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x1);
 		if (ret != 0) {
 			return ret;
@@ -142,13 +143,13 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 	} else if (!lastMute && mute && (switchSetNoInputOutput == lastSwitchSetNoInputOutput)) { // We are muting only
 		// Unroute input on mt8809
 		PRINT("control: Enabling mute configuration.\n");
-		uint8_t address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
-		uint8_t address2 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
-		ret = mt8809_set_switch(&gSwitchMatrix, address2, 0x0);
+		uint8_t address1 = lastBypass ? 0x0 : __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+		uint8_t address2 = __builtin_ctzll(switchSet ^ switchSetNoInput); // __builtin_ctzll() counts the number of trailing zeros
+		ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x0);
 		if (ret != 0) {
 			return ret;
 		}
-		ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x0);
+		ret = mt8809_set_switch(&gSwitchMatrix, address2, 0x0);
 		if (ret != 0) {
 			return ret;
 		}
@@ -156,7 +157,7 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 		// Route signal on mt8809
 		PRINT("control: Disabling bypass configuration.\n");
 		if (!mute) { // Mute has precedence
-			uint8_t address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+			uint8_t address1 = 0x0;
 			uint8_t address2 = __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
 			ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x0);
 			if (ret != 0) {
@@ -171,8 +172,8 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 		// Unroute signal on mt8809
 		PRINT("control: Enabling bypass configuration\n");
 		if (!mute) { // Mute has precedence
-			uint8_t address1 = __builtin_ctzll(lastSwitchSet ^ lastSwitchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
-			uint8_t address2 = __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+			uint8_t address1 = __builtin_ctzll(switchSet ^ switchSetNoOutput); // __builtin_ctzll() counts the number of trailing zeros
+			uint8_t address2 = 0x0;
 			ret = mt8809_set_switch(&gSwitchMatrix, address1, 0x0);
 			if (ret != 0) {
 				return ret;
@@ -189,7 +190,7 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 		mt8809_reset(&gSwitchMatrix);
 
 		// Set switches on mt8809
-		ret = mt8809_set_switches(&gSwitchMatrix, switchSet);
+		ret = mt8809_set_switches(&gSwitchMatrix, switchSetMod);
 		if (ret != 0) {
 			return ret;
 		}
