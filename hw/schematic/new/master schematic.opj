@@ -21,20 +21,26 @@
     (FALSE)
     (FALSE)
     (FALSE)
-    (FALSE))
+    (FALSE)
+    ( "FALSE"))
   (Folder "Outputs"
     (File ".\master schematic.mnl"
       (Type "LAYOUT Netlist File")))
   (Folder "Referenced Projects")
   (PartMRUSelector
-    (0
-      (LibraryName "D:\ANALOG FX\NEW\MASTER SCHEMATIC.OLB")
+    (mmsz5221.bt1
+      (FullPartName "mmsz5221.bt1.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\PSPICE\ON_ZENER.OLB")
       (DeviceIndex "0"))
     (R
       (FullPartName "R.Normal")
       (LibraryName "D:\ANALOG FX\NEW\DISCRETE.OLB")
       (DeviceIndex "0"))
     (OFFPAGELEFT-R
+      (LibraryName "D:\ANALOG FX\NEW\MASTER SCHEMATIC.OLB")
+      (DeviceIndex "0"))
+    (0
       (LibraryName "D:\ANALOG FX\NEW\MASTER SCHEMATIC.OLB")
       (DeviceIndex "0"))
     (MAX4544
@@ -69,14 +75,9 @@
       (Path "Design Resources"
          "E:\AnalogEffects\hw\schematic\new\master schematic.dsn" "SCHEMATIC1")
       (Path "Design Resources" "Library")
-      (Path "Design Resources" "Library"
-         "E:\AnalogEffects\hw\schematic\new\library2.olb")
-      (Path "Design Resources" "Library"
-         "E:\AnalogEffects\hw\schematic\new\master schematic.olb")
       (Path "Outputs")
       (Select "Design Resources"
-         "E:\AnalogEffects\hw\schematic\new\master schematic.dsn" "SCHEMATIC1"
-         "BEAGLEBONE_BLACK"))
+         "E:\AnalogEffects\hw\schematic\new\master schematic.dsn"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
@@ -86,12 +87,22 @@
     (Doc
       (Type "COrSchematicDoc")
       (Frame
-        (Placement "44 0 1 -1 -1 -1 -1 200 2322 200 910")
-        (Scroll "-552 40")
-        (Zoom "100")
+        (Placement "44 0 1 0 878 -8 -30 233 2460 0 1060")
+        (Scroll "-410 0")
+        (Zoom "140")
         (Occurrence "/"))
       (Path "E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\MASTER SCHEMATIC.DSN")
       (Schematic "SCHEMATIC1")
-      (Page "BEAGLEBONE_BLACK")))
+      (Page "BEAGLEBONE_BLACK"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -30 236 2358 1 711")
+        (Scroll "-467 0")
+        (Zoom "75")
+        (Occurrence "/"))
+      (Path "E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\MASTER SCHEMATIC.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "MATRIX")))
   (MPSSessionName "meadows")
   (ISPCBBASICLICENSE "false"))
