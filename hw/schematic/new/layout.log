@@ -437,3 +437,688 @@ Wed Nov 22 11:31:30 Loaded file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\MINIPB-1.MAX
 Wed Nov 22 11:33:02 Saved as file ~undo.max
 Wed Nov 22 11:35:47 Saved as file BACKUP1.MAX
 Wed Nov 22 11:45:47 Saved as file BACKUP1.MAX
+Thu Jan 11 20:01:38 UserDiv from Layout.INI for AutoECO: 60
+Thu Jan 11 20:01:38 Loaded file C:\CADENCE\SPB_16.2\TOOLS\LAYOUT_PLUS\DATA\_DEFAULT.TCH
+Thu Jan 11 20:01:39 Loaded file I:\AP\DATA1\LAB\LAYOUT LIBRARY\LAYOUT LIBRARY.LLB
+Thu Jan 11 20:01:39 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\BCON100T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\BCON156T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\BGA.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\CLCC.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DCON050T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DCON085T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DIMM050F.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DIMM050T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DIN.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DIP100B.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DIP100T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DSUBT.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DSUBT_HD.LLB
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\ECON100T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\FBUS.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\ISA.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\JUMPER.LLB
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\LAYOUT.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\LCON100T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\PC104.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\PCI.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\PCON100T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\PCON156T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\PGA.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\PLCC.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\QUAD.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\QUADB.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\RELAY.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\RF.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SBUS.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SIMM050F.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SIMM050T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SIMM100F.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SIMM100T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SIP.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SM.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SOG.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SOJ.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\STIFF.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TELE.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_AXIAL.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_CAP_P.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_CYLND.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_DIODE.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_DISC.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_RAD.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TO.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TRAINING.LLB
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\VRES.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\WCON100T.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\XT.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\ZIGZAG.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SM.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\TM_CYLND.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SM.llb
+Thu Jan 11 20:01:39 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SM.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\BCON100T.llb
+Thu Jan 11 20:01:39 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\DIP100T.llb
+Thu Jan 11 20:01:39 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SOG.llb
+Thu Jan 11 20:01:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\SM.llb
+Thu Jan 11 20:01:39 Loaded file I:\AP\DATA1\LAB\LAYOUT LIBRARY\LAYOUT LIBRARY.LLB
+Thu Jan 11 20:03:27 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-1.MAX
+Thu Jan 11 20:07:08 Saved as file ~undo.max
+Thu Jan 11 20:07:22 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:07:22 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:07:24 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 20:07:27 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:07:28 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:09:23 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 20:09:23 Saved as file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 20:09:23 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 20:09:49 Saved as file ~undo.max
+Thu Jan 11 20:09:56 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:09:56 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:09:56 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:09:57 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:09:58 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 20:09:59 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:10:19 Saved as file ~undo.max
+Thu Jan 11 20:11:37 Saved as file ~undo.max
+Thu Jan 11 20:11:53 Saved as file ~undo.max
+Thu Jan 11 20:12:19 Saved as file ~undo.max
+Thu Jan 11 20:12:32 Saved as file ~undo.max
+Thu Jan 11 20:12:36 Saved as file ~undo.max
+Thu Jan 11 20:12:39 Saved as file ~undo.max
+Thu Jan 11 20:13:46 Saved as file ~undo.max
+Thu Jan 11 20:14:10 Saved as file ~undo.max
+Thu Jan 11 20:15:19 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:15:19 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:15:20 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:15:20 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:15:22 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 20:15:23 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 20:15:36 Saved as file ~undo.max
+Thu Jan 11 20:15:54 Saved as file ~undo.max
+Thu Jan 11 20:16:03 Saved as file ~undo.max
+Thu Jan 11 20:16:12 Saved as file ~undo.max
+Thu Jan 11 20:16:18 Saved as file ~undo.max
+Thu Jan 11 20:16:29 Saved as file ~undo.max
+Thu Jan 11 20:16:31 Saved as file BACKUP1.MAX
+Thu Jan 11 20:16:42 Saved as file ~undo.max
+Thu Jan 11 20:17:46 Saved as file ~undo.max
+Thu Jan 11 20:17:52 Saved as file ~undo.max
+Thu Jan 11 20:17:59 Saved as file ~undo.max
+Thu Jan 11 20:18:02 Saved as file ~undo.max
+Thu Jan 11 20:18:08 Saved as file ~undo.max
+Thu Jan 11 20:18:11 Saved as file ~undo.max
+Thu Jan 11 20:18:26 Saved as file ~undo.max
+Thu Jan 11 20:18:32 Saved as file ~undo.max
+Thu Jan 11 20:18:35 Saved as file ~undo.max
+Thu Jan 11 20:18:49 Saved as file ~undo.max
+Thu Jan 11 20:18:55 Saved as file ~undo.max
+Thu Jan 11 20:19:07 Saved as file ~undo.max
+Thu Jan 11 20:19:10 Saved as file ~undo.max
+Thu Jan 11 20:19:20 Saved as file ~undo.max
+Thu Jan 11 20:19:23 Saved as file ~undo.max
+Thu Jan 11 20:19:24 Saved as file ~undo.max
+Thu Jan 11 20:19:29 Saved as file ~undo.max
+Thu Jan 11 20:19:33 Saved as file ~undo.max
+Thu Jan 11 20:19:39 Saved as file ~undo.max
+Thu Jan 11 20:19:45 Saved as file ~undo.max
+Thu Jan 11 20:19:53 Saved as file ~undo.max
+Thu Jan 11 20:19:54 Saved as file ~undo.max
+Thu Jan 11 20:20:04 Saved as file ~undo.max
+Thu Jan 11 20:20:09 Saved as file ~undo.max
+Thu Jan 11 20:20:53 Saved as file ~undo.max
+Thu Jan 11 20:22:04 Saved as file ~undo.max
+Thu Jan 11 20:23:06 Saved as file ~undo.max
+Thu Jan 11 20:25:33 Saved as file ~undo.max
+Thu Jan 11 20:25:40 Saved as file ~undo.max
+Thu Jan 11 20:25:42 Saved as file ~undo.max
+Thu Jan 11 20:25:45 Saved as file ~undo.max
+Thu Jan 11 20:25:48 Saved as file ~undo.max
+Thu Jan 11 20:25:50 Saved as file ~undo.max
+Thu Jan 11 20:26:10 Saved as file ~undo.max
+Thu Jan 11 20:26:24 Saved as file ~undo.max
+Thu Jan 11 20:26:29 Saved as file ~undo.max
+Thu Jan 11 20:26:31 Saved as file BACKUP1.MAX
+Thu Jan 11 20:27:11 Saved as file ~undo.max
+Thu Jan 11 20:27:20 Saved as file ~undo.max
+Thu Jan 11 20:27:23 Saved as file ~undo.max
+Thu Jan 11 20:27:49 Saved as file ~undo.max
+Thu Jan 11 20:28:01 Saved as file ~undo.max
+Thu Jan 11 20:28:08 Saved as file ~undo.max
+Thu Jan 11 20:28:12 Saved as file ~undo.max
+Thu Jan 11 20:28:41 Saved as file ~undo.max
+Thu Jan 11 20:29:29 Saved as file ~undo.max
+Thu Jan 11 20:31:09 Saved as file ~undo.max
+Thu Jan 11 20:31:13 Saved as file ~undo.max
+Thu Jan 11 20:31:16 Saved as file ~undo.max
+Thu Jan 11 20:31:19 Saved as file ~undo.max
+Thu Jan 11 20:31:21 Saved as file ~undo.max
+Thu Jan 11 20:31:22 Saved as file ~undo.max
+Thu Jan 11 20:31:31 Saved as file ~undo.max
+Thu Jan 11 20:31:40 Saved as file ~undo.max
+Thu Jan 11 20:31:44 Saved as file ~undo.max
+Thu Jan 11 20:31:46 Saved as file ~undo.max
+Thu Jan 11 20:32:12 Saved as file ~undo.max
+Thu Jan 11 20:33:47 Saved as file ~undo.max
+Thu Jan 11 20:33:49 Saved as file ~undo.max
+Thu Jan 11 20:33:51 Saved as file ~undo.max
+Thu Jan 11 20:34:30 Saved as file ~undo.max
+Thu Jan 11 20:34:45 Saved as file ~undo.max
+Thu Jan 11 20:34:48 Saved as file ~undo.max
+Thu Jan 11 20:35:01 Saved as file ~undo.max
+Thu Jan 11 20:35:27 Saved as file ~undo.max
+Thu Jan 11 20:36:35 Saved as file BACKUP1.MAX
+Thu Jan 11 20:36:49 Saved as file ~undo.max
+Thu Jan 11 20:36:55 Saved as file ~undo.max
+Thu Jan 11 20:37:22 Saved as file ~undo.max
+Thu Jan 11 20:37:24 Saved as file ~undo.max
+Thu Jan 11 20:37:39 Saved as file ~undo.max
+Thu Jan 11 20:37:49 Saved as file ~undo.max
+Thu Jan 11 20:37:58 Saved as file ~undo.max
+Thu Jan 11 20:38:03 Saved as file ~undo.max
+Thu Jan 11 20:38:11 Saved as file ~undo.max
+Thu Jan 11 20:38:21 Saved as file ~undo.max
+Thu Jan 11 20:38:23 Saved as file ~undo.max
+Thu Jan 11 20:38:33 Saved as file ~undo.max
+Thu Jan 11 20:38:43 Saved as file ~undo.max
+Thu Jan 11 20:38:45 Saved as file ~undo.max
+Thu Jan 11 20:38:59 Saved as file ~undo.max
+Thu Jan 11 20:39:02 Saved as file ~undo.max
+Thu Jan 11 20:39:07 Saved as file ~undo.max
+Thu Jan 11 20:39:12 Saved as file ~undo.max
+Thu Jan 11 20:39:15 Saved as file ~undo.max
+Thu Jan 11 20:39:17 Saved as file ~undo.max
+Thu Jan 11 20:39:20 Saved as file ~undo.max
+Thu Jan 11 20:39:52 Saved as file ~undo.max
+Thu Jan 11 20:40:01 Saved as file ~undo.max
+Thu Jan 11 20:41:33 Saved as file ~undo.max
+Thu Jan 11 20:41:43 Saved as file ~undo.max
+Thu Jan 11 20:41:50 Saved as file ~undo.max
+Thu Jan 11 20:46:05 Saved as file ~undo.max
+Thu Jan 11 20:46:07 Saved as file ~undo.max
+Thu Jan 11 20:46:29 Saved as file ~undo.max
+Thu Jan 11 20:46:32 Saved as file BACKUP1.MAX
+Thu Jan 11 20:47:12 Saved as file ~undo.max
+Thu Jan 11 20:47:20 Saved as file ~undo.max
+Thu Jan 11 20:47:31 Saved as file ~undo.max
+Thu Jan 11 20:48:42 Saved as file ~undo.max
+Thu Jan 11 20:48:52 Saved as file ~undo.max
+Thu Jan 11 20:49:17 Saved as file ~undo.max
+Thu Jan 11 20:49:25 Saved as file ~undo.max
+Thu Jan 11 20:49:26 Saved as file ~undo.max
+Thu Jan 11 20:50:09 Saved as file ~undo.max
+Thu Jan 11 20:50:18 Saved as file ~undo.max
+Thu Jan 11 20:50:35 Saved as file ~undo.max
+Thu Jan 11 20:51:19 Saved as file ~undo.max
+Thu Jan 11 20:51:26 Saved as file ~undo.max
+Thu Jan 11 20:51:44 Saved as file ~undo.max
+Thu Jan 11 20:52:48 Saved as file ~undo.max
+Thu Jan 11 20:52:58 Saved as file ~undo.max
+Thu Jan 11 20:53:05 Saved as file ~undo.max
+Thu Jan 11 20:53:34 Saved as file ~undo.max
+Thu Jan 11 20:54:04 Saved as file ~undo.max
+Thu Jan 11 20:54:52 Saved as file ~undo.max
+Thu Jan 11 20:55:15 Saved as file ~undo.max
+Thu Jan 11 20:55:23 Saved as file ~undo.max
+Thu Jan 11 20:55:53 Saved as file ~undo.max
+Thu Jan 11 20:56:03 Saved as file ~undo.max
+Thu Jan 11 20:56:07 Saved as file ~undo.max
+Thu Jan 11 20:56:20 Saved as file ~undo.max
+Thu Jan 11 20:56:32 Saved as file BACKUP1.MAX
+Thu Jan 11 20:56:41 Saved as file ~undo.max
+Thu Jan 11 20:56:56 Saved as file ~undo.max
+Thu Jan 11 20:57:00 Saved as file ~undo.max
+Thu Jan 11 20:57:03 Saved as file ~undo.max
+Thu Jan 11 20:57:15 Saved as file ~undo.max
+Thu Jan 11 20:57:28 Saved as file ~undo.max
+Thu Jan 11 20:57:35 Saved as file ~undo.max
+Thu Jan 11 20:57:43 Saved as file ~undo.max
+Thu Jan 11 20:57:46 Saved as file ~undo.max
+Thu Jan 11 20:57:55 Saved as file ~undo.max
+Thu Jan 11 20:59:24 Saved as file ~undo.max
+Thu Jan 11 20:59:40 Saved as file ~undo.max
+Thu Jan 11 21:00:05 Saved as file ~undo.max
+Thu Jan 11 21:00:07 Saved as file ~undo.max
+Thu Jan 11 21:00:14 Saved as file ~undo.max
+Thu Jan 11 21:00:17 Saved as file ~undo.max
+Thu Jan 11 21:00:58 Saved as file ~undo.max
+Thu Jan 11 21:01:36 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-1.MAX
+Thu Jan 11 21:01:51 Saved as file ~undo.max
+Thu Jan 11 21:01:57 Saved as file ~undo.max
+Thu Jan 11 21:02:04 Saved as file ~undo.max
+Thu Jan 11 21:02:25 Saved as file ~undo.max
+Thu Jan 11 21:03:16 Saved as file ~undo.max
+Thu Jan 11 21:03:50 Saved as file ~undo.max
+Thu Jan 11 21:04:39 Saved as file ~undo.max
+Thu Jan 11 21:04:46 Saved as file ~undo.max
+Thu Jan 11 21:04:47 Saved as file ~undo.max
+Thu Jan 11 21:05:10 Saved as file ~undo.max
+Thu Jan 11 21:05:16 Saved as file ~undo.max
+Thu Jan 11 21:05:20 Saved as file ~undo.max
+Thu Jan 11 21:05:29 Saved as file ~undo.max
+Thu Jan 11 21:05:32 Saved as file ~undo.max
+Thu Jan 11 21:05:59 Saved as file ~undo.max
+Thu Jan 11 21:06:04 Saved as file ~undo.max
+Thu Jan 11 21:06:16 Saved as file ~undo.max
+Thu Jan 11 21:06:19 Saved as file ~undo.max
+Thu Jan 11 21:06:26 Saved as file ~undo.max
+Thu Jan 11 21:06:31 Saved as file ~undo.max
+Thu Jan 11 21:06:32 Saved as file BACKUP1.MAX
+Thu Jan 11 21:06:36 Saved as file ~undo.max
+Thu Jan 11 21:06:44 Saved as file ~undo.max
+Thu Jan 11 21:06:48 Saved as file ~undo.max
+Thu Jan 11 21:06:55 Saved as file ~undo.max
+Thu Jan 11 21:06:58 Saved as file ~undo.max
+Thu Jan 11 21:07:01 Saved as file ~undo.max
+Thu Jan 11 21:07:07 Saved as file ~undo.max
+Thu Jan 11 21:07:15 Saved as file ~undo.max
+Thu Jan 11 21:07:20 Saved as file ~undo.max
+Thu Jan 11 21:07:23 Saved as file ~undo.max
+Thu Jan 11 21:07:35 Saved as file ~undo.max
+Thu Jan 11 21:07:41 Saved as file ~undo.max
+Thu Jan 11 21:07:50 Saved as file ~undo.max
+Thu Jan 11 21:07:54 Saved as file ~undo.max
+Thu Jan 11 21:08:02 Saved as file ~undo.max
+Thu Jan 11 21:08:09 Saved as file ~undo.max
+Thu Jan 11 21:08:15 Saved as file ~undo.max
+Thu Jan 11 21:08:19 Saved as file ~undo.max
+Thu Jan 11 21:08:27 Saved as file ~undo.max
+Thu Jan 11 21:08:30 Saved as file ~undo.max
+Thu Jan 11 21:08:35 Saved as file ~undo.max
+Thu Jan 11 21:08:36 Saved as file ~undo.max
+Thu Jan 11 21:08:40 Saved as file ~undo.max
+Thu Jan 11 21:08:46 Saved as file ~undo.max
+Thu Jan 11 21:08:50 Saved as file ~undo.max
+Thu Jan 11 21:09:02 Saved as file ~undo.max
+Thu Jan 11 21:09:07 Saved as file ~undo.max
+Thu Jan 11 21:09:10 Saved as file ~undo.max
+Thu Jan 11 21:09:21 Saved as file ~undo.max
+Thu Jan 11 21:09:23 Saved as file ~undo.max
+Thu Jan 11 21:12:01 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-1.MAX
+Thu Jan 11 21:14:05 Saved as file ~undo.max
+Thu Jan 11 21:14:28 Saved as file ~undo.max
+Thu Jan 11 21:14:32 Saved as file ~undo.max
+Thu Jan 11 21:14:40 Saved as file ~undo.max
+Thu Jan 11 21:14:52 Saved as file ~undo.max
+Thu Jan 11 21:14:54 Saved as file ~undo.max
+Thu Jan 11 21:15:23 Saved as file ~undo.max
+Thu Jan 11 21:15:26 Saved as file ~undo.max
+Thu Jan 11 21:17:33 Saved as file BACKUP1.MAX
+Thu Jan 11 21:22:20 Saved as file ~undo.max
+Thu Jan 11 21:22:26 Saved as file ~undo.max
+Thu Jan 11 21:22:29 Saved as file ~undo.max
+Thu Jan 11 21:22:32 Saved as file ~undo.max
+Thu Jan 11 21:24:02 Saved as file ~undo.max
+Thu Jan 11 21:24:08 Saved as file ~undo.max
+Thu Jan 11 21:24:12 Saved as file ~undo.max
+Thu Jan 11 21:24:15 Saved as file ~undo.max
+Thu Jan 11 21:24:18 Saved as file ~undo.max
+Thu Jan 11 21:24:41 Saved as file ~undo.max
+Thu Jan 11 21:24:50 Saved as file ~undo.max
+Thu Jan 11 21:24:51 Saved as file ~undo.max
+Thu Jan 11 21:25:03 Saved as file ~undo.max
+Thu Jan 11 21:25:08 Saved as file ~undo.max
+Thu Jan 11 21:25:11 Saved as file ~undo.max
+Thu Jan 11 21:25:14 Saved as file ~undo.max
+Thu Jan 11 21:25:19 Saved as file ~undo.max
+Thu Jan 11 21:25:21 Saved as file ~undo.max
+Thu Jan 11 21:25:38 Saved as file ~undo.max
+Thu Jan 11 21:27:02 Saved as file ~undo.max
+Thu Jan 11 21:27:04 Saved as file ~undo.max
+Thu Jan 11 21:27:24 Saved as file ~undo.max
+Thu Jan 11 21:27:29 Saved as file ~undo.max
+Thu Jan 11 21:27:33 Saved as file BACKUP1.MAX
+Thu Jan 11 21:27:39 Saved as file ~undo.max
+Thu Jan 11 21:27:42 Saved as file ~undo.max
+Thu Jan 11 21:27:54 Saved as file ~undo.max
+Thu Jan 11 21:27:58 Saved as file ~undo.max
+Thu Jan 11 21:28:00 Saved as file ~undo.max
+Thu Jan 11 21:28:03 Saved as file ~undo.max
+Thu Jan 11 21:28:08 Saved as file ~undo.max
+Thu Jan 11 21:28:18 Saved as file ~undo.max
+Thu Jan 11 21:28:20 Saved as file ~undo.max
+Thu Jan 11 21:28:32 Saved as file ~undo.max
+Thu Jan 11 21:28:47 Saved as file ~undo.max
+Thu Jan 11 21:28:52 Saved as file ~undo.max
+Thu Jan 11 21:28:57 Saved as file ~undo.max
+Thu Jan 11 21:29:04 Saved as file ~undo.max
+Thu Jan 11 21:29:11 Saved as file ~undo.max
+Thu Jan 11 21:29:14 Saved as file ~undo.max
+Thu Jan 11 21:29:18 Saved as file ~undo.max
+Thu Jan 11 21:29:25 Saved as file ~undo.max
+Thu Jan 11 21:29:28 Saved as file ~undo.max
+Thu Jan 11 21:30:08 Saved as file ~undo.max
+Thu Jan 11 21:31:06 Saved as file ~undo.max
+Thu Jan 11 21:31:11 Saved as file ~undo.max
+Thu Jan 11 21:31:36 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-1.MAX
+Thu Jan 11 21:32:22 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-1.MAX
+Thu Jan 11 21:32:32 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:32 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:33 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:33 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:34 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:34 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:34 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:34 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:34 Routed 3 connections in 2 seconds.
+Thu Jan 11 21:32:34 Total is now 82 out of 203 (40%).
+Thu Jan 11 21:32:34 Saved as file SWEEP1.MAX
+Thu Jan 11 21:32:36 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:36 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:40 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:41 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:43 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:43 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:43 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:43 Saved as file BACKUP1.MAX
+Thu Jan 11 21:32:43 Routed 182 connections in 9 seconds.
+Thu Jan 11 21:32:43 Total is now 195 out of 203 (96%).
+Thu Jan 11 21:32:43 Saved as file SWEEP2.MAX
+Thu Jan 11 21:32:47 Routed 5 connections in 3 seconds.
+Thu Jan 11 21:32:47 Total is now 200 out of 203 (98%).
+Thu Jan 11 21:32:47 Saved as file SWEEP3.MAX
+Thu Jan 11 21:32:48 Routed 2 connections in 1 seconds.
+Thu Jan 11 21:32:48 Total is now 201 out of 203 (99%).
+Thu Jan 11 21:32:48 Saved as file SWEEP4.MAX
+Thu Jan 11 21:32:49 Routed 2 connections in 0 seconds.
+Thu Jan 11 21:32:49 Total is now 203 out of 203 (100%).
+Thu Jan 11 21:32:49 Saved as file SWEEP5.MAX
+Thu Jan 11 21:33:46 Loaded file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-1.MAX
+Thu Jan 11 21:34:29 Saved as file ~undo.max
+Thu Jan 11 21:35:01 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-1.MAX
+Thu Jan 11 21:35:06 Saved as file BACKUP1.MAX
+Thu Jan 11 21:35:06 Saved as file BACKUP1.MAX
+Thu Jan 11 21:35:06 Routed 3 connections in 1 seconds.
+Thu Jan 11 21:35:06 Total is now 82 out of 203 (40%).
+Thu Jan 11 21:35:06 Saved as file SWEEP1.MAX
+Thu Jan 11 21:35:10 Saved as file BACKUP1.MAX
+Thu Jan 11 21:35:12 Saved as file BACKUP1.MAX
+Thu Jan 11 21:35:13 Saved as file BACKUP1.MAX
+Thu Jan 11 21:35:13 Routed 158 connections in 7 seconds.
+Thu Jan 11 21:35:13 Total is now 199 out of 203 (98%).
+Thu Jan 11 21:35:13 Saved as file SWEEP2.MAX
+Thu Jan 11 21:35:15 Routed 3 connections in 2 seconds.
+Thu Jan 11 21:35:15 Total is now 202 out of 203 (99%).
+Thu Jan 11 21:35:15 Saved as file SWEEP3.MAX
+Thu Jan 11 21:35:17 Routed 1 connections in 1 seconds.
+Thu Jan 11 21:35:17 Total is now 202 out of 203 (99%).
+Thu Jan 11 21:35:17 Saved as file SWEEP4.MAX
+Thu Jan 11 21:35:19 Routed 1 connections in 1 seconds.
+Thu Jan 11 21:35:19 Total is now 202 out of 203 (99%).
+Thu Jan 11 21:35:19 Saved as file SWEEP5.MAX
+Thu Jan 11 21:37:59 Saved as file ~undo.max
+Thu Jan 11 21:38:03 Saved as file BACKUP1.MAX
+Thu Jan 11 21:40:18 Saved as file ~undo.max
+Thu Jan 11 21:42:42 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-2.MAX
+Thu Jan 11 21:44:34 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 21:44:34 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 21:44:37 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 21:44:49 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 21:45:14 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 21:46:39 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 21:46:39 Saved as file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 21:46:39 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 21:47:32 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 21:47:32 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 21:47:35 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Thu Jan 11 21:47:37 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 21:47:41 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Thu Jan 11 21:47:53 Saved as file ~undo.max
+Thu Jan 11 21:47:59 Saved as file ~undo.max
+Thu Jan 11 21:48:10 Saved as file ~undo.max
+Thu Jan 11 21:48:18 Saved as file ~undo.max
+Thu Jan 11 21:48:21 Saved as file ~undo.max
+Thu Jan 11 21:48:27 Saved as file ~undo.max
+Thu Jan 11 21:48:36 Saved as file ~undo.max
+Thu Jan 11 21:48:47 Saved as file ~undo.max
+Thu Jan 11 21:49:04 Saved as file BACKUP1.MAX
+Thu Jan 11 21:49:09 Saved as file ~undo.max
+Thu Jan 11 21:49:16 Saved as file ~undo.max
+Thu Jan 11 21:49:22 Saved as file ~undo.max
+Thu Jan 11 21:49:26 Saved as file ~undo.max
+Thu Jan 11 21:49:32 Saved as file ~undo.max
+Thu Jan 11 21:49:43 Saved as file ~undo.max
+Thu Jan 11 21:50:02 Saved as file ~undo.max
+Thu Jan 11 21:50:12 Saved as file ~undo.max
+Thu Jan 11 21:50:18 Saved as file ~undo.max
+Thu Jan 11 21:50:22 Saved as file ~undo.max
+Thu Jan 11 21:50:45 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-2.MAX
+Sat Jan 13 15:27:55 Loaded file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-1.MAX
+Sat Jan 13 15:28:16 Saved as file ~undo.max
+Sat Jan 13 15:28:23 Saved as file ~undo.max
+Sat Jan 13 15:28:53 Saved as file ~undo.max
+Sat Jan 13 15:29:14 Saved as file ~undo.max
+Sat Jan 13 15:29:16 Saved as file ~undo2.max
+Sat Jan 13 15:29:16 Loaded file ~undo.max
+Sat Jan 13 15:29:26 Saved as file ~undo.max
+Sat Jan 13 15:29:38 Saved as file ~undo.max
+Sat Jan 13 15:30:04 Saved as file ~undo.max
+Sat Jan 13 15:30:07 Saved as file ~undo.max
+Sat Jan 13 15:30:14 Saved as file ~undo.max
+Sat Jan 13 15:30:20 Saved as file ~undo.max
+Sat Jan 13 15:30:23 Saved as file ~undo.max
+Sat Jan 13 15:30:28 Saved as file ~undo.max
+Sat Jan 13 15:30:32 Saved as file ~undo.max
+Sat Jan 13 15:30:33 Saved as file ~undo.max
+Sat Jan 13 15:30:36 Saved as file ~undo.max
+Sat Jan 13 15:30:38 Saved as file ~undo.max
+Sat Jan 13 15:32:28 Saved as file ~undo.max
+Sat Jan 13 15:32:45 Saved as file ~undo.max
+Sat Jan 13 15:32:52 Saved as file ~undo.max
+Sat Jan 13 15:32:58 Saved as file ~undo.max
+Sat Jan 13 15:33:13 Saved as file ~undo.max
+Sat Jan 13 15:33:52 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-1.MAX
+Sat Jan 13 15:34:07 Saved as file BACKUP1.MAX
+Sat Jan 13 15:34:07 Saved as file BACKUP1.MAX
+Sat Jan 13 15:34:08 Saved as file BACKUP1.MAX
+Sat Jan 13 15:34:08 Routed 3 connections in 4 seconds.
+Sat Jan 13 15:34:08 Total is now 81 out of 203 (39%).
+Sat Jan 13 15:34:08 Saved as file SWEEP1.MAX
+Sat Jan 13 15:34:12 Saved as file BACKUP1.MAX
+Sat Jan 13 15:34:14 Saved as file BACKUP1.MAX
+Sat Jan 13 15:34:16 Saved as file BACKUP1.MAX
+Sat Jan 13 15:34:16 Routed 142 connections in 7 seconds.
+Sat Jan 13 15:34:16 Total is now 192 out of 203 (94%).
+Sat Jan 13 15:34:16 Saved as file SWEEP2.MAX
+Sat Jan 13 15:34:21 Routed 5 connections in 5 seconds.
+Sat Jan 13 15:34:21 Total is now 197 out of 203 (97%).
+Sat Jan 13 15:34:21 Saved as file SWEEP3.MAX
+Sat Jan 13 15:34:27 Routed 2 connections in 6 seconds.
+Sat Jan 13 15:34:27 Total is now 199 out of 203 (98%).
+Sat Jan 13 15:34:27 Saved as file SWEEP4.MAX
+Sat Jan 13 15:34:32 Routed 3 connections in 4 seconds.
+Sat Jan 13 15:34:32 Total is now 202 out of 203 (99%).
+Sat Jan 13 15:34:32 Saved as file SWEEP5.MAX
+Sat Jan 13 15:35:20 Loaded file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-1.MAX
+Sat Jan 13 15:35:48 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-1.MAX
+Sat Jan 13 15:35:51 Saved as file ~undo.max
+Sat Jan 13 15:35:51 Saved as file BACKUP1.MAX
+Sat Jan 13 15:35:52 Saved as file BACKUP1.MAX
+Sat Jan 13 15:35:52 Saved as file BACKUP1.MAX
+Sat Jan 13 15:35:52 Saved as file BACKUP1.MAX
+Sat Jan 13 15:35:52 Saved as file BACKUP1.MAX
+Sat Jan 13 15:35:52 Saved as file BACKUP1.MAX
+Sat Jan 13 15:35:53 Saved as file BACKUP1.MAX
+Sat Jan 13 15:35:53 Saved as file BACKUP1.MAX
+Sat Jan 13 15:35:53 Saved as file BACKUP1.MAX
+Sat Jan 13 15:35:53 Routed 3 connections in 2 seconds.
+Sat Jan 13 15:35:53 Total is now 81 out of 203 (39%).
+Sat Jan 13 15:35:53 Saved as file SWEEP1.MAX
+Sat Jan 13 15:35:57 Saved as file BACKUP1.MAX
+Sat Jan 13 15:35:58 Saved as file BACKUP1.MAX
+Sat Jan 13 15:35:58 Saved as file BACKUP1.MAX
+Sat Jan 13 15:36:01 Saved as file BACKUP1.MAX
+Sat Jan 13 15:36:01 Saved as file BACKUP1.MAX
+Sat Jan 13 15:36:01 Saved as file BACKUP1.MAX
+Sat Jan 13 15:36:03 Saved as file BACKUP1.MAX
+Sat Jan 13 15:36:03 Saved as file BACKUP1.MAX
+Sat Jan 13 15:36:04 Saved as file BACKUP1.MAX
+Sat Jan 13 15:36:04 Routed 181 connections in 10 seconds.
+Sat Jan 13 15:36:04 Total is now 197 out of 203 (97%).
+Sat Jan 13 15:36:04 Saved as file SWEEP2.MAX
+Sat Jan 13 15:36:07 Routed 6 connections in 3 seconds.
+Sat Jan 13 15:36:07 Total is now 203 out of 203 (100%).
+Sat Jan 13 15:36:07 Saved as file SWEEP3.MAX
+Sat Jan 13 15:36:08 No new connections routed.
+Sat Jan 13 15:36:08 Total is now 203 out of 203 (100%).
+Sat Jan 13 15:36:08 Saved as file SWEEP4.MAX
+Sat Jan 13 15:36:08 No new connections routed.
+Sat Jan 13 15:36:08 Total is now 203 out of 203 (100%).
+Sat Jan 13 15:36:08 Saved as file SWEEP5.MAX
+Sat Jan 13 15:36:36 Saved as file ~undo.max
+Sat Jan 13 15:37:24 Saved as file BACKUP1.MAX
+Sat Jan 13 15:38:51 Saved as file ~undo.max
+Sat Jan 13 15:47:22 Saved as file BACKUP1.MAX
+Sat Jan 13 15:48:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sat Jan 13 15:48:39 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sat Jan 13 15:48:42 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Sat Jan 13 15:48:44 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sat Jan 13 15:48:44 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sat Jan 13 15:48:49 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Sat Jan 13 15:48:55 Saved as file ~undo.max
+Sat Jan 13 15:49:00 Saved as file ~undo.max
+Sat Jan 13 15:49:11 Saved as file ~undo.max
+Sat Jan 13 15:49:22 Saved as file ~undo.max
+Sat Jan 13 15:49:43 Saved as file ~undo.max
+Sat Jan 13 15:49:47 Saved as file ~undo.max
+Sat Jan 13 15:49:55 Saved as file ~undo.max
+Sat Jan 13 15:49:58 Saved as file ~undo.max
+Sat Jan 13 15:57:22 Saved as file BACKUP1.MAX
+Sat Jan 13 16:00:28 Saved as file ~undo.max
+Sat Jan 13 16:03:09 Saved as file ~undo.max
+Sat Jan 13 16:03:25 Saved as file ~undo.max
+Sat Jan 13 16:07:52 Saved as file BACKUP1.MAX
+Sat Jan 13 16:08:36 Saved as file ~undo.max
+Sat Jan 13 16:09:50 Saved as file ~undo.max
+Sat Jan 13 16:09:57 Saved as file ~undo.max
+Sat Jan 13 16:10:07 Saved as file ~undo.max
+Sat Jan 13 16:11:05 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-2.MAX
+Sat Jan 13 16:13:21 Loaded file E:\AnalogEffects\hw\schematic\new\DESIGN_II-2.MAX
+Mon Jan 15 17:18:48 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:18:48 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:18:50 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Mon Jan 15 17:18:52 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:19:08 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:19:08 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:19:09 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:19:09 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:19:10 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Mon Jan 15 17:19:13 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:19:26 Saved as file ~undo.max
+Mon Jan 15 17:23:53 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:23:53 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:23:54 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:23:54 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:23:55 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Mon Jan 15 17:23:58 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:24:11 Saved as file BACKUP1.MAX
+Mon Jan 15 17:24:19 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:24:19 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:24:20 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:24:20 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:24:22 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Mon Jan 15 17:24:24 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:24:37 Saved as file ~undo.max
+Mon Jan 15 17:24:45 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:24:45 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:24:46 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:24:46 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:24:47 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Mon Jan 15 17:24:49 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:25:02 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:25:02 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:25:03 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:25:03 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:25:04 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Mon Jan 15 17:25:06 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 15 17:34:11 Saved as file BACKUP1.MAX
+Mon Jan 15 17:36:10 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-2.MAX
+Mon Jan 22 17:23:55 Saved as file ~undo.max
+Mon Jan 22 17:23:58 Saved as file ~undo.max
+Mon Jan 22 17:25:21 Saved as file ~undo.max
+Mon Jan 22 17:29:52 Saved as file BACKUP1.MAX
+Mon Jan 22 17:30:18 Saved as file ~undo.max
+Mon Jan 22 17:30:34 Saved as file ~undo.max
+Mon Jan 22 17:31:03 Saved as file ~undo.max
+Mon Jan 22 17:40:52 Saved as file BACKUP1.MAX
+Mon Jan 22 17:42:32 Saved as file ~undo.max
+Mon Jan 22 17:48:05 Saved as file ~undo.max
+Mon Jan 22 17:48:55 Saved as file ~undo.max
+Mon Jan 22 17:51:05 Saved as file ~undo.max
+Mon Jan 22 17:52:07 Saved as file ~undo.max
+Mon Jan 22 17:52:47 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 22 17:52:47 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 22 17:52:50 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Mon Jan 22 17:52:52 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 22 17:53:35 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\padstack.llb
+Mon Jan 22 17:54:07 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\padstack.llb
+Mon Jan 22 17:54:29 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\padstack.llb
+Mon Jan 22 17:54:44 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\padstack.llb
+Mon Jan 22 17:55:41 Saved as file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 22 17:56:13 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Mon Jan 22 17:56:17 Saved as file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Mon Jan 22 17:56:17 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Mon Jan 22 17:56:17 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 22 17:56:48 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 22 17:56:48 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 22 17:56:49 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 22 17:56:49 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 22 17:56:50 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Mon Jan 22 17:56:52 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Mon Jan 22 17:57:08 Saved as file ~undo.max
+Mon Jan 22 17:57:23 Saved as file BACKUP1.MAX
+Mon Jan 22 17:57:36 Saved as file ~undo.max
+Mon Jan 22 17:58:35 Saved as file ~undo.max
+Mon Jan 22 18:07:23 Saved as file BACKUP1.MAX
+Mon Jan 22 18:13:02 Saved as file ~undo.max
+Mon Jan 22 18:18:23 Saved as file BACKUP1.MAX
+Mon Jan 22 18:19:02 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-2.MAX
+Tue Jan 23 11:25:12 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:25:12 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:25:14 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Tue Jan 23 11:25:16 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:26:20 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Tue Jan 23 11:26:20 Saved as file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Tue Jan 23 11:26:20 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Tue Jan 23 11:26:48 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:26:48 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:26:49 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:26:49 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:26:51 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Tue Jan 23 11:26:53 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:28:54 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:28:54 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:28:55 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:28:55 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:28:57 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Tue Jan 23 11:28:58 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:28:58 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Tue Jan 23 11:29:37 Saved as file ~undo.max
+Tue Jan 23 11:29:40 Saved as file ~undo.max
+Tue Jan 23 11:31:01 Saved as file ~undo.max
+Tue Jan 23 11:31:44 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-2.MAX
+Wed Jan 24 09:06:29 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\default.tch
+Wed Jan 24 09:06:29 Saved as file E:\AnalogEffects\hw\schematic\new\msu_logo.max
+Wed Jan 24 09:07:22 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\default.tch
+Wed Jan 24 09:08:13 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\default.tch
+Wed Jan 24 09:09:05 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\default.tch
+Wed Jan 24 09:09:05 Saved as file E:\AnalogEffects\hw\schematic\new\Pedal_matrix.max
+Wed Jan 24 09:10:26 Saved as file ~undo.max
+Wed Jan 24 09:16:23 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Wed Jan 24 09:16:23 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Wed Jan 24 09:16:25 Loaded file I:\AP\DATA1\LAB\LAYOUT LIBRARY\LAYOUT LIBRARY.LLB
+Wed Jan 24 09:16:25 Loaded file I:\GENERAL\COTF\USERS\MEADOWS\MEADOWS.LLB
+Wed Jan 24 09:16:28 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Wed Jan 24 09:16:29 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Wed Jan 24 09:16:30 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Wed Jan 24 09:16:32 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Wed Jan 24 09:16:32 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\data\template.imp
+Wed Jan 24 09:18:15 Loaded file C:\Cadence\SPB_16.2\tools\Layout_Plus\library\padstack.llb
+Wed Jan 24 09:19:49 Saved as file ~undo.max
+Wed Jan 24 09:22:16 Saved as file BACKUP1.MAX
+Wed Jan 24 09:32:46 Saved as file BACKUP1.MAX
+Wed Jan 24 09:42:47 Saved as file BACKUP1.MAX
+Wed Jan 24 09:45:00 Saved as file E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW\DESIGN_II-2.MAX

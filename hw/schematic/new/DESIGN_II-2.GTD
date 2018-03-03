@@ -1,0 +1,126 @@
+{Program	GerbTool for Layout
+	{Version	8.0}
+	{Created	Wed Jan 24 09:20:12 2018}
+}
+{Environment
+	{FilesPath  E:\ANALOGEFFECTS\HW\SCHEMATIC\NEW}
+}
+{Layers
+	{Layer  1
+		{File        DESIGN_II-2.TOP}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Green}
+		{DrawColor   Green}
+		{Type        Top}
+	}
+	{Layer  2
+		{File        DESIGN_II-2.GND}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  gray50}
+		{DrawColor   gray50}
+		{Type        Plane}
+	}
+	{Layer  3
+		{File        DESIGN_II-2.PWR}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  vga16green}
+		{DrawColor   vga16green}
+		{Type        Plane}
+	}
+	{Layer  4
+		{File        DESIGN_II-2.BOT}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Red}
+		{DrawColor   Red}
+		{Type        Bottom}
+	}
+	{Layer  5
+		{File        DESIGN_II-2.SMT}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Green}
+		{DrawColor   Green}
+		{Type        Other}
+	}
+	{Layer  6
+		{File        DESIGN_II-2.SMB}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  vga16yellow}
+		{DrawColor   vga16yellow}
+		{Type        Other}
+	}
+	{Layer  7
+		{File        DESIGN_II-2.SST}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  White}
+		{DrawColor   White}
+		{Type        Other}
+	}
+	{Layer  8
+		{File        DESIGN_II-2.SSB}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Yellow}
+		{DrawColor   Yellow}
+		{Type        Other}
+	}
+	{Layer  9
+		{File        DESIGN_II-2.AST}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Green}
+		{DrawColor   Green}
+		{Type        Other}
+	}
+	{Layer  10
+		{File        DESIGN_II-2.DRD}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Red}
+		{DrawColor   Red}
+		{Type        Other}
+	}
+	{Layer  11
+		{File        DESIGN_II-2.FAB}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Green}
+		{DrawColor   Green}
+		{Type        Other}
+	}
+}
+{Format Gerber
+	{Dialect           RS274X}
+	{m.n               3.4}
+	{Mode              Absolute}
+	{ZeroSuppression   Leading}
+	{Terminator        0x2a, 0xD, 0xA}
+	{Metric            No}
+	{Modal             No}
+	{UserData          Yes}
+	{Nets              No}
+	{Gcmds             Yes}
+	{CharSet           ASCII}
+	{Arcs360           No}
+	{ArcsModal         Yes}
+	{HonorCrLf         No}
+	{Comments          Yes}
+	{Flags             0}
+}
