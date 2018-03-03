@@ -18,14 +18,14 @@ static int clear_switches(struct mt8809 *mt8809) {
 
 	PRINT("mt8809: Clearing switch matrix.\n");
 
-	// Set active low reset to 0 (swapped due to level shifter)
-	gpio_set_one_hot(mt8809->pinMap[MT8809_RESET].gpio, GPIO_SETDATAOUT, mt8809->pinMap[MT8809_RESET].pin);
+	// Set active low reset to 0
+	gpio_set_one_hot(mt8809->pinMap[MT8809_RESET].gpio, GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_RESET].pin);
 
 	// Minimum 40ns pulse width
 	//sleep2(NANOSECONDS, 40);
 
-	// Set active low reset to 1 (swapped due to level shifter)
-	gpio_set_one_hot(mt8809->pinMap[MT8809_RESET].gpio, GPIO_CLEARDATAOUT, mt8809->pinMap[MT8809_RESET].pin);
+	// Set active low reset to 1
+	gpio_set_one_hot(mt8809->pinMap[MT8809_RESET].gpio, GPIO_SETDATAOUT, mt8809->pinMap[MT8809_RESET].pin);
 
 	// Minimum 10ns setup time
 	//sleep2(NANOSECONDS, 10);
