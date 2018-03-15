@@ -36,14 +36,14 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 #define LED_PINS_INIT()																		\
 		LED_CONTROL_INITIALIZER(															\
 			ARRAY_INITIALIZER({																\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 0),	/* led_b1 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 1),	/* led_b2 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 2),	/* led_b3 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 3),	/* led_b4 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 4),	/* led_b5 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 5),	/* led_b6 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 6),	/* led_b7 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 7),	/* led_b8 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 3),	/* led_b1 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 2),	/* led_b2 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 1),	/* led_b3 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 0),	/* led_b4 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 7),	/* led_b5 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 6),	/* led_b6 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 5),	/* led_b7 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 4),	/* led_b8 */	\
 				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 9),	/* led_bu */	\
 				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_LEDS], 8)	/* led_bd */	\
 			})																				\
@@ -76,16 +76,16 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 #define BUTTON_PINS_INIT()																		\
 		BUTTON_CONTROL_INITIALIZER(																\
 			ARRAY_INITIALIZER({																	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 0),	/* button_b1 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 1),	/* button_b2 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 2),	/* button_b3 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 3),	/* button_b4 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 4),	/* button_b5 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 5),	/* button_b6 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 6),	/* button_b7 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 7),	/* button_b8 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 9),	/* button_bu */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 8)	/* button_bd */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 3),	/* button_b1 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 2),	/* button_b2 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 1),	/* button_b3 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 0),	/* button_b4 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 7),	/* button_b5 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 6),	/* button_b6 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 5),	/* button_b7 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 4),	/* button_b8 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 8),	/* button_bu */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_BUTTONS], 9)	/* button_bd */	\
 			})																					\
 		)
 

@@ -428,20 +428,20 @@ static int handle_button_held_event(enum ae_button button) {
 
 	switch (button) {
 	case AE_BUTTON_B1:
-		// Toggle mode
-		ret = set_pedal_mode_enabled(!gConfig->pedalMode);
-		if (gControlCallbacks.modeChanged) {
-			gControlCallbacks.modeChanged(gConfig->pedalMode);
-		}
-		break;
 	case AE_BUTTON_B2:
 	case AE_BUTTON_B3:
 	case AE_BUTTON_B4:
 	case AE_BUTTON_B5:
 	case AE_BUTTON_B6:
 	case AE_BUTTON_B7:
-	case AE_BUTTON_B8:
 		ret = 0;
+		break;
+	case AE_BUTTON_B8:
+		// Toggle mode
+		ret = set_pedal_mode_enabled(!gConfig->pedalMode);
+		if (gControlCallbacks.modeChanged) {
+			gControlCallbacks.modeChanged(gConfig->pedalMode);
+		}
 		break;
 	case AE_BUTTON_BU:
 		// Toggle bypass
