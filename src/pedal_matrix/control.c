@@ -105,15 +105,6 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 
 	PRINT("control: Setting switch array.\n");
 
-	// Notify pedal arangement has changed
-	if (gControlCallbacks.pedalsChanged) {
-		bool presenceDetectTmp[AE_MAX_EFFECTS+2];
-		for (int i = 0; i < AE_MAX_EFFECTS; i++) {
-			presenceDetectTmp[i] = presenceDetect[i][0] && presenceDetect[i][1];
-		}
-		gControlCallbacks.pedalsChanged(pedalOrder, enabled, presenceDetectTmp, gConfig->currPreset.controlEnabled);
-	}
-
 	// Route each input to an output
 	for (int i = 0; i < AE_MAX_EFFECTS; i++) {
 		pedal = pedalOrder[i];

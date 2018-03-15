@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_bootstrap import Bootstrap
 import os
+from copy import deepcopy
 import time
 import signal
 from ctypes import *
@@ -260,19 +261,19 @@ def set_mute_c(mute):
 
 def set_bank_py(bank):
     global lcd, remote, lcdInfo, remoteInfo
-    remoteInfo["bank"] = bank.value
-    lcdInfo["bank"] = bank.value
+    remoteInfo["bank"] = c_int(bank).value
+    lcdInfo["bank"] = c_int(bank).value
     if remote is not None:
-        remote.updateInfo(remoteInfo.copy())
+        remote.updateInfo(deepcopy(remoteInfo))
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+        guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
     return 0
 
 
 def set_preset_py(preset):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["preset"] = preset.value
-    remoteInfo["preset"] = preset.value
+    lcdInfo["preset"] = c_int(preset).value
+    remoteInfo["preset"] = c_int(preset).value
 
     bank = c_int(0)
     c_lib.get_bank(byref(bank))
@@ -291,31 +292,31 @@ def set_preset_py(preset):
     lcdInfo["bankName"] = bankName
 
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+        guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
     return 0
 
 
 def set_mode_py(mode):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["pedalMode"] = mode.value
+    lcdInfo["pedalMode"] = c_bool(mode).value
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+        guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
     return 0
 
 
 def set_bypass_py(bypass):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["bypassMode"] = bypass.value
+    lcdInfo["bypassMode"] = c_bool(bypass).value
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+        guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
     return 0
 
 
 def set_mute_py(mute):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["muteMode"] = mute.value
+    lcdInfo["muteMode"] = c_bool(mute).value
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+        guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
     return 0
 
 
@@ -326,7 +327,7 @@ def set_pedals_py(pedals, enabled, presence, control):
     lcdInfo["presence"] = [presence[i] for i in range(0, 9)]
     lcdInfo["control"] = [control[i] for i in range(0, 2)]
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+        guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
     return 0
 
 def get_ip_address(ifname):
@@ -353,7 +354,7 @@ def update_ip_address():
             print("Web Address Changed: '" + ip + "'")
             lcdInfo["webAddress"] = ip
             if lcd is not None:
-                guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+                guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
         time.sleep(5)
 
 
@@ -460,7 +461,7 @@ def lcdUpdate(info):
             os.system("ifconfig wlan0 down")
     if info["remotePaired"] != lcdInfo["remotePaired"]:
         remoteInfo["id"] = None
-        remote.updateInfo(remoteInfo.copy())
+        remote.updateInfo(deepcopy(remoteInfo))
     lcdInfo = info.copy()
 
 
@@ -494,7 +495,7 @@ def remoteUpdate(info):
         lcdInfo["remoteID"] = info["id"]
     if info["paired"] != remoteInfo["paired"]:
         lcdInfo["remotePaired"] = info["paired"]
-    guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+    guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
     remoteInfo = info.copy()
 
 
@@ -502,7 +503,7 @@ def run_gui():
     global lcd, guiInvoker
     app = QApplication(sys.argv)
     #signal.signal(signal.SIGINT, signal.SIG_DFL)
-    lcd = LCDWindow(lcdInfo.copy(), lcdUpdate)
+    lcd = LCDWindow(deepcopy(lcdInfo), lcdUpdate)
     lcd.show()
     guiInvoker = Invoker()
     sys.exit(app.exec_())
@@ -517,6 +518,6 @@ if __name__ == "__main__":
     init_c_lib()
     init_control()
     init_structs()
-    remote = Remote(remoteInfo.copy(), remoteUpdate)
+    remote = Remote(deepcopy(remoteInfo), remoteUpdate)
     threading.Thread(target=run_app).start()
     run_gui()

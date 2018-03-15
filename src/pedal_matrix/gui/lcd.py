@@ -76,8 +76,6 @@ class LCDWindow(QMainWindow, Ui_MainWindow):
                 # Pedal not used
                 eval("self.labelPedal{0}.setStyleSheet('color: black')".format(i+1))
 
-        print("Update Pedals:", pedals, enabled, presence)
-
         self.labelIn.setEnabled(not bypass)
         self.labelOut.setEnabled(not mute)
 
@@ -102,10 +100,6 @@ class LCDWindow(QMainWindow, Ui_MainWindow):
             self.labelRing.setStyleSheet('color: black')
 
     def updateInfo(self, info):
-        try:
-            print("Old:", self.info["presence"], "\nNew:", info["presence"])
-        except:
-            pass
         self.info = info
         self.lineEditHardwareVersion.setText(info["hardwareVersion"])
         self.lineEditSoftwareVersion.setText(info["softwareVersion"])
