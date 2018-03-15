@@ -64,7 +64,7 @@ lcdInfo = {"bank": -1,
            "remotePaired": False,
            "pedals": [0, 0, 0, 0, 0, 0, 0],
            "enabled": [False, False, False, False, False, False, False],
-           "presence": [False, False, False, False, False, False, False],
+           "presence": [False, False, False, False, False, False, False, False, False],
            "control": [False, False]}
 
 # Used for ctypes
@@ -266,7 +266,7 @@ def set_bank_py(bank):
         remote.updateInfo(remoteInfo.copy())
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
-    return 0
+    return c_int(0)
 
 
 def set_preset_py(preset):
@@ -292,7 +292,7 @@ def set_preset_py(preset):
 
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
-    return 0
+    return c_int(0)
 
 
 def set_mode_py(mode):
@@ -300,7 +300,7 @@ def set_mode_py(mode):
     lcdInfo["pedalMode"] = c_bool(mode).value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
-    return 0
+    return c_int(0)
 
 
 def set_bypass_py(bypass):
@@ -308,7 +308,7 @@ def set_bypass_py(bypass):
     lcdInfo["bypassMode"] = c_bool(bypass).value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
-    return 0
+    return c_int(0)
 
 
 def set_mute_py(mute):
@@ -382,6 +382,11 @@ def init_structs():
             presetName = data['preset_name']
             bankName = data['bank_name']
 
+    # TODO in the future, get this from a file
+    lcdInfo["hardwareVersion"] = "Rev B"
+    lcdInfo["softwareVersion"] = "0.1"
+    lcdInfo["website"] = "https://design.ece.msstate.edu/2017/team_meadows/"
+
     lcdInfo["presetName"] = presetName
     lcdInfo["bankName"] = bankName
     lcdInfo["webAddress"] = get_ip_address("wlan0")
@@ -418,7 +423,7 @@ def init_control():
     set_mute_py_func_type = CFUNCTYPE(c_int, c_bool)
     set_mute_py_func = set_mute_py_func_type(set_mute_py)
 
-    set_pedals_py_func_type = CFUNCTYPE(POINTER(c_int), POINTER(c_bool), POINTER(c_bool), POINTER(c_bool))
+    set_pedals_py_func_type = CFUNCTYPE(c_int, POINTER(c_int), POINTER(c_bool), POINTER(c_bool), POINTER(c_bool))
     set_pedals_py_func = set_pedals_py_func_type(set_pedals_py)
 
     c_lib.register_callbacks(set_preset_py_func,

@@ -12,7 +12,7 @@ struct control_callbacks {
 	int (*pedalsChanged)(int [], bool [], bool [], bool []);
 };
 
-int register_callbacks(int (*presetChanged)(int), int (*bankChanged)(int), int (*modeChanged)(bool), int (*bypassEnabled)(bool), int (*muteEnabled)(bool), (*pedalsChanged)(int [], bool [], bool[], bool []));
+int register_callbacks(int (*presetChanged)(int), int (*bankChanged)(int), int (*modeChanged)(bool), int (*bypassEnabled)(bool), int (*muteEnabled)(bool), int (*pedalsChanged)(int [], bool [], bool[], bool []));
 
 int set_preset(int preset);
 int set_bank(int bank);

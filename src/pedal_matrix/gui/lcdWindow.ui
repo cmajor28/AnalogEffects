@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>720</width>
-    <height>362</height>
+    <width>525</width>
+    <height>306</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,10 +21,10 @@
        <bool>true</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSystemInfo">
        <attribute name="title">
@@ -52,9 +52,22 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="lineEditSoftwareVersion">
-          <property name="readOnly">
+        <item row="3" column="0">
+         <widget class="QLabel" name="labelWebAddress">
+          <property name="text">
+           <string>Web Address:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QCheckBox" name="checkBoxPaired">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Paired</string>
+          </property>
+          <property name="checkable">
            <bool>true</bool>
           </property>
          </widget>
@@ -73,10 +86,24 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="labelWebAddress">
+        <item row="3" column="2">
+         <widget class="QCheckBox" name="checkBoxEnabled">
           <property name="text">
-           <string>Web Address:</string>
+           <string>Enabled</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="labelRemoteID">
+          <property name="text">
+           <string>Remote ID:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="lineEditSoftwareVersion">
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -94,46 +121,6 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="3">
-         <widget class="QCheckBox" name="checkBoxEnabled">
-          <property name="text">
-           <string>Enabled</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="labelRemoteID">
-          <property name="text">
-           <string>Remote ID:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="3">
-         <widget class="QCheckBox" name="checkBoxPaired">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Paired</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <spacer name="horizontalSpacerSystemInfo">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="tabPedalMatrix">
@@ -141,11 +128,15 @@
         <string>Pedal Matrix</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="3">
+        <item row="0" column="2">
          <widget class="QCheckBox" name="checkBoxPedalMode">
           <property name="font">
            <font>
-            <pointsize>14</pointsize>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
           </property>
           <property name="text">
@@ -156,55 +147,15 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="labelPreset">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Preset:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLCDNumber" name="lcdNumberBank">
-          <property name="minimumSize">
-           <size>
-            <width>180</width>
-            <height>35</height>
-           </size>
-          </property>
-          <property name="digitCount">
-           <number>3</number>
-          </property>
-          <property name="segmentStyle">
-           <enum>QLCDNumber::Flat</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLCDNumber" name="lcdNumberPreset">
-          <property name="minimumSize">
-           <size>
-            <width>180</width>
-            <height>35</height>
-           </size>
-          </property>
-          <property name="digitCount">
-           <number>3</number>
-          </property>
-          <property name="segmentStyle">
-           <enum>QLCDNumber::Flat</enum>
-          </property>
-         </widget>
-        </item>
         <item row="3" column="0">
          <widget class="QLabel" name="labelPresetName">
           <property name="font">
            <font>
-            <pointsize>14</pointsize>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
           </property>
           <property name="text">
@@ -212,17 +163,43 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="1">
+         <widget class="QLCDNumber" name="lcdNumberBank">
+          <property name="minimumSize">
+           <size>
+            <width>120</width>
+            <height>33</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="digitCount">
+           <number>3</number>
+          </property>
+          <property name="segmentStyle">
+           <enum>QLCDNumber::Flat</enum>
+          </property>
+         </widget>
+        </item>
         <item row="3" column="1">
          <widget class="QLineEdit" name="lineEditPresetName">
           <property name="minimumSize">
            <size>
-            <width>180</width>
-            <height>35</height>
+            <width>120</width>
+            <height>25</height>
            </size>
           </property>
           <property name="font">
            <font>
-            <pointsize>14</pointsize>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
           </property>
           <property name="readOnly">
@@ -235,7 +212,7 @@
           <property name="font">
            <font>
             <family>MS Shell Dlg 2</family>
-            <pointsize>14</pointsize>
+            <pointsize>12</pointsize>
             <weight>50</weight>
             <italic>false</italic>
             <bold>false</bold>
@@ -246,30 +223,21 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="2">
-         <spacer name="horizontalSpacerPedalMatrix">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="lineEditBankName">
           <property name="minimumSize">
            <size>
-            <width>180</width>
-            <height>35</height>
+            <width>120</width>
+            <height>25</height>
            </size>
           </property>
           <property name="font">
            <font>
-            <pointsize>14</pointsize>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
           </property>
           <property name="text">
@@ -280,23 +248,47 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="labelBankName">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-           </font>
+        <item row="2" column="1">
+         <widget class="QLCDNumber" name="lcdNumberPreset">
+          <property name="minimumSize">
+           <size>
+            <width>120</width>
+            <height>33</height>
+           </size>
           </property>
-          <property name="text">
-           <string>Bank Name:</string>
+          <property name="digitCount">
+           <number>3</number>
+          </property>
+          <property name="segmentStyle">
+           <enum>QLCDNumber::Flat</enum>
           </property>
          </widget>
         </item>
-        <item row="1" column="3">
+        <item row="2" column="0">
+         <widget class="QLabel" name="labelPreset">
+          <property name="font">
+           <font>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Preset:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
          <widget class="QCheckBox" name="checkBoxBypass">
           <property name="font">
            <font>
-            <pointsize>14</pointsize>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
           </property>
           <property name="text">
@@ -307,11 +299,15 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="3">
+        <item row="2" column="2">
          <widget class="QCheckBox" name="checkBoxMute">
           <property name="font">
            <font>
-            <pointsize>14</pointsize>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
           </property>
           <property name="text">
@@ -319,6 +315,22 @@
           </property>
           <property name="checkable">
            <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="labelBankName">
+          <property name="font">
+           <font>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Bank Name:</string>
           </property>
          </widget>
         </item>
@@ -336,14 +348,14 @@
          <widget class="QLabel" name="labelIn">
           <property name="minimumSize">
            <size>
-            <width>75</width>
-            <height>100</height>
+            <width>70</width>
+            <height>90</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>75</width>
-            <height>100</height>
+            <width>70</width>
+            <height>90</height>
            </size>
           </property>
           <property name="frameShape">
@@ -363,14 +375,14 @@
            <widget class="QLabel" name="labelPedal3">
             <property name="minimumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="frameShape">
@@ -388,14 +400,14 @@
            <widget class="QLabel" name="labelPedal1">
             <property name="minimumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="frameShape">
@@ -413,14 +425,14 @@
            <widget class="QLabel" name="labelPedal7">
             <property name="minimumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="frameShape">
@@ -438,14 +450,14 @@
            <widget class="QLabel" name="labelPedal4">
             <property name="minimumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="frameShape">
@@ -463,14 +475,14 @@
            <widget class="QLabel" name="labelPedal5">
             <property name="minimumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="frameShape">
@@ -488,14 +500,14 @@
            <widget class="QLabel" name="labelPedal2">
             <property name="minimumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="frameShape">
@@ -513,14 +525,14 @@
            <widget class="QLabel" name="labelPedal6">
             <property name="minimumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>75</width>
-              <height>100</height>
+              <width>70</width>
+              <height>90</height>
              </size>
             </property>
             <property name="frameShape">
@@ -538,6 +550,18 @@
            <layout class="QHBoxLayout" name="horizontalLayoutAmpControl">
             <item>
              <widget class="QLabel" name="labelTip">
+              <property name="font">
+               <font>
+                <family>Consolas</family>
+                <pointsize>16</pointsize>
+                <weight>50</weight>
+                <italic>false</italic>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font: 16pt &quot;Consolas&quot;;</string>
+              </property>
               <property name="frameShape">
                <enum>QFrame::WinPanel</enum>
               </property>
@@ -573,14 +597,14 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>75</width>
-            <height>100</height>
+            <width>70</width>
+            <height>90</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>75</width>
-            <height>100</height>
+            <width>70</width>
+            <height>90</height>
            </size>
           </property>
           <property name="frameShape">

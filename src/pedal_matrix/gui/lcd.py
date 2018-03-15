@@ -62,44 +62,44 @@ class LCDWindow(QMainWindow, Ui_MainWindow):
                 numStr = str(pedals[i])
             else:
                 numStr = ""
-            eval("self.labelPedal{}.setText(numStr)".format(i+1))
-            eval("self.labelPedal{}.setEnabled(enabled[{}])".format(i+1, i))
+            eval("self.labelPedal{0}.setText(numStr)".format(i+1))
+            eval("self.labelPedal{0}.setEnabled(enabled[{1}])".format(i+1, i))
 
             if pedals[i] > 0 and not presence[i]:
                 # Pedal disconnected
-                eval("self.labelPedal{}.setStyleSheet('color: red')")
+                eval("self.labelPedal{0}.setStyleSheet('color: red')".format(i+1))
             else:
                 # Pedal connected
-                eval("self.labelPedal{}.setStyleSheet('color: blue')")
+                eval("self.labelPedal{0}.setStyleSheet('color: blue')".format(i+1))
 
         self.labelIn.setEnabled(not bypass)
         self.labelOut.setEnabled(not mute)
 
         if presence[7]:
-            self.labelIn.setStyleSheet('color: gray')
+            self.labelIn.setStyleSheet('color: black')
         else:
             self.labelIn.setStyleSheet('color: red')
 
         if presence[8]:
-            self.labelOut.setStyleSheet('color: gray')
+            self.labelOut.setStyleSheet('color: black')
         else:
             self.labelOut.setStyleSheet('color: red')
 
         if control[0]:
             self.labelTip.setStyleSheet('color: green')
         else:
-            self.labelTip.setStyleSheet('color: gray')
+            self.labelTip.setStyleSheet('color: black')
 
         if control[1]:
             self.labelRing.setStyleSheet('color: green')
         else:
-            self.labelRing.setStyleSheet('color: gray')
+            self.labelRing.setStyleSheet('color: black')
 
     def updateInfo(self, info):
         self.info = info
-        self.labelHardwareVersion.setText(info["hardwareVersion"])
-        self.labelSoftwareVersion.setText(info["softwareVersion"])
-        self.labelWebsite.setText(info["website"])
+        self.lineEditHardwareVersion.setText(info["hardwareVersion"])
+        self.lineEditSoftwareVersion.setText(info["softwareVersion"])
+        self.lineEditWebsite.setText(info["website"])
         self.lcdNumberBank.display(str(info["bank"]))
         self.lineEditBankName.setText(info["bankName"])
         self.lcdNumberPreset.display(str(info["preset"]))
