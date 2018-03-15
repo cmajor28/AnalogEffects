@@ -63,14 +63,20 @@ class LCDWindow(QMainWindow, Ui_MainWindow):
             else:
                 numStr = ""
             eval("self.labelPedal{0}.setText(numStr)".format(i+1))
-            eval("self.labelPedal{0}.setEnabled(enabled[{1}])".format(i+1, i))
+            eval("self.labelPedal{0}.setEnabled(enabled[pedals[i]-1])".format(i+1))
 
-            if pedals[i] > 0 and not presence[i]:
-                # Pedal disconnected
-                eval("self.labelPedal{0}.setStyleSheet('color: red')".format(i+1))
+            if pedals[i] > 0:
+                if presence[pedals[i]-1]:
+                    # Pedal connected
+                    eval("self.labelPedal{0}.setStyleSheet('color: blue')".format(i+1))
+                else:
+                    # Pedal disconnected
+                    eval("self.labelPedal{0}.setStyleSheet('color: red')".format(i+1))
             else:
-                # Pedal connected
-                eval("self.labelPedal{0}.setStyleSheet('color: blue')".format(i+1))
+                # Pedal not used
+                eval("self.labelPedal{0}.setStyleSheet('color: black')".format(i+1))
+
+        print("Update Pedals:", pedals, enabled, presence)
 
         self.labelIn.setEnabled(not bypass)
         self.labelOut.setEnabled(not mute)
@@ -85,17 +91,21 @@ class LCDWindow(QMainWindow, Ui_MainWindow):
         else:
             self.labelOut.setStyleSheet('color: red')
 
-        if control[0]:
-            self.labelTip.setStyleSheet('color: green')
+        if control[1]:
+            self.labelTip.setStyleSheet('color: blue')
         else:
             self.labelTip.setStyleSheet('color: black')
 
-        if control[1]:
-            self.labelRing.setStyleSheet('color: green')
+        if control[0]:
+            self.labelRing.setStyleSheet('color: blue')
         else:
             self.labelRing.setStyleSheet('color: black')
 
     def updateInfo(self, info):
+        try:
+            print("Old:", self.info["presence"], "\nNew:", info["presence"])
+        except:
+            pass
         self.info = info
         self.lineEditHardwareVersion.setText(info["hardwareVersion"])
         self.lineEditSoftwareVersion.setText(info["softwareVersion"])

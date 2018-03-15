@@ -54,8 +54,8 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 #define PRESENCE_PINS_INIT()																		\
 		PRESENCE_CONTROL_INITIALIZER(																\
 			ARRAY_INITIALIZER({																		\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 14),	/* jack_i0 */	\
-				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 15),	/* jack_o0 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 15),	/* jack_i0 */	\
+				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 14),	/* jack_o0 */	\
 				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 0),		/* jack_i1 */	\
 				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 1),		/* jack_o1 */	\
 				GPIO_EXT_PIN_INITIALIZER(&gGPIOExtBanks[GPIO_EXT_PRESENCE], 2),		/* jack_i2 */	\
@@ -101,10 +101,10 @@ extern struct gpio_ext gGPIOExtBanks[GPIO_EXT_COUNT];
 								&gGPIOBanks[GPIO1], 13,	/* ay1 */		\
 								&gGPIOBanks[GPIO1], 12)	/* ay2 */		\
 
-#define CONTROL_PINS_INIT()											\
-{																	\
-		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO0], 7),	/* en_a */	\
-		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO3], 16)	/* en_a */	\
+#define CONTROL_PINS_INIT()										    	\
+{																    	\
+		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO3], 16),	/* en_ring */	\
+		GPIO_PIN_INITIALIZER(&gGPIOBanks[GPIO0], 7)	    /* en_tip */	\
 }
 
 #endif // PINS_H_

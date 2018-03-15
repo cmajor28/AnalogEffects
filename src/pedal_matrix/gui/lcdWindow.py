@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'lcdWindow.ui'
 #
-# Created: Thu Mar 15 03:04:09 2018
+# Created: Thu Mar 15 03:30:16 2018
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!

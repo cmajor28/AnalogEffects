@@ -56,8 +56,8 @@ static int leds_set_all(bool controlEnabled[2], bool enabled[AE_MAX_EFFECTS]) {
 	bool ledOn[AE_LED_COUNT] = { 0 };
 
 	// Get all LED values
-	ledOn[AE_LED_BU] = gConfig->currPreset.controlEnabled[TIP];
-	ledOn[AE_LED_BD] = gConfig->currPreset.controlEnabled[RING];
+	ledOn[AE_LED_BU] = gConfig->currPreset.controlEnabled[RING];
+	ledOn[AE_LED_BD] = gConfig->currPreset.controlEnabled[TIP];
 	for (int i = 0; i < AE_MAX_EFFECTS; i++) {
 		ledOn[i] = gConfig->currPreset.enabled[i];
 	}
@@ -67,12 +67,14 @@ static int leds_set_all(bool controlEnabled[2], bool enabled[AE_MAX_EFFECTS]) {
 
 static int notify_pedal_update() {
 
-	// Notify pedal arangement has changed
+	// Notify pedal arrangement has changed
 	if (gControlCallbacks.pedalsChanged) {
 		bool presenceDetectTmp[AE_MAX_EFFECTS+2];
 		for (int i = 0; i < AE_MAX_EFFECTS; i++) {
-			presenceDetectTmp[i] = gPresenceDetect[i][0] && gPresenceDetect[i][1];
+			presenceDetectTmp[i] = gPresenceDetect[i+1][IN] && gPresenceDetect[i+1][OUT];
 		}
+		presenceDetectTmp[AE_MAX_EFFECTS] = gPresenceDetect[0][IN];
+		presenceDetectTmp[AE_MAX_EFFECTS+1] = gPresenceDetect[0][OUT];
 		gControlCallbacks.pedalsChanged(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, presenceDetectTmp, gConfig->currPreset.controlEnabled);
 	}
 
@@ -82,7 +84,7 @@ static int notify_pedal_update() {
 static int apply_control(bool control[2]) {
 
 	int ret = 0;
-	PRINT("control: Setting control signals to { %d, %d }.\n", control[TIP], control[RING]);
+	PRINT("control: Setting control signals to { %d, %d }.\n", control[RING], control[TIP]);
 	ret |= gpio_pin_set_value(&gControlSwitch[TIP], control[TIP]);
 	ret |= gpio_pin_set_value(&gControlSwitch[RING], control[RING]);
 	return ret;
@@ -698,8 +700,8 @@ int control_init() {
 
 	// Get initial LED values
 	if (gConfig->pedalMode) {
-		ledOn[AE_LED_BU] = gConfig->currPreset.controlEnabled[TIP];
-		ledOn[AE_LED_BD] = gConfig->currPreset.controlEnabled[RING];
+		ledOn[AE_LED_BU] = gConfig->currPreset.controlEnabled[RING];
+		ledOn[AE_LED_BD] = gConfig->currPreset.controlEnabled[TIP];
 		for (int i = 0; i < AE_MAX_EFFECTS; i++) {
 			ledOn[i] = gConfig->currPreset.enabled[i];
 		}
@@ -984,3 +986,29 @@ int get_mute(bool *enabled) {
 	pthread_mutex_unlock(&gConfigMutex);
 	return ret;
 }
+
+int get_pedals(int pedals[AE_MAX_EFFECTS], bool enabled[AE_MAX_EFFECTS], bool presence[AE_MAX_EFFECTS+2], bool control[2]) {
+	
+	int ret;
+	
+	ret = pthread_mutex_lock(&gConfigMutex);
+	if (ret != 0) {
+		PRINTE("pthread_mutex_lock() failed!");
+		return -1;
+	}
+	
+	// Get pedal arrangement
+	memcpy(pedals, gConfig->currPreset.pedalOrder, sizeof(gConfig->currPreset.pedalOrder));
+	memcpy(enabled, gConfig->currPreset.enabled, sizeof(gConfig->currPreset.enabled));
+	memcpy(control, gConfig->currPreset.controlEnabled, sizeof(gConfig->currPreset.controlEnabled));
+	
+	for (int i = 0; i < AE_MAX_EFFECTS; i++) {
+		presence[i] = gPresenceDetect[i+1][IN] && gPresenceDetect[i+1][OUT];
+	}
+	presence[AE_MAX_EFFECTS] = gPresenceDetect[0][IN];
+	presence[AE_MAX_EFFECTS+1] = gPresenceDetect[0][OUT];
+	
+	pthread_mutex_unlock(&gConfigMutex);
+	return 0;
+}
+

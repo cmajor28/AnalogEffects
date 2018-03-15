@@ -140,8 +140,8 @@ def preset_order():
             if curr > 0:
                 enable[curr-1] = 'enabled_pos' + str(i) in data
 
-        controlEnabled[0] = 'controlEnabled1' in data
-        controlEnabled[1] = 'controlEnabled2' in data
+        controlEnabled[1] = 'controlEnabled1' in data
+        controlEnabled[0] = 'controlEnabled2' in data
         
         # added to prevent repeat entries on pedal order
         index = [0,1,2,3,4,5,6]
@@ -163,8 +163,8 @@ def preset_order():
 
         # 0 indicates unused pedal, 8 indicates final output
         data = {
-            'controlEnabled1': controlEnabled[0],
-            'controlEnabled2': controlEnabled[1],
+            'controlEnabled1': controlEnabled[1],
+            'controlEnabled2': controlEnabled[0],
             'bank_name': bank_name,
             'bank_num': bank_num - 1,
             'preset_name': preset_name,
@@ -223,8 +223,8 @@ def init_c_lib():
                 read_pedal[i - 1] = data['pedal_pos' + str(i)]
                 read_enable[i - 1] = data['enabled_pos' + str(i)]
 
-            control_enable[0] = data['controlEnabled1']
-            control_enable[1] = data['controlEnabled2']
+            control_enable[1] = data['controlEnabled1']
+            control_enable[0] = data['controlEnabled2']
 
             new_preset[bank_num*8 + preset_num].pedalOrder = (c_int * 7)(*read_pedal)
             new_preset[bank_num*8 + preset_num].enabled = (c_bool * 7)(*read_enable)
@@ -260,19 +260,19 @@ def set_mute_c(mute):
 
 def set_bank_py(bank):
     global lcd, remote, lcdInfo, remoteInfo
-    remoteInfo["bank"] = c_int(bank).value
-    lcdInfo["bank"] = c_int(bank).value
+    remoteInfo["bank"] = bank.value
+    lcdInfo["bank"] = bank.value
     if remote is not None:
         remote.updateInfo(remoteInfo.copy())
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
-    return c_int(0)
+    return 0
 
 
 def set_preset_py(preset):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["preset"] = c_int(preset).value
-    remoteInfo["preset"] = c_int(preset).value
+    lcdInfo["preset"] = preset.value
+    remoteInfo["preset"] = preset.value
 
     bank = c_int(0)
     c_lib.get_bank(byref(bank))
@@ -292,31 +292,31 @@ def set_preset_py(preset):
 
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
-    return c_int(0)
+    return 0
 
 
 def set_mode_py(mode):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["pedalMode"] = c_bool(mode).value
+    lcdInfo["pedalMode"] = mode.value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
-    return c_int(0)
+    return 0
 
 
 def set_bypass_py(bypass):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["bypassMode"] = c_bool(bypass).value
+    lcdInfo["bypassMode"] = bypass.value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
-    return c_int(0)
+    return 0
 
 
 def set_mute_py(mute):
     global lcd, remote, lcdInfo, remoteInfo
-    lcdInfo["muteMode"] = c_bool(mute).value
+    lcdInfo["muteMode"] = mute.value
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
-    return c_int(0)
+    return 0
 
 
 def set_pedals_py(pedals, enabled, presence, control):
@@ -327,7 +327,7 @@ def set_pedals_py(pedals, enabled, presence, control):
     lcdInfo["control"] = [control[i] for i in range(0, 2)]
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
-    return c_int(0)
+    return 0
 
 def get_ip_address(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -371,6 +371,15 @@ def init_structs():
     c_lib.get_mute(byref(mute))
     lcdInfo["bank"] = remoteInfo["bank"] = bank.value
     lcdInfo["preset"] = remoteInfo["preset"] = preset.value
+    pedals = (c_int * 7)()
+    enabled = (c_bool * 7)()
+    presence = (c_bool * 9)()
+    control = (c_bool * 2)()
+    c_lib.get_pedals(pedals, enabled, presence, control)
+    lcdInfo["pedals"] = [pedals[i] for i in range(0, 7)]
+    lcdInfo["enabled"] = [enabled[i] for i in range(0, 7)]
+    lcdInfo["presence"] = [presence[i] for i in range(0, 9)]
+    lcdInfo["control"] = [control[i] for i in range(0, 2)]
 
     # read from file for preset name
     filename = "%d_%d" % (bank.value, preset.value)
@@ -384,7 +393,7 @@ def init_structs():
 
     # TODO in the future, get this from a file
     lcdInfo["hardwareVersion"] = "Rev B"
-    lcdInfo["softwareVersion"] = "0.1"
+    lcdInfo["softwareVersion"] = "0.1 [Alpha]"
     lcdInfo["website"] = "https://design.ece.msstate.edu/2017/team_meadows/"
 
     lcdInfo["presetName"] = presetName

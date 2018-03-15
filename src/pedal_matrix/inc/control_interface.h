@@ -26,4 +26,6 @@ int get_mode(bool *pedalMode);
 int get_bypass(bool *enabled);
 int get_mute(bool *enabled);
 
+int get_pedals(int pedals[AE_MAX_EFFECTS], bool enabled[AE_MAX_EFFECTS], bool presence[AE_MAX_EFFECTS+2], bool control[2]);
+
 #endif // CONTROL_INTERFACE_H_
