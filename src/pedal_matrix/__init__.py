@@ -52,6 +52,7 @@ remoteInfo = {"id": "",
               "preset": -1}
 
 lcdInfo = {"bank": -1,
+           "bankName": "",
            "preset": -1,
            "presetName": "",
            "webAddress": "",
@@ -60,7 +61,11 @@ lcdInfo = {"bank": -1,
            "bypassMode": False,
            "muteMode": False,
            "webEnabled": False,
-           "remotePaired": False}
+           "remotePaired": False,
+           "pedals": [0, 0, 0, 0, 0, 0, 0],
+           "enabled": [False, False, False, False, False, False, False],
+           "presence": [False, False, False, False, False, False, False],
+           "control": [False, False]}
 
 # Used for ctypes
 set_preset_py_func = None
@@ -68,11 +73,13 @@ set_bank_py_func = None
 set_mode_py_func = None
 set_bypass_py_func = None
 set_mute_py_func = None
+set_pedals_py_func = None
 set_preset_py_func_type = None
 set_bank_py_func_type = None
 set_mode_py_func_type = None
 set_bypass_py_func_type = None
 set_mute_py_func_type = None
+set_pedals_py_func_type = None
 
 """@app.route('/')
 def index():
@@ -273,12 +280,15 @@ def set_preset_py(preset):
     # read from file for preset name
     filename = "%d_%d" % (bank.value, c_int(preset).value)
     presetName = ''
+    bankName = ''
     if os.path.isfile('data/preset_' + filename + '.json'):
         with open('data/preset_' + filename + '.json', 'r') as f:
             data = json.load(f)
             presetName = data['preset_name']
+            bankName = data['bank_name']
 
     lcdInfo["presetName"] = presetName
+    lcdInfo["bankName"] = bankName
 
     if lcd is not None:
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
@@ -308,6 +318,16 @@ def set_mute_py(mute):
         guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
     return c_int(0)
 
+
+def set_pedals_py(pedals, enabled, presence, control):
+    global lcd, lcdInfo
+    lcdInfo["pedals"] = [pedals[i] for i in range(0, 7)]
+    lcdInfo["enabled"] = [enabled[i] for i in range(0, 7)]
+    lcdInfo["presence"] = [presence[i] for i in range(0, 9)]
+    lcdInfo["control"] = [control[i] for i in range(0, 2)]
+    if lcd is not None:
+        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+    return c_int(0)
 
 def get_ip_address(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -355,12 +375,15 @@ def init_structs():
     # read from file for preset name
     filename = "%d_%d" % (bank.value, preset.value)
     presetName = ''
+    bankName = ''
     if os.path.isfile('data/preset_' + filename + '.json'):
         with open('data/preset_' + filename + '.json', 'r') as f:
             data = json.load(f)
             presetName = data['preset_name']
+            bankName = data['bank_name']
 
     lcdInfo["presetName"] = presetName
+    lcdInfo["bankName"] = bankName
     lcdInfo["webAddress"] = get_ip_address("wlan0")
     lcdInfo["remoteID"] = None
     lcdInfo["pedalMode"] = mode.value
@@ -377,8 +400,8 @@ def init_structs():
 
 
 def init_control():
-    global set_preset_py_func, set_bank_py_func, set_mode_py_func, set_bypass_py_func, set_mute_py_func
-    global set_preset_py_func_type, set_bank_py_func_type, set_mode_py_func_type, set_bypass_py_func_type, set_mute_py_func_type
+    global set_preset_py_func, set_bank_py_func, set_mode_py_func, set_bypass_py_func, set_mute_py_func, set_pedals_py_func
+    global set_preset_py_func_type, set_bank_py_func_type, set_mode_py_func_type, set_bypass_py_func_type, set_mute_py_func_type, set_pedals_func_type
 
     set_preset_py_func_type = CFUNCTYPE(c_int, c_int)
     set_preset_py_func = set_preset_py_func_type(set_preset_py)
@@ -395,11 +418,15 @@ def init_control():
     set_mute_py_func_type = CFUNCTYPE(c_int, c_bool)
     set_mute_py_func = set_mute_py_func_type(set_mute_py)
 
+    set_pedals_py_func_type = CFUNCTYPE(POINTER(c_int), POINTER(c_bool), POINTER(c_bool), POINTER(c_bool))
+    set_pedals_py_func = set_pedals_py_func_type(set_pedals_py)
+
     c_lib.register_callbacks(set_preset_py_func,
                              set_bank_py_func,
                              set_mode_py_func,
                              set_bypass_py_func,
-                             set_mute_py_func)
+                             set_mute_py_func,
+                             set_pedals_py_func)
 
 
 def lcdUpdate(info):
@@ -426,6 +453,15 @@ def lcdUpdate(info):
 def remoteUpdate(info):
     global lcd, remote, lcdInfo, remoteInfo
     if info["bank"] != remoteInfo["bank"]:
+        # read from file for bank name
+        filename = "%d_%d" % (info["bank"], info["preset"])
+        bankName = ''
+        if os.path.isfile('data/preset_' + filename + '.json'):
+            with open('data/preset_' + filename + '.json', 'r') as f:
+                data = json.load(f)
+                bankName = data['preset_name']
+
+        lcdInfo["bankName"] = bankName
         lcdInfo["bank"] = info["bank"]
         set_bank_c(info["bank"])
     if info["preset"] != remoteInfo["preset"]:

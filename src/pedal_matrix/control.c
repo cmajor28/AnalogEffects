@@ -65,6 +65,20 @@ static int leds_set_all(bool controlEnabled[2], bool enabled[AE_MAX_EFFECTS]) {
 	return ret;
 }
 
+static int notify_pedal_update() {
+
+	// Notify pedal arangement has changed
+	if (gControlCallbacks.pedalsChanged) {
+		bool presenceDetectTmp[AE_MAX_EFFECTS+2];
+		for (int i = 0; i < AE_MAX_EFFECTS; i++) {
+			presenceDetectTmp[i] = gPresenceDetect[i][0] && gPresenceDetect[i][1];
+		}
+		gControlCallbacks.pedalsChanged(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, presenceDetectTmp, gConfig->currPreset.controlEnabled);
+	}
+
+	return 0;
+}
+
 static int apply_control(bool control[2]) {
 
 	int ret = 0;
@@ -74,7 +88,7 @@ static int apply_control(bool control[2]) {
 	return ret;
 }
 
-static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabled[AE_MAX_EFFECTS], bool presenceDetect[AE_MAX_EFFECTS][2], bool bypass, bool mute) {
+static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabled[AE_MAX_EFFECTS], bool presenceDetect[AE_MAX_EFFECTS+1][2], bool bypass, bool mute) {
 
 	static uint64_t lastSwitchSet = 0;
 	static bool lastMute = FALSE;
@@ -88,6 +102,15 @@ static int apply_switch_configuration(int pedalOrder[AE_MAX_EFFECTS], bool enabl
 	int address;
 
 	PRINT("control: Setting switch array.\n");
+
+	// Notify pedal arangement has changed
+	if (gControlCallbacks.pedalsChanged) {
+		bool presenceDetectTmp[AE_MAX_EFFECTS+2];
+		for (int i = 0; i < AE_MAX_EFFECTS; i++) {
+			presenceDetectTmp[i] = presenceDetect[i][0] && presenceDetect[i][1];
+		}
+		gControlCallbacks.pedalsChanged(pedalOrder, enabled, presenceDetectTmp, gConfig->currPreset.controlEnabled);
+	}
 
 	// Route each input to an output
 	for (int i = 0; i < AE_MAX_EFFECTS; i++) {
@@ -226,8 +249,10 @@ static int load_preset(int bank, int preset) {
 	pthread_mutex_unlock(&gPresetsMutex);
 
 	// Apply the preset to hardware
-	ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, gConfig->bypassEnabled, gConfig->muteEnabled);
-	ret |= apply_control(gConfig->currPreset.controlEnabled);
+	ret = apply_control(gConfig->currPreset.controlEnabled);
+	ret |= apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, gConfig->bypassEnabled, gConfig->muteEnabled);
+
+	notify_pedal_update();
 
 	return ret;
 }
@@ -296,6 +321,8 @@ static int set_pedal_enabled(int pedal, bool enable) {
 		return ret;
 	}
 
+	notify_pedal_update();
+
 	gConfig->changeMade = TRUE;
 	leds_set(pedal, gConfig->currPreset.enabled[pedal]);
 	return 0;
@@ -315,6 +342,7 @@ static int set_control_enabled(int control, bool enable) {
 		return ret;
 	}
 
+	notify_pedal_update();
 	gConfig->changeMade = TRUE;
 	leds_set(control + AE_BUTTON_BU, gConfig->currPreset.controlEnabled[control]);
 	return 0;
@@ -428,33 +456,34 @@ static int handle_button_held_event(enum ae_button button) {
 
 	switch (button) {
 	case AE_BUTTON_B1:
-		// Toggle mode
-		ret = set_pedal_mode_enabled(!gConfig->pedalMode);
-		if (gControlCallbacks.modeChanged) {
-			gControlCallbacks.modeChanged(gConfig->pedalMode);
-		}
-		break;
 	case AE_BUTTON_B2:
 	case AE_BUTTON_B3:
 	case AE_BUTTON_B4:
 	case AE_BUTTON_B5:
 	case AE_BUTTON_B6:
 	case AE_BUTTON_B7:
-	case AE_BUTTON_B8:
-		ret = 0;
+		// Handle these like a button pressed
+		ret = handle_button_pressed_event(button);
 		break;
-	case AE_BUTTON_BU:
-		// Toggle bypass
-		ret = set_bypass_enabled(!gConfig->bypassEnabled);
-		if (gControlCallbacks.bypassEnabled) {
-			gControlCallbacks.bypassEnabled(gConfig->bypassEnabled);
+	case AE_BUTTON_B8:
+		// Toggle mode
+		ret = set_pedal_mode_enabled(!gConfig->pedalMode);
+		if (gControlCallbacks.modeChanged) {
+			gControlCallbacks.modeChanged(gConfig->pedalMode);
 		}
 		break;
-	case AE_BUTTON_BD:
+	case AE_BUTTON_BU:
 		// Toggle mute
 		ret = set_mute_enabled(!gConfig->muteEnabled);
 		if (gControlCallbacks.muteEnabled) {
 			gControlCallbacks.muteEnabled(gConfig->muteEnabled);
+		}
+		break;
+	case AE_BUTTON_BD:
+		// Toggle bypass
+		ret = set_bypass_enabled(!gConfig->bypassEnabled);
+		if (gControlCallbacks.bypassEnabled) {
+			gControlCallbacks.bypassEnabled(gConfig->bypassEnabled);
 		}
 		break;
 	default:
@@ -487,6 +516,7 @@ static int presence_control_update(void *context, enum ae_presence jack, bool pr
 		return ret;
 	}
 
+	notify_pedal_update();
 	pthread_mutex_unlock(&gConfigMutex);
 
 	return ret;
@@ -650,6 +680,10 @@ int control_init() {
 
 	// Set control
 	ret = apply_control(gConfig->currPreset.controlEnabled);
+	if (ret != 0) {
+		pthread_mutex_unlock(&gConfigMutex);
+		return -1;
+	}
 
 	// Apply switch configuration
 	ret = apply_switch_configuration(gConfig->currPreset.pedalOrder, gConfig->currPreset.enabled, gPresenceDetect, gConfig->bypassEnabled, gConfig->muteEnabled);
@@ -657,6 +691,8 @@ int control_init() {
 		pthread_mutex_unlock(&gConfigMutex);
 		return -1;
 	}
+
+	notify_pedal_update();
 
 	bool ledOn[AE_LED_COUNT] = { 0 };
 
@@ -766,7 +802,7 @@ int control_uninit() {
 	return 0;
 }
 
-int register_callbacks(int (*presetChanged)(int), int (*bankChanged)(int), int (*modeChanged)(bool), int (*bypassEnabled)(bool), int (*muteEnabled)(bool)) {
+int register_callbacks(int (*presetChanged)(int), int (*bankChanged)(int), int (*modeChanged)(bool), int (*bypassEnabled)(bool), int (*muteEnabled)(bool), int (*pedalsChanged)(int [], bool [], bool [], bool [])) {
 
 	int ret;
 
@@ -783,7 +819,8 @@ int register_callbacks(int (*presetChanged)(int), int (*bankChanged)(int), int (
 	gControlCallbacks.modeChanged = modeChanged;
 	gControlCallbacks.bypassEnabled = bypassEnabled;
 	gControlCallbacks.muteEnabled = muteEnabled;
-
+	gControlCallbacks.pedalsChanged = pedalsChanged;
+	
 	pthread_mutex_unlock(&gConfigMutex);
 	return ret;
 }
