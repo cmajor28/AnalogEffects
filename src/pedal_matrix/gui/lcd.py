@@ -63,9 +63,8 @@ class LCDWindow(QMainWindow, Ui_MainWindow):
             else:
                 numStr = ""
             eval("self.labelPedal{0}.setText(numStr)".format(i+1))
-            eval("self.labelPedal{0}.setEnabled(enabled[pedals[i]-1])".format(i+1))
 
-            if pedals[i] > 0:
+            if pedals[i] > 0  and enabled[pedals[i]-1]:
                 if presence[pedals[i]-1]:
                     # Pedal connected
                     eval("self.labelPedal{0}.setStyleSheet('color: blue')".format(i+1))
@@ -76,16 +75,17 @@ class LCDWindow(QMainWindow, Ui_MainWindow):
                 # Pedal not used
                 eval("self.labelPedal{0}.setStyleSheet('color: black')".format(i+1))
 
-        self.labelIn.setEnabled(not bypass)
-        self.labelOut.setEnabled(not mute)
-
-        if presence[7]:
+        if bypass:
             self.labelIn.setStyleSheet('color: black')
+        elif presence[7]:
+            self.labelIn.setStyleSheet('color: blue')
         else:
             self.labelIn.setStyleSheet('color: red')
 
-        if presence[8]:
+        if mute:
             self.labelOut.setStyleSheet('color: black')
+        elif presence[8]:
+            self.labelOut.setStyleSheet('color: blue')
         else:
             self.labelOut.setStyleSheet('color: red')
 
