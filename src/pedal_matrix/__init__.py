@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_bootstrap import Bootstrap
 import os
+from copy import deepcopy
 import time
 import signal
 from ctypes import *
@@ -52,6 +53,7 @@ remoteInfo = {"id": "",
               "preset": -1}
 
 lcdInfo = {"bank": -1,
+           "bankName": "",
            "preset": -1,
            "presetName": "",
            "webAddress": "",
@@ -60,7 +62,11 @@ lcdInfo = {"bank": -1,
            "bypassMode": False,
            "muteMode": False,
            "webEnabled": False,
-           "remotePaired": False}
+           "remotePaired": False,
+           "pedals": [0, 0, 0, 0, 0, 0, 0],
+           "enabled": [False, False, False, False, False, False, False],
+           "presence": [False, False, False, False, False, False, False, False, False],
+           "control": [False, False]}
 
 # Used for ctypes
 set_preset_py_func = None
@@ -68,11 +74,13 @@ set_bank_py_func = None
 set_mode_py_func = None
 set_bypass_py_func = None
 set_mute_py_func = None
+set_pedals_py_func = None
 set_preset_py_func_type = None
 set_bank_py_func_type = None
 set_mode_py_func_type = None
 set_bypass_py_func_type = None
 set_mute_py_func_type = None
+set_pedals_py_func_type = None
 
 """@app.route('/')
 def index():
@@ -133,8 +141,8 @@ def preset_order():
             if curr > 0:
                 enable[curr-1] = 'enabled_pos' + str(i) in data
 
-        controlEnabled[0] = 'controlEnabled1' in data
-        controlEnabled[1] = 'controlEnabled2' in data
+        controlEnabled[1] = 'controlEnabled1' in data
+        controlEnabled[0] = 'controlEnabled2' in data
         
         # added to prevent repeat entries on pedal order
         index = [0,1,2,3,4,5,6]
@@ -156,8 +164,8 @@ def preset_order():
 
         # 0 indicates unused pedal, 8 indicates final output
         data = {
-            'controlEnabled1': controlEnabled[0],
-            'controlEnabled2': controlEnabled[1],
+            'controlEnabled1': controlEnabled[1],
+            'controlEnabled2': controlEnabled[0],
             'bank_name': bank_name,
             'bank_num': bank_num - 1,
             'preset_name': preset_name,
@@ -216,8 +224,8 @@ def init_c_lib():
                 read_pedal[i - 1] = data['pedal_pos' + str(i)]
                 read_enable[i - 1] = data['enabled_pos' + str(i)]
 
-            control_enable[0] = data['controlEnabled1']
-            control_enable[1] = data['controlEnabled2']
+            control_enable[1] = data['controlEnabled1']
+            control_enable[0] = data['controlEnabled2']
 
             new_preset[bank_num*8 + preset_num].pedalOrder = (c_int * 7)(*read_pedal)
             new_preset[bank_num*8 + preset_num].enabled = (c_bool * 7)(*read_enable)
@@ -256,9 +264,9 @@ def set_bank_py(bank):
     remoteInfo["bank"] = c_int(bank).value
     lcdInfo["bank"] = c_int(bank).value
     if remote is not None:
-        remote.updateInfo(remoteInfo.copy())
+        remote.updateInfo(deepcopy(remoteInfo))
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+        guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
     return 0
 
 
@@ -273,15 +281,18 @@ def set_preset_py(preset):
     # read from file for preset name
     filename = "%d_%d" % (bank.value, c_int(preset).value)
     presetName = ''
+    bankName = ''
     if os.path.isfile('data/preset_' + filename + '.json'):
         with open('data/preset_' + filename + '.json', 'r') as f:
             data = json.load(f)
             presetName = data['preset_name']
+            bankName = data['bank_name']
 
     lcdInfo["presetName"] = presetName
+    lcdInfo["bankName"] = bankName
 
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+        guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
     return 0
 
 
@@ -289,7 +300,7 @@ def set_mode_py(mode):
     global lcd, remote, lcdInfo, remoteInfo
     lcdInfo["pedalMode"] = c_bool(mode).value
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+        guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
     return 0
 
 
@@ -297,7 +308,7 @@ def set_bypass_py(bypass):
     global lcd, remote, lcdInfo, remoteInfo
     lcdInfo["bypassMode"] = c_bool(bypass).value
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+        guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
     return 0
 
 
@@ -305,9 +316,19 @@ def set_mute_py(mute):
     global lcd, remote, lcdInfo, remoteInfo
     lcdInfo["muteMode"] = c_bool(mute).value
     if lcd is not None:
-        guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
-    return c_int(0)
+        guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
+    return 0
 
+
+def set_pedals_py(pedals, enabled, presence, control):
+    global lcd, lcdInfo
+    lcdInfo["pedals"] = [pedals[i] for i in range(0, 7)]
+    lcdInfo["enabled"] = [enabled[i] for i in range(0, 7)]
+    lcdInfo["presence"] = [presence[i] for i in range(0, 9)]
+    lcdInfo["control"] = [control[i] for i in range(0, 2)]
+    if lcd is not None:
+        guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
+    return 0
 
 def get_ip_address(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -333,7 +354,7 @@ def update_ip_address():
             print("Web Address Changed: '" + ip + "'")
             lcdInfo["webAddress"] = ip
             if lcd is not None:
-                guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+                guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
         time.sleep(5)
 
 
@@ -351,16 +372,33 @@ def init_structs():
     c_lib.get_mute(byref(mute))
     lcdInfo["bank"] = remoteInfo["bank"] = bank.value
     lcdInfo["preset"] = remoteInfo["preset"] = preset.value
+    pedals = (c_int * 7)()
+    enabled = (c_bool * 7)()
+    presence = (c_bool * 9)()
+    control = (c_bool * 2)()
+    c_lib.get_pedals(pedals, enabled, presence, control)
+    lcdInfo["pedals"] = [pedals[i] for i in range(0, 7)]
+    lcdInfo["enabled"] = [enabled[i] for i in range(0, 7)]
+    lcdInfo["presence"] = [presence[i] for i in range(0, 9)]
+    lcdInfo["control"] = [control[i] for i in range(0, 2)]
 
     # read from file for preset name
     filename = "%d_%d" % (bank.value, preset.value)
     presetName = ''
+    bankName = ''
     if os.path.isfile('data/preset_' + filename + '.json'):
         with open('data/preset_' + filename + '.json', 'r') as f:
             data = json.load(f)
             presetName = data['preset_name']
+            bankName = data['bank_name']
+
+    # TODO in the future, get this from a file
+    lcdInfo["hardwareVersion"] = "Rev B"
+    lcdInfo["softwareVersion"] = "0.1 [Alpha]"
+    lcdInfo["website"] = "https://design.ece.msstate.edu/2017/team_meadows/"
 
     lcdInfo["presetName"] = presetName
+    lcdInfo["bankName"] = bankName
     lcdInfo["webAddress"] = get_ip_address("wlan0")
     lcdInfo["remoteID"] = None
     lcdInfo["pedalMode"] = mode.value
@@ -377,8 +415,8 @@ def init_structs():
 
 
 def init_control():
-    global set_preset_py_func, set_bank_py_func, set_mode_py_func, set_bypass_py_func, set_mute_py_func
-    global set_preset_py_func_type, set_bank_py_func_type, set_mode_py_func_type, set_bypass_py_func_type, set_mute_py_func_type
+    global set_preset_py_func, set_bank_py_func, set_mode_py_func, set_bypass_py_func, set_mute_py_func, set_pedals_py_func
+    global set_preset_py_func_type, set_bank_py_func_type, set_mode_py_func_type, set_bypass_py_func_type, set_mute_py_func_type, set_pedals_func_type
 
     set_preset_py_func_type = CFUNCTYPE(c_int, c_int)
     set_preset_py_func = set_preset_py_func_type(set_preset_py)
@@ -395,11 +433,15 @@ def init_control():
     set_mute_py_func_type = CFUNCTYPE(c_int, c_bool)
     set_mute_py_func = set_mute_py_func_type(set_mute_py)
 
+    set_pedals_py_func_type = CFUNCTYPE(c_int, POINTER(c_int), POINTER(c_bool), POINTER(c_bool), POINTER(c_bool))
+    set_pedals_py_func = set_pedals_py_func_type(set_pedals_py)
+
     c_lib.register_callbacks(set_preset_py_func,
                              set_bank_py_func,
                              set_mode_py_func,
                              set_bypass_py_func,
-                             set_mute_py_func)
+                             set_mute_py_func,
+                             set_pedals_py_func)
 
 
 def lcdUpdate(info):
@@ -419,13 +461,22 @@ def lcdUpdate(info):
             os.system("ifconfig wlan0 down")
     if info["remotePaired"] != lcdInfo["remotePaired"]:
         remoteInfo["id"] = None
-        remote.updateInfo(remoteInfo.copy())
+        remote.updateInfo(deepcopy(remoteInfo))
     lcdInfo = info.copy()
 
 
 def remoteUpdate(info):
     global lcd, remote, lcdInfo, remoteInfo
     if info["bank"] != remoteInfo["bank"]:
+        # read from file for bank name
+        filename = "%d_%d" % (info["bank"], info["preset"])
+        bankName = ''
+        if os.path.isfile('data/preset_' + filename + '.json'):
+            with open('data/preset_' + filename + '.json', 'r') as f:
+                data = json.load(f)
+                bankName = data['preset_name']
+
+        lcdInfo["bankName"] = bankName
         lcdInfo["bank"] = info["bank"]
         set_bank_c(info["bank"])
     if info["preset"] != remoteInfo["preset"]:
@@ -444,7 +495,7 @@ def remoteUpdate(info):
         lcdInfo["remoteID"] = info["id"]
     if info["paired"] != remoteInfo["paired"]:
         lcdInfo["remotePaired"] = info["paired"]
-    guiInvoker.invoke(lcd.updateInfo, lcdInfo.copy())
+    guiInvoker.invoke(lcd.updateInfo, deepcopy(lcdInfo))
     remoteInfo = info.copy()
 
 
@@ -452,7 +503,7 @@ def run_gui():
     global lcd, guiInvoker
     app = QApplication(sys.argv)
     #signal.signal(signal.SIGINT, signal.SIG_DFL)
-    lcd = LCDWindow(lcdInfo.copy(), lcdUpdate)
+    lcd = LCDWindow(deepcopy(lcdInfo), lcdUpdate)
     lcd.show()
     guiInvoker = Invoker()
     sys.exit(app.exec_())
@@ -467,6 +518,6 @@ if __name__ == "__main__":
     init_c_lib()
     init_control()
     init_structs()
-    remote = Remote(remoteInfo.copy(), remoteUpdate)
+    remote = Remote(deepcopy(remoteInfo), remoteUpdate)
     threading.Thread(target=run_app).start()
     run_gui()

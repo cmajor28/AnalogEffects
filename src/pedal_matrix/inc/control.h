@@ -21,8 +21,8 @@ enum {
 };
 
 enum {
-	TIP,
-	RING
+	RING,
+	TIP
 };
 
 int control_init();

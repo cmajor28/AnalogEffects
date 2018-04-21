@@ -56,9 +56,56 @@ class LCDWindow(QMainWindow, Ui_MainWindow):
         self.info["remotePaired"] = self.checkBoxPaired.isChecked()
         self.updateInfoCallback(self.info)
 
+    def __updatePedals(self, pedals, enabled, presence, control, mute, bypass):
+        for i in range(0,7):
+            if pedals[i] > 0:
+                numStr = str(pedals[i])
+            else:
+                numStr = ""
+            eval("self.labelPedal{0}.setText(numStr)".format(i+1))
+
+            if pedals[i] > 0  and enabled[pedals[i]-1]:
+                if presence[pedals[i]-1]:
+                    # Pedal connected
+                    eval("self.labelPedal{0}.setStyleSheet('color: blue')".format(i+1))
+                else:
+                    # Pedal disconnected
+                    eval("self.labelPedal{0}.setStyleSheet('color: red')".format(i+1))
+            else:
+                # Pedal not used
+                eval("self.labelPedal{0}.setStyleSheet('color: black')".format(i+1))
+
+        if bypass:
+            self.labelIn.setStyleSheet('color: black')
+        elif presence[7]:
+            self.labelIn.setStyleSheet('color: blue')
+        else:
+            self.labelIn.setStyleSheet('color: red')
+
+        if mute:
+            self.labelOut.setStyleSheet('color: black')
+        elif presence[8]:
+            self.labelOut.setStyleSheet('color: blue')
+        else:
+            self.labelOut.setStyleSheet('color: red')
+
+        if control[1]:
+            self.labelTip.setStyleSheet('color: blue')
+        else:
+            self.labelTip.setStyleSheet('color: black')
+
+        if control[0]:
+            self.labelRing.setStyleSheet('color: blue')
+        else:
+            self.labelRing.setStyleSheet('color: black')
+
     def updateInfo(self, info):
         self.info = info
+        self.lineEditHardwareVersion.setText(info["hardwareVersion"])
+        self.lineEditSoftwareVersion.setText(info["softwareVersion"])
+        self.lineEditWebsite.setText(info["website"])
         self.lcdNumberBank.display(str(info["bank"]))
+        self.lineEditBankName.setText(info["bankName"])
         self.lcdNumberPreset.display(str(info["preset"]))
         self.lineEditPresetName.setText(info["presetName"])
         self.lineEditWebAddress.setText(info["webAddress"])
@@ -68,6 +115,7 @@ class LCDWindow(QMainWindow, Ui_MainWindow):
         self.checkBoxMute.setChecked(info["muteMode"])
         self.checkBoxEnabled.setChecked(info["webEnabled"])
         self.checkBoxPaired.setChecked(info["remotePaired"])
+        self.__updatePedals(info["pedals"], info["enabled"], info["presence"], info["control"], info["muteMode"], info["bypassMode"])
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
